@@ -64,15 +64,15 @@ public class GenUtils
     {
         // java对象数据传递到模板文件vm
         VelocityContext velocityContext = new VelocityContext();
-        String packageName = GenConfig.getPackageName();
+        String packageName = GenConfig.getPackageName() + "." + GenConfig.moduleName;
         velocityContext.put("tableName", table.getTableName());
         velocityContext.put("tableComment", replaceKeyword(table.getTableComment()));
         velocityContext.put("primaryKey", table.getPrimaryKey());
         velocityContext.put("className", table.getClassName());
         velocityContext.put("classname", table.getClassname());
-        velocityContext.put("moduleName", getModuleName(packageName));
+        velocityContext.put("moduleName", GenConfig.moduleName);
         velocityContext.put("columns", table.getColumns());
-        velocityContext.put("basePackage", getBasePackage(packageName));
+        velocityContext.put("basePackage", packageName);
         velocityContext.put("package", packageName);
         velocityContext.put("author", GenConfig.getAuthor());
         velocityContext.put("datetime", DateUtils.getDate());
@@ -149,7 +149,7 @@ public class GenUtils
 
         if (template.contains("Controller.java.vm"))
         {
-            return javaPath + "controller" + "/" + className + "Controller.java";
+            return getBaseProjectPath(GenConfig.packageName) + "/web/" + "controller" + "/" + moduleName + "/" + className + "Controller.java";
         }
 
         if (template.contains("Mapper.xml.vm"))
@@ -199,10 +199,19 @@ public class GenUtils
 
     public static String getProjectPath()
     {
-        String packageName = GenConfig.getPackageName();
+        String packageName = GenConfig.getPackageName() + "/" + GenConfig.moduleName;
         StringBuffer projectPath = new StringBuffer();
         projectPath.append("main/java/");
         projectPath.append(packageName.replace(".", "/"));
+        projectPath.append("/");
+        return projectPath.toString();
+    }
+    
+    public static String getBaseProjectPath(String path)
+    {
+        StringBuffer projectPath = new StringBuffer();
+        projectPath.append("main/java/");
+        projectPath.append(path.replace(".", "/"));
         projectPath.append("/");
         return projectPath.toString();
     }

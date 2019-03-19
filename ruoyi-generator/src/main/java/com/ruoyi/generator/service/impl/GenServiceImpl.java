@@ -110,8 +110,7 @@ public class GenServiceImpl implements IGenService
 
         VelocityInitializer.initVelocity();
 
-        String packageName = GenConfig.getPackageName();
-        String moduleName = GenUtils.getModuleName(packageName);
+        String moduleName = GenConfig.moduleName;
 
         VelocityContext context = GenUtils.getVelocityContext(table);
 

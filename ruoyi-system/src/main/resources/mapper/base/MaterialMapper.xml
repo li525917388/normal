@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.base.mapper.MaterialMapper">
+    
+    <resultMap type="Material" id="MaterialResult">
+        <result property="id"    column="id"    />
+        <result property="matCode"    column="mat_code"    />
+        <result property="matName"    column="mat_name"    />
+        <result property="matType"    column="mat_type"    />
+    </resultMap>
+	
+	<sql id="selectMaterialVo">
+        select id, mat_code, mat_name, mat_type from base_material
+    </sql>
+	
+    <select id="selectMaterialList" parameterType="Material" resultMap="MaterialResult">
+        <include refid="selectMaterialVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="matCode != null  and matCode != '' "> and mat_code = #{matCode}</if>
+             <if test="matName != null  and matName != '' "> and mat_name = #{matName}</if>
+             <if test="matType != null  and matType != '' "> and mat_type = #{matType}</if>
+         </where>
+    </select>
+    
+    <select id="selectMaterialById" parameterType="Long" resultMap="MaterialResult">
+        <include refid="selectMaterialVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMaterial" parameterType="Material" useGeneratedKeys="true" keyProperty="id">
+        insert into base_material
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="matCode != null  and matCode != ''  ">mat_code,</if>
+			<if test="matName != null  and matName != ''  ">mat_name,</if>
+			<if test="matType != null  and matType != ''  ">mat_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="matCode != null  and matCode != ''  ">#{matCode},</if>
+			<if test="matName != null  and matName != ''  ">#{matName},</if>
+			<if test="matType != null  and matType != ''  ">#{matType},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMaterial" parameterType="Material">
+        update base_material
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="matCode != null  and matCode != ''  ">mat_code = #{matCode},</if>
+            <if test="matName != null  and matName != ''  ">mat_name = #{matName},</if>
+            <if test="matType != null  and matType != ''  ">mat_type = #{matType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMaterialById" parameterType="Long">
+        delete from base_material where id = #{id}
+    </delete>
+	
+    <delete id="deleteMaterialByIds" parameterType="String">
+        delete from base_material where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

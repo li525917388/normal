@@ -20,6 +20,9 @@ public class GenConfig
 
     /** 生成包路径 */
     public static String packageName;
+    
+    /** 模块 */
+    public static String moduleName;
 
     /** 自动去除表前缀，默认是true */
     public static String autoRemovePre;
@@ -70,4 +73,13 @@ public class GenConfig
     {
         GenConfig.tablePrefix = tablePrefix;
     }
+
+	public static String getModuleName() {
+		return moduleName;
+	}
+
+	@Value("${moduleName}")
+	public void setModuleName(String moduleName) {
+		GenConfig.moduleName = moduleName;
+	}
 }
