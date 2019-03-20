@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-supplier-edit" th:object="${supplier}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">供应商编号：</label>
+				<div class="col-sm-8">
+					<input id="supCode" name="supCode" th:field="*{supCode}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">供应商名称：</label>
+				<div class="col-sm-8">
+					<input id="supName" name="supName" th:field="*{supName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">供应商地址：</label>
+				<div class="col-sm-8">
+					<input id="supAddress" name="supAddress" th:field="*{supAddress}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">供应商电话：</label>
+				<div class="col-sm-8">
+					<input id="supPhone" name="supPhone" th:field="*{supPhone}" class="form-control" type="text">
+				</div>
+			</div>
+			
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">公司名称：</label>
+				<div class="col-sm-8">
+					<input id="compName" name="compName" th:field="*{compName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系人：</label>
+				<div class="col-sm-8">
+					<input id="contact" name="contact" th:field="*{contact}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">有效值：</label>
+				<div class="col-sm-8">
+                    <div class="onoffswitch">
+                         <input type="checkbox" th:checked="${supplier.valid == '1' ? true : false}" class="onoffswitch-checkbox" id="valid" name="valid">
+                         <label class="onoffswitch-label" for="valid">
+                             <span class="onoffswitch-inner"></span>
+                             <span class="onoffswitch-switch"></span>
+                         </label>
+                     </div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">数据来源：</label>
+				<div class="col-sm-8">
+					<input id="dataSource" name="dataSource" th:field="*{dataSource}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "base/supplier";
+		$("#form-supplier-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-supplier-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

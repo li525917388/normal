@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.base.mapper.SupplierMapper">
+    
+    <resultMap type="Supplier" id="SupplierResult">
+        <result property="id"    column="id"    />
+        <result property="supCode"    column="sup_code"    />
+        <result property="supName"    column="sup_name"    />
+        <result property="supAddress"    column="sup_address"    />
+        <result property="supPhone"    column="sup_phone"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="editTime"    column="edit_time"    />
+        <result property="compName"    column="comp_name"    />
+        <result property="contact"    column="contact"    />
+        <result property="valid"    column="valid"    />
+        <result property="dataSource"    column="data_source"    />
+    </resultMap>
+	
+	<sql id="selectSupplierVo">
+        select id, sup_code, sup_name, sup_address, sup_phone, create_time, edit_time, comp_name, contact, valid, data_source from base_supplier
+    </sql>
+	
+    <select id="selectSupplierList" parameterType="Supplier" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="supCode != null  and supCode != '' "> and sup_code = #{supCode}</if>
+             <if test="supName != null  and supName != '' "> and sup_name = #{supName}</if>
+             <if test="supAddress != null  and supAddress != '' "> and sup_address = #{supAddress}</if>
+             <if test="supPhone != null  and supPhone != '' "> and sup_phone = #{supPhone}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="editTime != null "> and edit_time = #{editTime}</if>
+             <if test="compName != null  and compName != '' "> and comp_name = #{compName}</if>
+             <if test="contact != null  and contact != '' "> and contact = #{contact}</if>
+             <if test="valid != null "> and valid = #{valid}</if>
+             <if test="dataSource != null  and dataSource != '' "> and data_source = #{dataSource}</if>
+         </where>
+    </select>
+    
+    <select id="selectSupplierById" parameterType="Integer" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSupplier" parameterType="Supplier" useGeneratedKeys="true" keyProperty="id">
+        insert into base_supplier
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="supCode != null  and supCode != ''  ">sup_code,</if>
+			<if test="supName != null  and supName != ''  ">sup_name,</if>
+			<if test="supAddress != null  and supAddress != ''  ">sup_address,</if>
+			<if test="supPhone != null  and supPhone != ''  ">sup_phone,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="editTime != null  ">edit_time,</if>
+			<if test="compName != null  and compName != ''  ">comp_name,</if>
+			<if test="contact != null  and contact != ''  ">contact,</if>
+			<if test="valid != null  ">valid,</if>
+			<if test="dataSource != null  and dataSource != ''  ">data_source,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="supCode != null  and supCode != ''  ">#{supCode},</if>
+			<if test="supName != null  and supName != ''  ">#{supName},</if>
+			<if test="supAddress != null  and supAddress != ''  ">#{supAddress},</if>
+			<if test="supPhone != null  and supPhone != ''  ">#{supPhone},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="editTime != null  ">#{editTime},</if>
+			<if test="compName != null  and compName != ''  ">#{compName},</if>
+			<if test="contact != null  and contact != ''  ">#{contact},</if>
+			<if test="valid != null  ">#{valid},</if>
+			<if test="dataSource != null  and dataSource != ''  ">#{dataSource},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSupplier" parameterType="Supplier">
+        update base_supplier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supCode != null  and supCode != ''  ">sup_code = #{supCode},</if>
+            <if test="supName != null  and supName != ''  ">sup_name = #{supName},</if>
+            <if test="supAddress != null  and supAddress != ''  ">sup_address = #{supAddress},</if>
+            <if test="supPhone != null  and supPhone != ''  ">sup_phone = #{supPhone},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="editTime != null  ">edit_time = #{editTime},</if>
+            <if test="compName != null  and compName != ''  ">comp_name = #{compName},</if>
+            <if test="contact != null  and contact != ''  ">contact = #{contact},</if>
+            <if test="valid != null  ">valid = #{valid},</if>
+            <if test="dataSource != null  and dataSource != ''  ">data_source = #{dataSource},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSupplierById" parameterType="Integer">
+        delete from base_supplier where id = #{id}
+    </delete>
+	
+    <delete id="deleteSupplierByIds" parameterType="String">
+        delete from base_supplier where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -34,8 +34,8 @@ public class SysRole extends BaseEntity
     @Excel(name = "数据范围", readConverterExp = "1=所有数据权限,2=自定义数据权限")
     private String dataScope;
 
-    /** 角色状态（0正常 1停用） */
-    @Excel(name = "角色状态", readConverterExp = "0=正常,1=停用")
+    /** 角色状态（1正常 0停用） */
+    @Excel(name = "角色状态", readConverterExp = "1=正常,0=停用")
     private String status;
 
     /** 删除标志（0代表存在 2代表删除） */
