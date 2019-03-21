@@ -21,24 +21,41 @@ public class Supplier extends BaseEntity
 	/**  */
 	private Integer id;
 	/** 供应商编号 */
+	@Excel(name = "供应商编号")
 	private String supCode;
+	
 	/** 供应商名称 */
+	@Excel(name = "供应商名称")
 	private String supName;
+	
 	/** 供应商地址 */
+	@Excel(name = "地址")
 	private String supAddress;
+	
 	/** 供应商电话 */
+	@Excel(name = "电话")
 	private String supPhone;
+	
 	/** 创建时间 */
+	@Excel(name = "创建时")
 	private Date createTime;
+	
 	/** 编辑时间 */
+	@Excel(name = "编辑时间")
 	private Date editTime;
+	
 	/** 公司名称 */
+	@Excel(name = "公司名称")
 	private String compName;
+	
 	/** 联系人 */
+	@Excel(name = "联系人")
 	private String contact;
-	/** 有效值 */
-	@Excel(name = "有效值", readConverterExp = "1=正常,0=停用")
-	private String valid;
+	
+	/** 是否禁用 */
+	@Excel(name = "有效值", readConverterExp = "0=正常,1=停用")
+	private String invalid;
+	
 	/** 数据来源 */
 	private String dataSource;
 
@@ -123,14 +140,14 @@ public class Supplier extends BaseEntity
 	{
 		return contact;
 	}
-	public void setValid(String valid) 
+	public void setInvalid(String valid) 
 	{
-		this.valid = valid;
+		this.invalid = valid;
 	}
 
-	public String getValid() 
+	public String getInvalid() 
 	{
-		return valid;
+		return invalid;
 	}
 	public void setDataSource(String dataSource) 
 	{
@@ -153,7 +170,7 @@ public class Supplier extends BaseEntity
             .append("editTime", getEditTime())
             .append("compName", getCompName())
             .append("contact", getContact())
-            .append("valid", getValid())
+            .append("invalid", getInvalid())
             .append("dataSource", getDataSource())
             .toString();
     }

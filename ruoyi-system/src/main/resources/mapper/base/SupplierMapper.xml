@@ -14,12 +14,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="editTime"    column="edit_time"    />
         <result property="compName"    column="comp_name"    />
         <result property="contact"    column="contact"    />
-        <result property="valid"    column="valid"    />
+        <result property="invalid"    column="invalid"    />
         <result property="dataSource"    column="data_source"    />
     </resultMap>
 	
 	<sql id="selectSupplierVo">
-        select id, sup_code, sup_name, sup_address, sup_phone, create_time, edit_time, comp_name, contact, valid, data_source from base_supplier
+        select id, sup_code, sup_name, sup_address, sup_phone, create_time, edit_time, comp_name, contact, invalid, data_source from base_supplier
     </sql>
 	
     <select id="selectSupplierList" parameterType="Supplier" resultMap="SupplierResult">
@@ -34,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="editTime != null "> and edit_time = #{editTime}</if>
              <if test="compName != null  and compName != '' "> and comp_name = #{compName}</if>
              <if test="contact != null  and contact != '' "> and contact = #{contact}</if>
-             <if test="valid != null "> and valid = #{valid}</if>
+             <if test="invalid != null and contact != ''"> and invalid = #{invalid}</if>
              <if test="dataSource != null  and dataSource != '' "> and data_source = #{dataSource}</if>
          </where>
     </select>
@@ -55,8 +55,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="editTime != null  ">edit_time,</if>
 			<if test="compName != null  and compName != ''  ">comp_name,</if>
 			<if test="contact != null  and contact != ''  ">contact,</if>
-			<if test="valid != null  ">valid,</if>
+			<if test="invalid != null  ">invalid,</if>
 			<if test="dataSource != null  and dataSource != ''  ">data_source,</if>
+			create_time
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="supCode != null  and supCode != ''  ">#{supCode},</if>
@@ -67,8 +68,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="editTime != null  ">#{editTime},</if>
 			<if test="compName != null  and compName != ''  ">#{compName},</if>
 			<if test="contact != null  and contact != ''  ">#{contact},</if>
-			<if test="valid != null  ">#{valid},</if>
+			<if test="invalid != null  ">#{invalid},</if>
 			<if test="dataSource != null  and dataSource != ''  ">#{dataSource},</if>
+			sysdate()
          </trim>
     </insert>
 	 
@@ -83,8 +85,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="editTime != null  ">edit_time = #{editTime},</if>
             <if test="compName != null  and compName != ''  ">comp_name = #{compName},</if>
             <if test="contact != null  and contact != ''  ">contact = #{contact},</if>
-            <if test="valid != null  ">valid = #{valid},</if>
+            <if test="invalid != null  ">invalid = #{invalid},</if>
             <if test="dataSource != null  and dataSource != ''  ">data_source = #{dataSource},</if>
+            edit_time=sysdate()
         </trim>
         where id = #{id}
     </update>

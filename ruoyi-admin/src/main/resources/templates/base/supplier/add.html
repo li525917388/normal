@@ -46,23 +46,15 @@
 				<label class="col-sm-3 control-label">有效值</label>
 				<div class="col-sm-8">
 					<div class="onoffswitch">
-                         <input type="checkbox" th:checked="true" class="onoffswitch-checkbox" id="valid" name="valid">
-                         <label class="onoffswitch-label" for="valid">
+                         <input type="checkbox" th:checked="true" class="onoffswitch-checkbox" id="invalid" name="invalid">
+                         <label class="onoffswitch-label" for="invalid">
                              <span class="onoffswitch-inner"></span>
                              <span class="onoffswitch-switch"></span>
                          </label>
                      </div>
 				</div>
 			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">数据来源：</label>
-				<div class="col-sm-8">
-					
-					<select id="dataSource" name="dataSource" class="form-control m-b" th:with="type=${@dict.getType('sys_data_source')}">
-	                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
-	                </select>
-				</div>
-			</div>
+			
 		</form>
 	</div>
     <div th:include="include::footer"></div>
@@ -82,9 +74,43 @@
 		
 		function submitHandler() {
 	        if ($.validate.form()) {
-	            $.operate.save(prefix + "/add", $('#form-supplier-add').serialize());
+	            // $.operate.save(prefix + "/add", $('#form-supplier-add').serialize());
+	            add();
 	        }
 	    }
+		
+		
+		
+		function add() {
+			var supCode = $("input[name='supCode']").val();
+			var supName = $("input[name='supName']").val();
+			var supAddress = $("input[name='supAddress']").val();
+			var compName = $("input[name='compName']").val();
+			var contact = $("input[name='contact']").val();
+			var invalid = $("input[name='invalid']").is(':checked') == true ? 0 : 1;
+			var supPhone = $("input[name='supPhone']").val();
+			$.ajax({
+				cache : true,
+				type : "POST",
+				url : ctx + "base/supplier/add",
+				data : {
+					"supCode": supCode,
+					"supName": supName,
+					"supAddress": supAddress,
+					"compName": compName,
+					"contact": contact,
+					"invalid": invalid,
+					"supPhone": supPhone,
+				},
+				async : false,
+				error : function(request) {
+					$.modal.alertError("系统错误");
+				},
+				success : function(data) {
+					$.operate.successCallback(data);
+				}
+			});
+		}
 	</script>
 </body>
 </html>

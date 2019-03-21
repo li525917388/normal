@@ -44,15 +44,13 @@
 
 							<li>
 								&nbsp;有 &nbsp;&nbsp;效  &nbsp;&nbsp;值：
-								<select name="valid" th:with="type=${@dict.getType('sys_normal_disable')}">
+								<select name="invalid" th:with="type=${@dict.getType('sys_normal_disable')}">
 									<option value="">所有</option>
 									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
 								</select>
 							</li>
 
-							<li>
-								数 据 来 源：<input type="text" name="dataSource"/>
-							</li>
+						
 
 							<li>
 								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -96,7 +94,8 @@
                 removeUrl: prefix + "/remove",
 				exportUrl: prefix + "/export",
                 modalName: "供应商",
-		        showExport: true,
+		        striped: true,		//灰白相间
+		        clickToSelect: true,
                 columns: [{
 		            checkbox: true
 		        },
@@ -146,7 +145,7 @@
 					sortable: true
 				},
 				{
-					field : 'valid', 
+					field : 'invalid', 
 					title : '有效值',
 					sortable: true
 				},

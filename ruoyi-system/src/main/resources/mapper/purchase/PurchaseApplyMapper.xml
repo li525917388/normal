@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.purchase.mapper.PurchaseApplyMapper">
+    
+    <resultMap type="PurchaseApply" id="PurchaseApplyResult">
+        <result property="applyNo"    column="apply_no"    />
+        <result property="matCode"    column="mat_code"    />
+        <result property="applyDate"    column="apply_date"    />
+        <result property="applicant"    column="applicant"    />
+        <result property="applyDept"    column="apply_dept"    />
+        <result property="status"    column="status"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="unitPrice"    column="unit_price"    />
+        <result property="applyAmount"    column="apply_amount"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectPurchaseApplyVo">
+        select apply_no, mat_code, apply_date, applicant, apply_dept, status, quantity, unit_price, apply_amount, remark from purchase_apply
+    </sql>
+	
+    <select id="selectPurchaseApplyList" parameterType="PurchaseApply" resultMap="PurchaseApplyResult">
+        <include refid="selectPurchaseApplyVo"/>
+        <where>  
+            <if test="applyNo != null  and applyNo != '' "> and apply_no = #{applyNo}</if>
+             <if test="matCode != null  and matCode != '' "> and mat_code = #{matCode}</if>
+             <if test="applyDate != null "> and apply_date = #{applyDate}</if>
+             <if test="applicant != null  and applicant != '' "> and applicant = #{applicant}</if>
+             <if test="applyDept != null  and applyDept != '' "> and apply_dept = #{applyDept}</if>
+             <if test="status != null  and status != '' "> and status = #{status}</if>
+             <if test="quantity != null "> and quantity = #{quantity}</if>
+             <if test="unitPrice != null "> and unit_price = #{unitPrice}</if>
+             <if test="applyAmount != null "> and apply_amount = #{applyAmount}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectPurchaseApplyById" parameterType="String" resultMap="PurchaseApplyResult">
+        <include refid="selectPurchaseApplyVo"/>
+        where apply_no = #{applyNo}
+    </select>
+        
+    <insert id="insertPurchaseApply" parameterType="PurchaseApply">
+        insert into purchase_apply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="applyNo != null  and applyNo != ''  ">apply_no,</if>
+			<if test="matCode != null  and matCode != ''  ">mat_code,</if>
+			<if test="applyDate != null  ">apply_date,</if>
+			<if test="applicant != null  and applicant != ''  ">applicant,</if>
+			<if test="applyDept != null  and applyDept != ''  ">apply_dept,</if>
+			<if test="status != null  and status != ''  ">status,</if>
+			<if test="quantity != null  ">quantity,</if>
+			<if test="unitPrice != null  ">unit_price,</if>
+			<if test="applyAmount != null  ">apply_amount,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="applyNo != null  and applyNo != ''  ">#{applyNo},</if>
+			<if test="matCode != null  and matCode != ''  ">#{matCode},</if>
+			<if test="applyDate != null  ">#{applyDate},</if>
+			<if test="applicant != null  and applicant != ''  ">#{applicant},</if>
+			<if test="applyDept != null  and applyDept != ''  ">#{applyDept},</if>
+			<if test="status != null  and status != ''  ">#{status},</if>
+			<if test="quantity != null  ">#{quantity},</if>
+			<if test="unitPrice != null  ">#{unitPrice},</if>
+			<if test="applyAmount != null  ">#{applyAmount},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updatePurchaseApply" parameterType="PurchaseApply">
+        update purchase_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="matCode != null  and matCode != ''  ">mat_code = #{matCode},</if>
+            <if test="applyDate != null  ">apply_date = #{applyDate},</if>
+            <if test="applicant != null  and applicant != ''  ">applicant = #{applicant},</if>
+            <if test="applyDept != null  and applyDept != ''  ">apply_dept = #{applyDept},</if>
+            <if test="status != null  and status != ''  ">status = #{status},</if>
+            <if test="quantity != null  ">quantity = #{quantity},</if>
+            <if test="unitPrice != null  ">unit_price = #{unitPrice},</if>
+            <if test="applyAmount != null  ">apply_amount = #{applyAmount},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where apply_no = #{applyNo}
+    </update>
+
+	<delete id="deletePurchaseApplyById" parameterType="String">
+        delete from purchase_apply where apply_no = #{applyNo}
+    </delete>
+	
+    <delete id="deletePurchaseApplyByIds" parameterType="String">
+        delete from purchase_apply where apply_no in 
+        <foreach item="applyNo" collection="array" open="(" separator="," close=")">
+            #{applyNo}
+        </foreach>
+    </delete>
+    
+</mapper>
