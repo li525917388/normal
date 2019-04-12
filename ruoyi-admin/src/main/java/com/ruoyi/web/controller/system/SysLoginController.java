@@ -21,36 +21,46 @@ import com.ruoyi.common.utils.StringUtils;
  * @author ruoyi
  */
 @Controller
-public class SysLoginController extends BaseController
-{
-    @GetMapping("/login")
-    public String login(HttpServletRequest request, HttpServletResponse response)
-    {
+public class SysLoginController extends BaseController {
+    
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@GetMapping("/login")
+    public String login(HttpServletRequest request, HttpServletResponse response) {
         // 如果是Ajax请求，返回Json字符串。
-        if (ServletUtils.isAjaxRequest(request))
-        {
+        if (ServletUtils.isAjaxRequest(request)) {
             return ServletUtils.renderString(response, "{\"code\":\"1\",\"msg\":\"未登录或登录超时。请重新登录\"}");
         }
 
         return "login";
     }
 
+	
+	/**
+	 * 登录
+	 * @param username
+	 * @param password
+	 * @param rememberMe
+	 * @return
+	 */
     @PostMapping("/login")
     @ResponseBody
-    public AjaxResult ajaxLogin(String username, String password, Boolean rememberMe)
-    {
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
+    public AjaxResult ajaxLogin(String username, String password, Boolean rememberMe) {
+        
+    	UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe);
         Subject subject = SecurityUtils.getSubject();
-        try
-        {
+        
+        try {
             subject.login(token);
             return success();
         }
-        catch (AuthenticationException e)
-        {
+        catch (AuthenticationException e) {
             String msg = "用户或密码错误";
-            if (StringUtils.isNotEmpty(e.getMessage()))
-            {
+            if (StringUtils.isNotEmpty(e.getMessage())) {
                 msg = e.getMessage();
             }
             return error(msg);
