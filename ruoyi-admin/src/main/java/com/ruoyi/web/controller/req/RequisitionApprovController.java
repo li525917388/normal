@@ -24,6 +24,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.util.ShiroUtils;
 
 /**
  * 申购 信息操作处理
@@ -32,30 +33,31 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
  * @date 2019-04-12
  */
 @Controller
-@RequestMapping("/req/requisition")
-public class RequisitionController extends BaseController {
-    private String prefix = "req/requisition";
+@RequestMapping("/req/requisitionApprov")
+public class RequisitionApprovController extends BaseController {
+    private String prefix = "req/requisitionApprov";
 	
 	@Autowired
 	private IRequisitionService requisitionService;
 	
-	@RequiresPermissions("req:requisition:view")
+	@RequiresPermissions("req:requisitionApprov:view")
 	@GetMapping()
 	public String requisition() {
-	    return prefix + "/requisition";
+	    return prefix + "/requisitionApprov";
 	}
 	
 	/**
-	 * 查询申购列表
+	 * 查询申购审核列表
 	 * @param requisition
 	 * @return
 	 */
-	@RequiresPermissions("req:requisition:list")
+	@RequiresPermissions("req:requisitionApprov:list")
 	@PostMapping("/list")
 	@ResponseBody
 	public TableDataInfo list(Requisition requisition) {
 		startPage();
-        List<Requisition> list = requisitionService.selectRequisitionList(requisition);
+		SysUser user = ShiroUtils.getSysUser();
+        List<Requisition> list = requisitionService.selectRequisitionApprovList(requisition, user);
 		return getDataTable(list);
 	}
 	
@@ -63,7 +65,7 @@ public class RequisitionController extends BaseController {
 	/**
 	 * 导出申购列表
 	 */
-	@RequiresPermissions("req:requisition:export")
+	@RequiresPermissions("req:requisitionApprov:export")
     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(Requisition requisition) {
@@ -83,7 +85,7 @@ public class RequisitionController extends BaseController {
 	/**
 	 * 新增保存申购
 	 */
-	@RequiresPermissions("req:requisition:add")
+	@RequiresPermissions("req:requisitionApprov:add")
 	@Log(title = "申购", businessType = BusinessType.INSERT)
 	@PostMapping("/add")
 	@ResponseBody
@@ -116,7 +118,7 @@ public class RequisitionController extends BaseController {
 	/**
 	 * 修改保存申购
 	 */
-	@RequiresPermissions("req:requisition:edit")
+	@RequiresPermissions("req:requisitionApprov:edit")
 	@Log(title = "申购", businessType = BusinessType.UPDATE)
 	@PostMapping("/edit")
 	@ResponseBody
@@ -127,7 +129,7 @@ public class RequisitionController extends BaseController {
 	/**
 	 * 删除申购
 	 */
-	@RequiresPermissions("req:requisition:remove")
+	@RequiresPermissions("req:requisitionApprov:remove")
 	@Log(title = "申购", businessType = BusinessType.DELETE)
 	@PostMapping( "/remove")
 	@ResponseBody

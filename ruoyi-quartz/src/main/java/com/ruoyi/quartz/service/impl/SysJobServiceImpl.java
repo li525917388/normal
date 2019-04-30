@@ -37,6 +37,7 @@ public class SysJobServiceImpl implements ISysJobService
     @PostConstruct
     public void init() throws SchedulerException, TaskException
     {
+    	//scheduler.clear();		//quartz的坑，下次启动报错，放开此注释即可
         List<SysJob> jobList = jobMapper.selectJobAll();
         for (SysJob job : jobList)
         {

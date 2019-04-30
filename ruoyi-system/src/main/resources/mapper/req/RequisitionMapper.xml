@@ -25,15 +25,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectRequisitionVo"/>
         <where>  
             <if test="reqCode != null  and reqCode != '' "> and req_code = #{reqCode}</if>
-             <if test="matCode != null  and matCode != '' "> and mat_code = #{matCode}</if>
-             <if test="quantity != null "> and quantity = #{quantity}</if>
-             <if test="unitPrice != null "> and unit_price = #{unitPrice}</if>
-             <if test="money != null "> and money = #{money}</if>
-             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
-             <if test="status != null  and status != '' "> and status = #{status}</if>
-             <if test="applyEmp != null  and applyEmp != '' "> and apply_emp = #{applyEmp}</if>
-             <if test="applyDate != null "> and apply_date = #{applyDate}</if>
-             <if test="applySite != null  and applySite != '' "> and apply_site = #{applySite}</if>
+			<if test="matCode != null  and matCode != '' "> and mat_code = #{matCode}</if>
+			<if test="quantity != null "> and quantity = #{quantity}</if>
+			<if test="unitPrice != null "> and unit_price = #{unitPrice}</if>
+			<if test="money != null "> and money = #{money}</if>
+			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+			<if test="status != null  and status != '' "> and status = #{status}</if>
+			<if test="applyEmp != null  and applyEmp != '' "> and apply_emp = #{applyEmp}</if>
+			<if test="applyDate != null "> and apply_date = #{applyDate}</if>
+			<if test="applySite != null  and applySite != '' "> and apply_site = #{applySite}</if>
+         </where>
+    </select>
+    
+    
+    <!-- 查询审核列表 -->
+    <select id="selectRequisitionApprovList" parameterType="Requisition" resultMap="RequisitionResult">
+        <include refid="selectRequisitionVo"/>
+        <where>
+			<if test="requisition.reqCode != null  and requisition.reqCode != '' "> and req_code = #{requisition.reqCode}</if>
+			<if test="requisition.matCode != null  and requisition.matCode != '' "> and mat_code = #{requisition.matCode}</if>
+			<if test="requisition.quantity != null "> and quantity = #{requisition.quantity}</if>
+			<if test="requisition.unitPrice != null "> and unit_price = #{requisition.unitPrice}</if>
+			<if test="requisition.money != null "> and money = #{requisition.money}</if>
+			<if test="requisition.remark != null  and requisition.remark != '' "> and remark = #{requisition.remark}</if>
+			<if test="requisition.status != null  and requisition.status != '' "> and status = #{requisition.status}</if>
+			<if test="requisition.applyEmp != null  and requisition.applyEmp != '' "> and apply_emp = #{requisition.applyEmp}</if>
+			<if test="requisition.applyDate != null "> and apply_date = #{requisition.applyDate}</if>
+			<if test="requisition.applySite != null  and requisition.applySite != '' "> and apply_site = #{requisition.applySite}</if>
+			and req_code in 
+			<foreach collection="list" open="(" separator="," close=")" item="rid">
+				#{rid}
+			</foreach>
          </where>
     </select>
     

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-requisition-edit" th:object="${requisition}">
+            <input id="reqCode" name="reqCode" th:field="*{reqCode}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物料编号：</label>
+				<div class="col-sm-8">
+					<input id="matCode" name="matCode" th:field="*{matCode}" class="form-control" readOnly type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">数量：</label>
+				<div class="col-sm-8">
+					<input id="quantity" name="quantity" th:field="*{quantity}" class="form-control" readOnly type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">单价：</label>
+				<div class="col-sm-8">
+					<input id="unitPrice" name="unitPrice" th:field="*{unitPrice}" class="form-control" readOnly type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">金额：</label>
+				<div class="col-sm-8">
+					<input id="money" name="money" th:field="*{money}" class="form-control" readOnly type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" th:field="*{remark}" class="form-control" readonly type="text">
+				</div>
+			</div>
+	
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "req/requisitionApprov";
+		$("#form-requisition-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-requisition-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

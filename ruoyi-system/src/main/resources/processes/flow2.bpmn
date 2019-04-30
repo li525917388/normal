@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="flow2" name="flow2" isExecutable="true">
+    <documentation>flow2</documentation>
+    <startEvent id="start2"></startEvent>
+    <userTask id="task21" name="task21" activiti:assignee="ldh">
+      <extensionElements>
+        <modeler:activiti-idm-assignee xmlns:modeler="http://activiti.com/modeler"><![CDATA[true]]></modeler:activiti-idm-assignee>
+        <modeler:assignee-info-email xmlns:modeler="http://activiti.com/modeler"><![CDATA[ldh@qq.com]]></modeler:assignee-info-email>
+        <modeler:assignee-info-firstname xmlns:modeler="http://activiti.com/modeler"><![CDATA[Li]]></modeler:assignee-info-firstname>
+        <modeler:assignee-info-lastname xmlns:modeler="http://activiti.com/modeler"><![CDATA[Dehuan]]></modeler:assignee-info-lastname>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <userTask id="task22" name="task22" activiti:assignee="tyl">
+      <extensionElements>
+        <activiti:formProperty id="status" name="status" type="long"></activiti:formProperty>
+        <modeler:activiti-idm-assignee xmlns:modeler="http://activiti.com/modeler"><![CDATA[true]]></modeler:activiti-idm-assignee>
+        <modeler:assignee-info-email xmlns:modeler="http://activiti.com/modeler"><![CDATA[tyl@qq.com]]></modeler:assignee-info-email>
+        <modeler:assignee-info-firstname xmlns:modeler="http://activiti.com/modeler"><![CDATA[Tang]]></modeler:assignee-info-firstname>
+        <modeler:assignee-info-lastname xmlns:modeler="http://activiti.com/modeler"><![CDATA[Yaliang]]></modeler:assignee-info-lastname>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="sid-FB7FE609-2129-4313-94DD-9F4B72CD8ABC"></exclusiveGateway>
+    <userTask id="task23" name="task233" activiti:assignee="cxj">
+      <extensionElements>
+        <activiti:formProperty id="status" name="status" type="long"></activiti:formProperty>
+        <modeler:activiti-idm-assignee xmlns:modeler="http://activiti.com/modeler"><![CDATA[true]]></modeler:activiti-idm-assignee>
+        <modeler:assignee-info-email xmlns:modeler="http://activiti.com/modeler"><![CDATA[cxj@qq.com]]></modeler:assignee-info-email>
+        <modeler:assignee-info-firstname xmlns:modeler="http://activiti.com/modeler"><![CDATA[Chen]]></modeler:assignee-info-firstname>
+        <modeler:assignee-info-lastname xmlns:modeler="http://activiti.com/modeler"><![CDATA[Xujun]]></modeler:assignee-info-lastname>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="sid-7BC5CD77-43B3-4A99-83E8-BD74373860AA"></exclusiveGateway>
+    <endEvent id="end2"></endEvent>
+    <sequenceFlow id="line3" sourceRef="task22" targetRef="sid-FB7FE609-2129-4313-94DD-9F4B72CD8ABC"></sequenceFlow>
+    <sequenceFlow id="line2" sourceRef="task21" targetRef="task22"></sequenceFlow>
+    <sequenceFlow id="line1" sourceRef="start2" targetRef="task21"></sequenceFlow>
+    <sequenceFlow id="line4" sourceRef="sid-FB7FE609-2129-4313-94DD-9F4B72CD8ABC" targetRef="task23">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status==1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="line5" sourceRef="sid-FB7FE609-2129-4313-94DD-9F4B72CD8ABC" targetRef="task21">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status==2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="line6" sourceRef="task23" targetRef="sid-7BC5CD77-43B3-4A99-83E8-BD74373860AA"></sequenceFlow>
+    <sequenceFlow id="line8" sourceRef="sid-7BC5CD77-43B3-4A99-83E8-BD74373860AA" targetRef="end2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status==1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="line7" sourceRef="sid-7BC5CD77-43B3-4A99-83E8-BD74373860AA" targetRef="task21">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${status==2}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_flow2">
+    <bpmndi:BPMNPlane bpmnElement="flow2" id="BPMNPlane_flow2">
+      <bpmndi:BPMNShape bpmnElement="start2" id="BPMNShape_start2">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task21" id="BPMNShape_task21">
+        <omgdc:Bounds height="80.0" width="100.0" x="175.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task22" id="BPMNShape_task22">
+        <omgdc:Bounds height="80.0" width="100.0" x="320.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-FB7FE609-2129-4313-94DD-9F4B72CD8ABC" id="BPMNShape_sid-FB7FE609-2129-4313-94DD-9F4B72CD8ABC">
+        <omgdc:Bounds height="40.0" width="40.0" x="465.0" y="158.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task23" id="BPMNShape_task23">
+        <omgdc:Bounds height="80.0" width="100.0" x="550.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-7BC5CD77-43B3-4A99-83E8-BD74373860AA" id="BPMNShape_sid-7BC5CD77-43B3-4A99-83E8-BD74373860AA">
+        <omgdc:Bounds height="40.0" width="40.0" x="695.0" y="158.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end2" id="BPMNShape_end2">
+        <omgdc:Bounds height="28.0" width="28.0" x="780.0" y="164.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="line8" id="BPMNEdge_line8">
+        <omgdi:waypoint x="734.6217948717949" y="178.37820512820514"></omgdi:waypoint>
+        <omgdi:waypoint x="780.0002839785394" y="178.0891701657418"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="line6" id="BPMNEdge_line6">
+        <omgdi:waypoint x="650.0" y="178.2164502164502"></omgdi:waypoint>
+        <omgdi:waypoint x="695.4130434782609" y="178.41304347826087"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="line7" id="BPMNEdge_line7">
+        <omgdi:waypoint x="715.5" y="197.5"></omgdi:waypoint>
+        <omgdi:waypoint x="715.5" y="342.0"></omgdi:waypoint>
+        <omgdi:waypoint x="225.0" y="342.0"></omgdi:waypoint>
+        <omgdi:waypoint x="225.0" y="218.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="line4" id="BPMNEdge_line4">
+        <omgdi:waypoint x="504.5833333333333" y="178.41666666666666"></omgdi:waypoint>
+        <omgdi:waypoint x="550.0" y="178.2183406113537"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="line5" id="BPMNEdge_line5">
+        <omgdi:waypoint x="485.5" y="197.5"></omgdi:waypoint>
+        <omgdi:waypoint x="485.5" y="305.0"></omgdi:waypoint>
+        <omgdi:waypoint x="225.0" y="305.0"></omgdi:waypoint>
+        <omgdi:waypoint x="225.0" y="218.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="line1" id="BPMNEdge_line1">
+        <omgdi:waypoint x="130.0" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="175.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="line3" id="BPMNEdge_line3">
+        <omgdi:waypoint x="420.0" y="178.2164502164502"></omgdi:waypoint>
+        <omgdi:waypoint x="465.4130434782609" y="178.41304347826087"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="line2" id="BPMNEdge_line2">
+        <omgdi:waypoint x="275.0" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

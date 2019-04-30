@@ -1,6 +1,8 @@
 package com.ruoyi.req.service;
 
 import com.ruoyi.req.domain.Requisition;
+import com.ruoyi.system.domain.SysUser;
+
 import java.util.List;
 
 /**
@@ -50,5 +52,14 @@ public interface IRequisitionService
      * @return 结果
      */
 	public int deleteRequisitionByIds(String ids);
+
+	
+	/**
+	 * 获取审核列表
+	 * @param requisition
+	 * @param user
+	 * @return
+	 */
+	public List<Requisition> selectRequisitionApprovList(Requisition requisition, SysUser user);
 	
 }

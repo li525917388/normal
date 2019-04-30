@@ -35,7 +35,7 @@
     <dependencyManagement>
         <dependencies>
         
-            <!-- SpringBoot的依赖配�?-->
+            <!-- SpringBoot的依赖配�?-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -51,7 +51,7 @@
 	            <version>${druid.version}</version>
 	        </dependency>
 	        
-	        <!--验证�? -->
+	        <!--验证�? -->
 			<dependency>
 				<groupId>com.github.penggle</groupId>
 				<artifactId>kaptcha</artifactId>
@@ -79,14 +79,14 @@
 				<version>${shiro.version}</version>
 			</dependency>
 	
-			<!-- thymeleaf模板引擎和shiro框架的整�? -->
+			<!-- thymeleaf模板引擎和shiro框架的整�? -->
 			<dependency>
 				<groupId>com.github.theborakompanioni</groupId>
 				<artifactId>thymeleaf-extras-shiro</artifactId>
 				<version>${thymeleaf.extras.shiro.version}</version>
 			</dependency>
 	
-			<!-- 解析客户端操作系统�?�浏览器�? -->
+			<!-- 解析客户端操作系统�?�浏览器�? -->
 			<dependency>
 				<groupId>eu.bitwalker</groupId>
 				<artifactId>UserAgentUtils</artifactId>
@@ -121,21 +121,21 @@
 				<version>${swagger.version}</version>
 			</dependency>
             
-            <!--io常用工具�? -->
+            <!--io常用工具�? -->
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${commons.io.version}</version>
 			</dependency>
 	
-			<!--文件上传工具�? -->
+			<!--文件上传工具�? -->
 			<dependency>
 				<groupId>commons-fileupload</groupId>
 				<artifactId>commons-fileupload</artifactId>
 				<version>${commons.fileupload.version}</version>
 			</dependency>
 			
-			<!-- HTML解析�? -->
+			<!-- HTML解析�? -->
 			<dependency>
 				<groupId>org.jsoup</groupId>
 				<artifactId>jsoup</artifactId>
@@ -201,9 +201,7 @@
 		<module>ruoyi-quartz</module>
 		<module>ruoyi-generator</module>
         <module>ruoyi-common</module>
-        <module>ruoyi-proj</module>
-    <module>ruoyi-wms</module>
-  </modules>
+    </modules>
     <packaging>pom</packaging>
 
 

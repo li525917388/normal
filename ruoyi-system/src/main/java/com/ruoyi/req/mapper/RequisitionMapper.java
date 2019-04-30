@@ -1,7 +1,9 @@
 package com.ruoyi.req.mapper;
 
 import com.ruoyi.req.domain.Requisition;
+
 import java.util.List;	
+import java.util.Map;
 
 /**
  * 申购 数据层
@@ -58,5 +60,13 @@ public interface RequisitionMapper
      * @return 结果
      */
 	public int deleteRequisitionByIds(String[] reqCodes);
+
+	
+	/**
+	 * 获取审批列表
+	 * @param params
+	 * @return
+	 */
+	public List<Requisition> selectRequisitionApprovList(Map<String, Object> params);
 	
 }
