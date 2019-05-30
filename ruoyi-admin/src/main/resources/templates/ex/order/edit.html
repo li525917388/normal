@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-order-edit" th:object="${order}">
+            <input id="orderid" name="orderid" th:field="*{orderid}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单号：</label>
+				<div class="col-sm-8">
+					<input id="orderNo" name="orderNo" th:field="*{orderNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单日期：</label>
+				<div class="col-sm-8">
+					<input id="orderDate" readonly="readonly" th:field="*{orderDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">电商id：</label>
+				<div class="col-sm-8">
+					<input id="ecCompanyId" name="ecCompanyId" th:field="*{ecCompanyId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单状态：</label>
+				<div class="col-sm-8">
+					
+					<select disabled="disabled" th:field="*{orderStatus}" th:with="type=${@dict.getType('ex_order_status')}" class="form-control">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单来源：</label>
+				<div class="col-sm-8">
+					<input id="orderSource" name="orderSource" th:field="*{orderSource}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">客户ID：</label>
+				<div class="col-sm-8">
+					<input id="custId" name="custId" th:field="*{custId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">寄件人姓名：</label>
+				<div class="col-sm-8">
+					<input id="senderName" name="senderName" th:field="*{senderName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">寄件人电话：</label>
+				<div class="col-sm-8">
+					<input id="senderPhone" name="senderPhone" th:field="*{senderPhone}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">寄件省：</label>
+				<div class="col-sm-8">
+					<input id="senderProv" name="senderProv" th:field="*{senderProv}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">寄件市：</label>
+				<div class="col-sm-8">
+					<input id="senderCity" name="senderCity" th:field="*{senderCity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">寄件区/县：</label>
+				<div class="col-sm-8">
+					<input id="senderArea" name="senderArea" th:field="*{senderArea}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">寄件乡/镇/街：</label>
+				<div class="col-sm-8">
+					<input id="senderTown" name="senderTown" th:field="*{senderTown}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">寄件详细地址：</label>
+				<div class="col-sm-8">
+					<textarea id="senderAddr" name="senderAddr" th:field="*{senderAddr}" class="form-control" rows="" cols=""></textarea>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">寄件邮编：</label>
+				<div class="col-sm-8">
+					<input id="senderPost" name="senderPost" th:field="*{senderPost}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件人：</label>
+				<div class="col-sm-8">
+					<input id="receiverName" name="receiverName" th:field="*{receiverName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件电话：</label>
+				<div class="col-sm-8">
+					<input id="receiverPhone" name="receiverPhone" th:field="*{receiverPhone}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件省：</label>
+				<div class="col-sm-8">
+					<input id="receiverProv" name="receiverProv" th:field="*{receiverProv}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件市：</label>
+				<div class="col-sm-8">
+					<input id="receiverCity" name="receiverCity" th:field="*{receiverCity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件区/县：</label>
+				<div class="col-sm-8">
+					<input id="receiverArea" name="receiverArea" th:field="*{receiverArea}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件乡/镇/街：</label>
+				<div class="col-sm-8">
+					<input id="receiverTown" name="receiverTown" th:field="*{receiverTown}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件详细地址：</label>
+				<div class="col-sm-8">
+					<textarea id="receiverAddr" name="receiverAddr" th:field="*{receiverAddr}" class="form-control" rows="" cols=""></textarea>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件邮编：</label>
+				<div class="col-sm-8">
+					<input id="receiverPost" name="receiverPost" th:field="*{receiverPost}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">运费：</label>
+				<div class="col-sm-8">
+					<input id="deliverMoney" name="deliverMoney" th:field="*{deliverMoney}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物品价值：</label>
+				<div class="col-sm-8">
+					<input id="goodsMoney" name="goodsMoney" th:field="*{goodsMoney}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物品数量：</label>
+				<div class="col-sm-8">
+					<input id="goodsNum" name="goodsNum" th:field="*{goodsNum}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">重量：</label>
+				<div class="col-sm-8">
+					<input id="weight" name="weight" th:field="*{weight}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">支付方式：</label>
+				<div class="col-sm-8">
+					<input id="payType" name="payType" th:field="*{payType}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "ex/order";
+		$("#form-order-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-order-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

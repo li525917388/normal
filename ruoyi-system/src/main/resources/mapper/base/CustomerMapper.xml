@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.base.mapper.CustomerMapper">
+    
+	<resultMap type="Customer" id="CustomerResult">
+		<result property="custId"    column="cust_id"    />
+		<result property="custName"    column="cust_name"    />
+		<result property="loginName"    column="login_name"    />
+		<result property="password"    column="password"    />
+		<result property="custPhone"    column="cust_phone"    />
+		<result property="custType"    column="cust_type"    />
+		<result property="custProv"    column="cust_prov"    />
+		<result property="custCity"    column="cust_city"    />
+		<result property="custArea"    column="cust_area"    />
+		<result property="custAddr"    column="cust_addr"    />
+		<result property="remark"    column="remark"    />
+	</resultMap>
+	
+	<sql id="selectCustomerVo">
+		select cust_id, cust_name, login_name, password, cust_phone, cust_type, cust_prov, cust_city, cust_area, cust_addr, remark from base_customer
+	</sql>
+	
+	<select id="selectCustomerList" parameterType="Customer" resultMap="CustomerResult">
+		<include refid="selectCustomerVo"/>
+		<where>  
+			<if test="custId != null "> and cust_id = #{custId}</if>
+ 			<if test="custName != null  and custName != '' "> and cust_name = #{custName}</if>
+ 			<if test="loginName != null  and loginName != '' "> and login_name = #{loginName}</if>
+ 			<if test="password != null  and password != '' "> and password = #{password}</if>
+ 			<if test="custPhone != null  and custPhone != '' "> and cust_phone = #{custPhone}</if>
+ 			<if test="custType != null "> and cust_type = #{custType}</if>
+ 			<if test="custProv != null  and custProv != '' "> and cust_prov = #{custProv}</if>
+ 			<if test="custCity != null  and custCity != '' "> and cust_city = #{custCity}</if>
+ 			<if test="custArea != null  and custArea != '' "> and cust_area = #{custArea}</if>
+ 			<if test="custAddr != null  and custAddr != '' "> and cust_addr = #{custAddr}</if>
+ 			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectCustomerById" parameterType="Long" resultMap="CustomerResult">
+		<include refid="selectCustomerVo"/>
+		where cust_id = #{custId}
+	</select>
+        
+	<insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="custId">
+		insert into base_customer
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="custName != null  and custName != ''  ">cust_name,</if>
+			<if test="loginName != null  and loginName != ''  ">login_name,</if>
+			<if test="password != null  and password != ''  ">password,</if>
+			<if test="custPhone != null  and custPhone != ''  ">cust_phone,</if>
+			<if test="custType != null  ">cust_type,</if>
+			<if test="custProv != null  and custProv != ''  ">cust_prov,</if>
+			<if test="custCity != null  and custCity != ''  ">cust_city,</if>
+			<if test="custArea != null  and custArea != ''  ">cust_area,</if>
+			<if test="custAddr != null  and custAddr != ''  ">cust_addr,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="custName != null  and custName != ''  ">#{custName},</if>
+			<if test="loginName != null  and loginName != ''  ">#{loginName},</if>
+			<if test="password != null  and password != ''  ">#{password},</if>
+			<if test="custPhone != null  and custPhone != ''  ">#{custPhone},</if>
+			<if test="custType != null  ">#{custType},</if>
+			<if test="custProv != null  and custProv != ''  ">#{custProv},</if>
+			<if test="custCity != null  and custCity != ''  ">#{custCity},</if>
+			<if test="custArea != null  and custArea != ''  ">#{custArea},</if>
+			<if test="custAddr != null  and custAddr != ''  ">#{custAddr},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updateCustomer" parameterType="Customer">
+		update base_customer
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="custName != null  and custName != ''  ">cust_name = #{custName},</if>
+			<if test="loginName != null  and loginName != ''  ">login_name = #{loginName},</if>
+			<if test="password != null  and password != ''  ">password = #{password},</if>
+			<if test="custPhone != null  and custPhone != ''  ">cust_phone = #{custPhone},</if>
+			<if test="custType != null  ">cust_type = #{custType},</if>
+			<if test="custProv != null  and custProv != ''  ">cust_prov = #{custProv},</if>
+			<if test="custCity != null  and custCity != ''  ">cust_city = #{custCity},</if>
+			<if test="custArea != null  and custArea != ''  ">cust_area = #{custArea},</if>
+			<if test="custAddr != null  and custAddr != ''  ">cust_addr = #{custAddr},</if>
+			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+		</trim>
+		where cust_id = #{custId}
+	</update>
+
+	<delete id="deleteCustomerById" parameterType="Long">
+		delete from base_customer where cust_id = #{custId}
+	</delete>
+	
+	<delete id="deleteCustomerByIds" parameterType="String">
+		delete from base_customer where cust_id in 
+		<foreach item="custId" collection="array" open="(" separator="," close=")">
+ 			#{custId}
+		</foreach>
+	</delete>
+    
+</mapper>

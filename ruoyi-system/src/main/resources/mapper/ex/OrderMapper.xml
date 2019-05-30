@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ex.mapper.OrderMapper">
+    
+	<resultMap type="Order" id="OrderResult">
+		<result property="orderid"    		column="orderid"    />
+		<result property="orderNo"    		column="order_no"    />
+		<result property="orderDate"    	column="order_date"    />
+		<result property="ecCompanyId"    	column="ec_company_id"    />
+		<result property="orderStatus"    	column="order_status"    />
+		<result property="orderSource"    	column="order_source"    />
+		<result property="custId"    		column="cust_id"    />
+		<result property="custName"    		column="cust_name"    />
+		<result property="senderName"    	column="sender_name"    />
+		<result property="senderPhone"    	column="sender_phone"    />
+		<result property="senderProv"    	column="sender_prov"    />
+		<result property="senderCity"    	column="sender_city"    />
+		<result property="senderArea"    	column="sender_area"    />
+		<result property="senderTown"    	column="sender_town"    />
+		<result property="senderAddr"    	column="sender_addr"    />
+		<result property="senderPost"    	column="sender_post"    />
+		<result property="receiverName"    	column="receiver_name"    />
+		<result property="receiverPhone"    column="receiver_phone"    />
+		<result property="receiverProv"    	column="receiver_prov"    />
+		<result property="receiverCity"    	column="receiver_city"    />
+		<result property="receiverArea"    	column="receiver_area"    />
+		<result property="receiverTown"    	column="receiver_town"    />
+		<result property="receiverAddr"    	column="receiver_addr"    />
+		<result property="receiverPost"    	column="receiver_post"    />
+		<result property="deliverMoney"    	column="deliver_money"    />
+		<result property="goodsMoney"    	column="goods_money"    />
+		<result property="goodsNum"    		column="goods_num"    />
+		<result property="weight"    		column="weight"    />
+		<result property="payType"    		column="pay_type"    />
+	</resultMap>
+	
+	<sql id="selectOrderVo">
+		select 
+			o.orderid, 
+			o.order_no, 
+			o.order_date, 
+			o.ec_company_id, 
+			o.order_status, 
+			o.order_source, 
+			o.cust_id,
+			c.cust_name,
+			o.sender_name, 
+			o.sender_phone, 
+			o.sender_prov, 
+			o.sender_city, 
+			o.sender_area, 
+			o.sender_town, 
+			o.sender_addr, 
+			o.sender_post, 
+			o.receiver_name, 
+			o.receiver_phone, 
+			o.receiver_prov, 
+			o.receiver_city, 
+			o.receiver_area, 
+			o.receiver_town, 
+			o.receiver_addr, 
+			o.receiver_post, 
+			o.deliver_money, 
+			o.goods_money, 
+			o.goods_num, 
+			o.weight, 
+			o.pay_type 
+		from ex_order o 
+		left join base_customer c on c.cust_id=o.cust_id
+	</sql>
+	
+	<select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
+		<include refid="selectOrderVo"/>
+		<where>  
+			<if test="orderid != null "> and orderid = #{orderid}</if>
+ 			<if test="orderNo != null  and orderNo != '' "> and order_no = #{orderNo}</if>
+ 			<if test="orderDate != null "> and order_date = #{orderDate}</if>
+ 			<if test="ecCompanyId != null  and ecCompanyId != '' "> and ec_company_id = #{ecCompanyId}</if>
+ 			<if test="orderStatus != null "> and order_status = #{orderStatus}</if>
+ 			<if test="orderSource != null  and orderSource != '' "> and order_source = #{orderSource}</if>
+ 			<if test="custId != null "> and cust_id = #{custId}</if>
+ 			<if test="senderName != null  and senderName != '' "> and sender_name = #{senderName}</if>
+ 			<if test="senderPhone != null  and senderPhone != '' "> and sender_phone = #{senderPhone}</if>
+ 			<if test="senderProv != null  and senderProv != '' "> and sender_prov = #{senderProv}</if>
+ 			<if test="senderCity != null  and senderCity != '' "> and sender_city = #{senderCity}</if>
+ 			<if test="senderArea != null  and senderArea != '' "> and sender_area = #{senderArea}</if>
+ 			<if test="senderTown != null  and senderTown != '' "> and sender_town = #{senderTown}</if>
+ 			<if test="senderAddr != null  and senderAddr != '' "> and sender_addr = #{senderAddr}</if>
+ 			<if test="senderPost != null "> and sender_post = #{senderPost}</if>
+ 			<if test="receiverName != null  and receiverName != '' "> and receiver_name = #{receiverName}</if>
+ 			<if test="receiverPhone != null  and receiverPhone != '' "> and receiver_phone = #{receiverPhone}</if>
+ 			<if test="receiverProv != null  and receiverProv != '' "> and receiver_prov = #{receiverProv}</if>
+ 			<if test="receiverCity != null  and receiverCity != '' "> and receiver_city = #{receiverCity}</if>
+ 			<if test="receiverArea != null  and receiverArea != '' "> and receiver_area = #{receiverArea}</if>
+ 			<if test="receiverTown != null  and receiverTown != '' "> and receiver_town = #{receiverTown}</if>
+ 			<if test="receiverAddr != null  and receiverAddr != '' "> and receiver_addr = #{receiverAddr}</if>
+ 			<if test="receiverPost != null "> and receiver_post = #{receiverPost}</if>
+ 			<if test="deliverMoney != null "> and deliver_money = #{deliverMoney}</if>
+ 			<if test="goodsMoney != null "> and goods_money = #{goodsMoney}</if>
+ 			<if test="goodsNum != null "> and goods_num = #{goodsNum}</if>
+ 			<if test="weight != null "> and weight = #{weight}</if>
+ 			<if test="payType != null "> and pay_type = #{payType}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectOrderById" parameterType="Long" resultMap="OrderResult">
+		<include refid="selectOrderVo"/>
+		where orderid = #{orderid}
+	</select>
+        
+	<insert id="insertOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="orderid">
+		insert into ex_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+			<if test="orderDate != null  ">order_date,</if>
+			<if test="ecCompanyId != null  and ecCompanyId != ''  ">ec_company_id,</if>
+			<if test="orderStatus != null  ">order_status,</if>
+			<if test="orderSource != null  and orderSource != ''  ">order_source,</if>
+			<if test="custId != null  ">cust_id,</if>
+			<if test="senderName != null  and senderName != ''  ">sender_name,</if>
+			<if test="senderPhone != null  and senderPhone != ''  ">sender_phone,</if>
+			<if test="senderProv != null  and senderProv != ''  ">sender_prov,</if>
+			<if test="senderCity != null  and senderCity != ''  ">sender_city,</if>
+			<if test="senderArea != null  and senderArea != ''  ">sender_area,</if>
+			<if test="senderTown != null  and senderTown != ''  ">sender_town,</if>
+			<if test="senderAddr != null  and senderAddr != ''  ">sender_addr,</if>
+			<if test="senderPost != null  ">sender_post,</if>
+			<if test="receiverName != null  and receiverName != ''  ">receiver_name,</if>
+			<if test="receiverPhone != null  and receiverPhone != ''  ">receiver_phone,</if>
+			<if test="receiverProv != null  and receiverProv != ''  ">receiver_prov,</if>
+			<if test="receiverCity != null  and receiverCity != ''  ">receiver_city,</if>
+			<if test="receiverArea != null  and receiverArea != ''  ">receiver_area,</if>
+			<if test="receiverTown != null  and receiverTown != ''  ">receiver_town,</if>
+			<if test="receiverAddr != null  and receiverAddr != ''  ">receiver_addr,</if>
+			<if test="receiverPost != null  ">receiver_post,</if>
+			<if test="deliverMoney != null  ">deliver_money,</if>
+			<if test="goodsMoney != null  ">goods_money,</if>
+			<if test="goodsNum != null  ">goods_num,</if>
+			<if test="weight != null  ">weight,</if>
+			<if test="payType != null  ">pay_type,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+			<if test="orderDate != null  ">#{orderDate},</if>
+			<if test="ecCompanyId != null  and ecCompanyId != ''  ">#{ecCompanyId},</if>
+			<if test="orderStatus != null  ">#{orderStatus},</if>
+			<if test="orderSource != null  and orderSource != ''  ">#{orderSource},</if>
+			<if test="custId != null  ">#{custId},</if>
+			<if test="senderName != null  and senderName != ''  ">#{senderName},</if>
+			<if test="senderPhone != null  and senderPhone != ''  ">#{senderPhone},</if>
+			<if test="senderProv != null  and senderProv != ''  ">#{senderProv},</if>
+			<if test="senderCity != null  and senderCity != ''  ">#{senderCity},</if>
+			<if test="senderArea != null  and senderArea != ''  ">#{senderArea},</if>
+			<if test="senderTown != null  and senderTown != ''  ">#{senderTown},</if>
+			<if test="senderAddr != null  and senderAddr != ''  ">#{senderAddr},</if>
+			<if test="senderPost != null  ">#{senderPost},</if>
+			<if test="receiverName != null  and receiverName != ''  ">#{receiverName},</if>
+			<if test="receiverPhone != null  and receiverPhone != ''  ">#{receiverPhone},</if>
+			<if test="receiverProv != null  and receiverProv != ''  ">#{receiverProv},</if>
+			<if test="receiverCity != null  and receiverCity != ''  ">#{receiverCity},</if>
+			<if test="receiverArea != null  and receiverArea != ''  ">#{receiverArea},</if>
+			<if test="receiverTown != null  and receiverTown != ''  ">#{receiverTown},</if>
+			<if test="receiverAddr != null  and receiverAddr != ''  ">#{receiverAddr},</if>
+			<if test="receiverPost != null  ">#{receiverPost},</if>
+			<if test="deliverMoney != null  ">#{deliverMoney},</if>
+			<if test="goodsMoney != null  ">#{goodsMoney},</if>
+			<if test="goodsNum != null  ">#{goodsNum},</if>
+			<if test="weight != null  ">#{weight},</if>
+			<if test="payType != null  ">#{payType},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updateOrder" parameterType="Order">
+		update ex_order
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
+			<if test="orderDate != null  ">order_date = #{orderDate},</if>
+			<if test="ecCompanyId != null  and ecCompanyId != ''  ">ec_company_id = #{ecCompanyId},</if>
+			<if test="orderStatus != null  ">order_status = #{orderStatus},</if>
+			<if test="orderSource != null  and orderSource != ''  ">order_source = #{orderSource},</if>
+			<if test="custId != null  ">cust_id = #{custId},</if>
+			<if test="senderName != null  and senderName != ''  ">sender_name = #{senderName},</if>
+			<if test="senderPhone != null  and senderPhone != ''  ">sender_phone = #{senderPhone},</if>
+			<if test="senderProv != null  and senderProv != ''  ">sender_prov = #{senderProv},</if>
+			<if test="senderCity != null  and senderCity != ''  ">sender_city = #{senderCity},</if>
+			<if test="senderArea != null  and senderArea != ''  ">sender_area = #{senderArea},</if>
+			<if test="senderTown != null  and senderTown != ''  ">sender_town = #{senderTown},</if>
+			<if test="senderAddr != null  and senderAddr != ''  ">sender_addr = #{senderAddr},</if>
+			<if test="senderPost != null  ">sender_post = #{senderPost},</if>
+			<if test="receiverName != null  and receiverName != ''  ">receiver_name = #{receiverName},</if>
+			<if test="receiverPhone != null  and receiverPhone != ''  ">receiver_phone = #{receiverPhone},</if>
+			<if test="receiverProv != null  and receiverProv != ''  ">receiver_prov = #{receiverProv},</if>
+			<if test="receiverCity != null  and receiverCity != ''  ">receiver_city = #{receiverCity},</if>
+			<if test="receiverArea != null  and receiverArea != ''  ">receiver_area = #{receiverArea},</if>
+			<if test="receiverTown != null  and receiverTown != ''  ">receiver_town = #{receiverTown},</if>
+			<if test="receiverAddr != null  and receiverAddr != ''  ">receiver_addr = #{receiverAddr},</if>
+			<if test="receiverPost != null  ">receiver_post = #{receiverPost},</if>
+			<if test="deliverMoney != null  ">deliver_money = #{deliverMoney},</if>
+			<if test="goodsMoney != null  ">goods_money = #{goodsMoney},</if>
+			<if test="goodsNum != null  ">goods_num = #{goodsNum},</if>
+			<if test="weight != null  ">weight = #{weight},</if>
+			<if test="payType != null  ">pay_type = #{payType},</if>
+			<if test="dispDeptId != null  ">pay_type = #{disp_dept_id},</if>
+			<if test="dispUserId != null  ">pay_type = #{disp_user_id},</if>
+		</trim>
+		where orderid = #{orderid}
+	</update>
+
+	<delete id="deleteOrderById" parameterType="Long">
+		delete from ex_order where orderid = #{orderid}
+	</delete>
+	
+	<delete id="deleteOrderByIds" parameterType="String">
+		delete from ex_order where orderid in 
+		<foreach item="orderid" collection="array" open="(" separator="," close=")">
+ 			#{orderid}
+		</foreach>
+	</delete>
+    
+</mapper>

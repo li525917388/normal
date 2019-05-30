@@ -111,6 +111,7 @@
             		var ids = $("#" + $.table._option.id).bootstrapTable("getSelections");
             		$('#' + $.table._option.toolbar + ' .btn-del').toggleClass('disabled', !ids.length);
             		$('#' + $.table._option.toolbar + ' .btn-edit').toggleClass('disabled', ids.length!=1);
+            		$('#' + $.table._option.toolbar + ' .btn-select').toggleClass('disabled', ids.length!=1);
             	});
             },
             // 表格销毁
