@@ -15,84 +15,61 @@
 							</li>
 
 							<li>
-								订 单 日 期：<input type="text" name="orderDate"/>
-							</li>
-
-							<li>
-								电&nbsp;&nbsp;&nbsp;商&nbsp;&nbsp;&nbsp;&nbsp;ID：<input type="text" name="ecCompanyId"/>
-							</li>
-
-							<li>
-								订 单 状 态：<select name="orderStatus" th:with="type=${@dict.getType('ex_order_status')}">
-									<option value="">所有</option>
-									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
-								</select>
-								
-							</li>
-
-							<li>
-								订 单 来 源：<input type="text" name="orderSource"/>
-							</li>
-
-							<li>
-								客&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;&nbsp;ID：<input type="text" name="custId"/>
-							</li>
-
-							<li>
-								寄件人姓名：<input type="text" name="senderName"/>
-							</li>
-
-							<li>
-								寄件人电话：<input type="text" name="senderPhone"/>
-							</li>
-
-							<li>
-								寄 件 邮 编：<input type="text" name="senderPost"/>
-							</li>
-
-							<li>
-								收&nbsp;&nbsp;&nbsp;件&nbsp;&nbsp;&nbsp;人：<input type="text" name="receiverName"/>
-							</li>
-
-							<li>
-								收 件 电 话：<input type="text" name="receiverPhone"/>
-							</li>
-
-							<li>
-								收 件 邮 编：<input type="text" name="receiverPost"/>
-							</li>
-
-							<li>
-								支 付 方 式：<input type="text" name="payType"/>
-							</li>
-
-							<li>
 								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
 								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
 							</li>
 						</ul>
 					</div>
 				</form>
+				
+			</div>
+			
+			
+			<div class="col-sm-12 search-collapse">
+				<form id="pickupForm">
+					<div class="select-list">
+						<ul>
+							<li>
+								取件员：<input type="text" name="op"/>
+							</li>
+							
+							<li>
+								物品类型：<select name="goodsType" th:with="type=${@dict.getType('ex_waybill_goodstype')}">
+									<option value="">-</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel + '（' + dict.dictValue + '）'}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							
+							<li>
+								快件类型：<select name="expressType" th:with="type=${@dict.getType('ex_waybill_expresstype')}">
+									<option value="">-</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel + '（' + dict.dictValue + '）'}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							
+							<li>
+								物品价值：<input type="text" name="goodsMoney"/>
+							</li>
+							
+							<li>
+								付款方式：<select name="payType" th:with="type=${@dict.getType('ex_order_paytype')}">
+									<option value="">-</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								重量：<input type="text" name="weight"/>
+							</li>
+						</ul>
+					</div>
+				</form>
+				
 			</div>
 			
 	        <div class="btn-group-sm" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="ex:order:add">
-					<i class="fa fa-plus"></i> 添加
-				</a>
-				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="ex:order:edit">
-					<i class="fa fa-edit"></i> 修改
-				</a>
-				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="ex:order:remove">
-					<i class="fa fa-remove"></i> 删除
-				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="ex:order:export">
-						<i class="fa fa-download"></i> 导出
-				</a>
-				<a class="btn btn-warning btn-select disabled" onclick="javascript:dispSite()" shiro:hasPermission="ex:order:dispSite">
-						<i class="fa fa-sitemap"></i> 调度网点
-				</a>
-				<a class="btn btn-warning btn-select disabled" onclick="javascript:dispSalesman()" shiro:hasPermission="ex:order:dispSalesman">
-						<i class="fa fa-male"></i> 调度业务员
+				
+				<a class="btn btn-warning btn-select disabled" onclick="javascript:pickup()" shiro:hasPermission="ex:order:dispSalesman">
+						<i class="fa fa-male"></i> 收件
 				</a>
 			</div>
 			<div class="col-sm-12 select-table table-striped">
@@ -116,7 +93,7 @@
                 removeUrl: prefix + "/remove",
 				exportUrl: prefix + "/export",
                 modalName: "订单",
-		        showExport: true,
+		        showExport: false,
                 columns: [{
 		            checkbox: true
 		        },
@@ -280,8 +257,7 @@
 		            align: 'center',
 		            formatter: function(value, row, index) {
 		            	var actions = [];
-		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.orderid + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.orderid + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="javascript:pickup(\'' + row.orderid + '\')"><i class="fa fa-remove"></i>收件</a>');
 						return actions.join('');
 		            }
 		        }]

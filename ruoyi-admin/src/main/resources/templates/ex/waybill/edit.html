@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-waybill-edit" th:object="${waybill}">
+            <input id="waybillId" name="waybillId" th:field="*{waybillId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">运单号：</label>
+				<div class="col-sm-8">
+					<input id="waybillNo" name="waybillNo" th:field="*{waybillNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单ID：</label>
+				<div class="col-sm-8">
+					<input id="orderId" name="orderId" th:field="*{orderId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">运单状态：</label>
+				<div class="col-sm-8">
+					<input id="waybillStatus" name="waybillStatus" th:field="*{waybillStatus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">寄件日期：</label>
+				<div class="col-sm-8">
+					<input id="sendDate" name="sendDate" th:field="*{sendDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件人姓名：</label>
+				<div class="col-sm-8">
+					<input id="receiverName" name="receiverName" th:field="*{receiverName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件人电话：</label>
+				<div class="col-sm-8">
+					<input id="receiverPhone" name="receiverPhone" th:field="*{receiverPhone}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收件重量：</label>
+				<div class="col-sm-8">
+					<input id="weight" name="weight" th:field="*{weight}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物品名称：</label>
+				<div class="col-sm-8">
+					<input id="goodsName" name="goodsName" th:field="*{goodsName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">体积：</label>
+				<div class="col-sm-8">
+					<input id="volume" name="volume" th:field="*{volume}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "ex/waybill";
+		$("#form-waybill-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-waybill-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

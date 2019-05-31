@@ -202,8 +202,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="goodsNum != null  ">goods_num = #{goodsNum},</if>
 			<if test="weight != null  ">weight = #{weight},</if>
 			<if test="payType != null  ">pay_type = #{payType},</if>
-			<if test="dispDeptId != null  ">pay_type = #{disp_dept_id},</if>
-			<if test="dispUserId != null  ">pay_type = #{disp_user_id},</if>
+			<if test="dispDeptId != null  ">disp_dept_id = #{dispDeptId},</if>
+			<if test="dispUserId != null  ">disp_user_id = #{dispUserId},</if>
 		</trim>
 		where orderid = #{orderid}
 	</update>

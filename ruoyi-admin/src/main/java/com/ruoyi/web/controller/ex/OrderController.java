@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.ex.domain.Order;
+import com.ruoyi.ex.domain.Waybill;
 import com.ruoyi.ex.service.IOrderService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -165,4 +166,32 @@ public class OrderController extends BaseController
 		return toAjax(orderService.dispSalesman(orderid, userid));
 	}
 	
+	
+	
+	
+	/**
+	 * 收件页面
+	 * @return
+	 */
+	@RequiresPermissions("ex:order:pickup:view")
+	@GetMapping("/pickup")
+	public String pickup() {
+	    return prefix + "/pickup/pickup";
+	}
+	
+	
+	
+	/**
+	 * 收件操作
+	 * @param order
+	 * @return
+	 */
+	@RequiresPermissions("ex:order:pickup:oper")
+	@Log(title = "收件操作", businessType = BusinessType.UPDATE)
+	@PostMapping("/pickup")
+	@ResponseBody
+	public AjaxResult pickupOper(Waybill waybill)
+	{		
+		return toAjax(orderService.pickupOper(waybill));
+	}
 }

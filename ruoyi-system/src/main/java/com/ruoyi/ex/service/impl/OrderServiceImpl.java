@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ruoyi.ex.mapper.OrderMapper;
+import com.ruoyi.ex.mapper.WaybillMapper;
 import com.ruoyi.ex.domain.Order;
+import com.ruoyi.ex.domain.Waybill;
 import com.ruoyi.ex.service.IOrderService;
 import com.ruoyi.common.core.text.Convert;
 
@@ -23,6 +25,9 @@ public class OrderServiceImpl implements IOrderService
 {
 	@Autowired
 	private OrderMapper orderMapper;
+	
+	@Autowired
+	private WaybillMapper waybillMapper;
 
 	/**
      * 查询订单信息
@@ -125,7 +130,54 @@ public class OrderServiceImpl implements IOrderService
 	 */
 	@Override
 	public int dispSalesman(Long[] orderid, long userid) {
-		// TODO Auto-generated method stub
+		
+		for(int i = 0; i < orderid.length; i++){
+
+			Order order = new Order();
+			
+			order.setOrderid(orderid[i]);
+			order.setDispUserId(userid);
+			order.setOrderStatus(3);		//调度业务员
+			
+			int res = orderMapper.updateOrder(order);
+			
+			if(res == 0){
+				
+				throw new RuntimeException("调度失败");
+			}
+		}
+		
+		return 1;
+	}
+
+	
+	
+	/*
+	 * 收件操作
+	 * @see com.ruoyi.ex.service.IOrderService#pickupOper(com.ruoyi.ex.domain.Waybill)
+	 * 2019年5月31日
+	 */
+	@Transactional
+	@Override
+	public int pickupOper(Waybill waybill) {
+		
+		//新增运单
+		int waybillRes = waybillMapper.insertWaybill(waybill);
+		
+		if(waybillRes == 0){
+			throw new RuntimeException("新增运单失败");
+		}
+		
+		
+		//修改订单状态
+		Order order = new Order();
+		order.setOrderStatus(3);		//设置已收取
+		int orderRes = orderMapper.updateOrder(order);
+		
+		if(orderRes == 0){
+			throw new RuntimeException("修改订单状态失败");
+		}
+		
 		return 0;
 	}
 	

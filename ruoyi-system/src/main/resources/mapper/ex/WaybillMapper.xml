@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ex.mapper.WaybillMapper">
+    
+	<resultMap type="Waybill" id="WaybillResult">
+		<result property="waybillId"    column="waybill_id"    />
+		<result property="waybillNo"    column="waybill_no"    />
+		<result property="orderId"    column="order_id"    />
+		<result property="waybillStatus"    column="waybill_status"    />
+		<result property="sendDate"    column="send_date"    />
+		<result property="receiverName"    column="receiver_name"    />
+		<result property="receiverPhone"    column="receiver_phone"    />
+		<result property="weight"    column="weight"    />
+		<result property="goodsName"    column="goods_name"    />
+		<result property="volume"    column="volume"    />
+	</resultMap>
+	
+	<sql id="selectWaybillVo">
+		select waybill_id, waybill_no, order_id, waybill_status, send_date, receiver_name, receiver_phone, weight, goods_name, volume from ex_waybill
+	</sql>
+	
+	<select id="selectWaybillList" parameterType="Waybill" resultMap="WaybillResult">
+		<include refid="selectWaybillVo"/>
+		<where>  
+			<if test="waybillId != null "> and waybill_id = #{waybillId}</if>
+ 			<if test="waybillNo != null  and waybillNo != '' "> and waybill_no = #{waybillNo}</if>
+ 			<if test="orderId != null "> and order_id = #{orderId}</if>
+ 			<if test="waybillStatus != null "> and waybill_status = #{waybillStatus}</if>
+ 			<if test="sendDate != null "> and send_date = #{sendDate}</if>
+ 			<if test="receiverName != null  and receiverName != '' "> and receiver_name = #{receiverName}</if>
+ 			<if test="receiverPhone != null  and receiverPhone != '' "> and receiver_phone = #{receiverPhone}</if>
+ 			<if test="weight != null "> and weight = #{weight}</if>
+ 			<if test="goodsName != null  and goodsName != '' "> and goods_name = #{goodsName}</if>
+ 			<if test="volume != null  and volume != '' "> and volume = #{volume}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectWaybillById" parameterType="Long" resultMap="WaybillResult">
+		<include refid="selectWaybillVo"/>
+		where waybill_id = #{waybillId}
+	</select>
+        
+	<insert id="insertWaybill" parameterType="Waybill" useGeneratedKeys="true" keyProperty="waybillId">
+		insert into ex_waybill
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="waybillNo != null  and waybillNo != ''  ">waybill_no,</if>
+			<if test="orderId != null  ">order_id,</if>
+			<if test="waybillStatus != null  ">waybill_status,</if>
+			<if test="sendDate != null  ">send_date,</if>
+			<if test="receiverName != null  and receiverName != ''  ">receiver_name,</if>
+			<if test="receiverPhone != null  and receiverPhone != ''  ">receiver_phone,</if>
+			<if test="weight != null  ">weight,</if>
+			<if test="goodsName != null  and goodsName != ''  ">goods_name,</if>
+			<if test="volume != null  and volume != ''  ">volume,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="waybillNo != null  and waybillNo != ''  ">#{waybillNo},</if>
+			<if test="orderId != null  ">#{orderId},</if>
+			<if test="waybillStatus != null  ">#{waybillStatus},</if>
+			<if test="sendDate != null  ">#{sendDate},</if>
+			<if test="receiverName != null  and receiverName != ''  ">#{receiverName},</if>
+			<if test="receiverPhone != null  and receiverPhone != ''  ">#{receiverPhone},</if>
+			<if test="weight != null  ">#{weight},</if>
+			<if test="goodsName != null  and goodsName != ''  ">#{goodsName},</if>
+			<if test="volume != null  and volume != ''  ">#{volume},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updateWaybill" parameterType="Waybill">
+		update ex_waybill
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="waybillNo != null  and waybillNo != ''  ">waybill_no = #{waybillNo},</if>
+			<if test="orderId != null  ">order_id = #{orderId},</if>
+			<if test="waybillStatus != null  ">waybill_status = #{waybillStatus},</if>
+			<if test="sendDate != null  ">send_date = #{sendDate},</if>
+			<if test="receiverName != null  and receiverName != ''  ">receiver_name = #{receiverName},</if>
+			<if test="receiverPhone != null  and receiverPhone != ''  ">receiver_phone = #{receiverPhone},</if>
+			<if test="weight != null  ">weight = #{weight},</if>
+			<if test="goodsName != null  and goodsName != ''  ">goods_name = #{goodsName},</if>
+			<if test="volume != null  and volume != ''  ">volume = #{volume},</if>
+		</trim>
+		where waybill_id = #{waybillId}
+	</update>
+
+	<delete id="deleteWaybillById" parameterType="Long">
+		delete from ex_waybill where waybill_id = #{waybillId}
+	</delete>
+	
+	<delete id="deleteWaybillByIds" parameterType="String">
+		delete from ex_waybill where waybill_id in 
+		<foreach item="waybillId" collection="array" open="(" separator="," close=")">
+ 			#{waybillId}
+		</foreach>
+	</delete>
+    
+</mapper>

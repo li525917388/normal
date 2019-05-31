@@ -1,6 +1,7 @@
 package com.ruoyi.ex.service;
 
 import com.ruoyi.ex.domain.Order;
+import com.ruoyi.ex.domain.Waybill;
 
 import java.util.List;
 
@@ -68,5 +69,15 @@ public interface IOrderService
 	 * @return
 	 */
 	public int dispSalesman(Long[] orderid, long userid);
+
+	
+	
+	
+	/**
+	 * 收件操作
+	 * @param waybill
+	 * @return
+	 */
+	public int pickupOper(Waybill waybill);
 	
 }
