@@ -1,7 +1,6 @@
 package com.ruoyi.ex.service;
 
 import com.ruoyi.ex.domain.Order;
-import com.ruoyi.ex.domain.Waybill;
 
 import java.util.List;
 
@@ -72,12 +71,11 @@ public interface IOrderService
 
 	
 	
-	
 	/**
-	 * 收件操作
-	 * @param waybill
+	 * 根据运单号获取订单信息
+	 * @param waybillNo
 	 * @return
 	 */
-	public int pickupOper(Waybill waybill);
+	public Order selectOrderByWaybillNo(String waybillNo);
 	
 }

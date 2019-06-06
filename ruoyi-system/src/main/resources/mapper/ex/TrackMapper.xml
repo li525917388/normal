@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ex.mapper.TrackMapper">
+    
+	<resultMap type="ScanInfo" id="ScanInfoResult">
+		<result property="scanId"    		column="scan_id"    />
+		<result property="waybillNo"    	column="waybill_no"    />
+		<result property="scanType"    		column="scan_type"    />
+		<result property="scanTime"    		column="scan_time"    />
+		<result property="scanUserId"    	column="scan_user_id"    />
+		<result property="scanDeptId"    	column="scan_dept_id"    />
+		<result property="remark"    		column="remark"    />
+		<result property="nextDeptId"    	column="next_dept_id"    />
+		<result property="previousDeptId"  	column="previous_dept_id"    />
+		<result property="deliveryUserId"	column="delivery_user_id"    />
+		<result property="signer"			column="signer"    />
+	</resultMap>
+	
+	<sql id="selectScanInfoVo">
+		select scan_id, waybill_no, scan_type, scan_time, scan_user_id, scan_dept_id, remark, next_dept_id, previous_dept_id, delivery_user_id, signer from ex_scan_info 
+	</sql>
+	
+	<!-- 获取运单列表 -->
+	<select id="selectScanInfoList" parameterType="String" resultMap="ScanInfoResult">
+		<include refid="selectScanInfoVo"/>
+		where waybill_no = #{waybillNo}
+	</select>
+	
+  
+</mapper>

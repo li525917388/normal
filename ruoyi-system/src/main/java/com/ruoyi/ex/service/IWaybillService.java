@@ -1,6 +1,8 @@
 package com.ruoyi.ex.service;
 
 import com.ruoyi.ex.domain.Waybill;
+import com.ruoyi.system.domain.SysUser;
+
 import java.util.List;
 
 /**
@@ -50,5 +52,18 @@ public interface IWaybillService
      * @return 结果
      */
 	public int deleteWaybillByIds(String ids);
+	
+	
+	
+
+	
+	
+	/**
+	 * 收件操作
+	 * @param waybill
+	 *  @param user
+	 * @return
+	 */
+	public int pickupOper(Waybill waybill, SysUser user);
 	
 }

@@ -83,6 +83,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</trim>
 		where waybill_id = #{waybillId}
 	</update>
+	
+	
+	<!-- 更新运单详情 -->
+	<update id="updateWaybillDetail" parameterType="Waybill">
+		update ex_waybill_detail 
+		<set>
+			<if test="pickupDate != null">pickup_date = #{pickupDate},</if>
+		</set>
+		where waybill_id = #{waybillId}
+	</update>
+	
 
 	<delete id="deleteWaybillById" parameterType="Long">
 		delete from ex_waybill where waybill_id = #{waybillId}
@@ -95,4 +106,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</foreach>
 	</delete>
     
+    
+    <!-- 新增扫描记录 -->
+    <insert id="insertScanInfo" parameterType="ScanInfo">
+    	<![CDATA[
+    		insert into ex_scan_info(
+    			waybill_no,
+    			scan_type,
+    			scan_time,
+    			scan_user_id,
+    			scan_dept_id,
+    			remark,
+    			next_dept_id,
+    			previous_dept_id,
+    			delivery_user_id,
+    			signer
+    		) values(
+    			#{waybillNo},
+    			#{scanType},
+    			#{scanTime},
+    			#{scanUserId},
+    			#{scanDeptId},
+    			#{remark},
+    			#{nextDeptId},
+    			#{previousDeptId},
+    			#{deliveryUserId},
+    			#{signer}
+    		)
+    	]]>
+    </insert>
 </mapper>

@@ -1,6 +1,7 @@
 package com.ruoyi.ex.mapper;
 
 import com.ruoyi.ex.domain.Order;
+
 import java.util.List;	
 
 /**
@@ -58,5 +59,14 @@ public interface OrderMapper
      * @return 结果
      */
 	public int deleteOrderByIds(String[] orderids);
+
+	
+	
+	/**
+	 * 根据运单号获取订单信息
+	 * @param waybillNo
+	 * @return
+	 */
+	public Order selectOrderByWaybillNo(String waybillNo);
 	
 }

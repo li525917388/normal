@@ -1,7 +1,10 @@
 package com.ruoyi.web.controller.ex;
 
 import java.util.List;
+
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.ex.domain.Waybill;
 import com.ruoyi.ex.service.IWaybillService;
+import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -124,4 +129,73 @@ public class WaybillController extends BaseController
 		return toAjax(waybillService.deleteWaybillByIds(ids));
 	}
 	
+	
+
+	
+	
+	/**
+	 * 收件页面
+	 * @return
+	 */
+	@RequiresPermissions("ex:waybill:pickup:view")
+	@GetMapping("/pickup")
+	public String pickup() {
+	    return prefix + "/pickup/pickup";
+	}
+	
+	
+	
+	/**
+	 * 新增收件页面
+	 * @return
+	 */
+	@GetMapping("/pickup/add")
+	public String pickupAdd() {
+	    return prefix + "/pickup/add";
+	}
+	
+	
+
+	/**
+	 * 收件操作
+	 * @param order
+	 * @return
+	 */
+	@RequiresPermissions("ex:waybill:pickup:oper")
+	@Log(title = "收件操作", businessType = BusinessType.UPDATE)
+	@PostMapping("/pickup/add")
+	@ResponseBody
+	public AjaxResult pickupOper(Waybill waybill) {	
+		
+		//shiro
+		Subject subject = SecurityUtils.getSubject();	
+		//获取登录用户信息
+		SysUser user = (SysUser) subject.getPrincipal();
+		
+		return toAjax(waybillService.pickupOper(waybill, user));
+	}
+	
+	
+	
+	
+	/**
+	 * 发件页面
+	 * @return
+	 */
+	@RequiresPermissions("ex:waybill:departure:view")
+	@GetMapping("/departure")
+	public String departure() {
+	    return prefix + "/departure/departure";
+	}
+	
+	
+	
+	/**
+	 * 新增发件页面
+	 * @return
+	 */
+	@GetMapping("/departure/add")
+	public String departureAdd() {
+	    return prefix + "/departure/add";
+	}
 }

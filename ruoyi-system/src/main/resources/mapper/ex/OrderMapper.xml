@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="Order" id="OrderResult">
 		<result property="orderid"    		column="orderid"    />
 		<result property="orderNo"    		column="order_no"    />
+		<result property="waybillNo"    	column="waybill_no"    />
 		<result property="orderDate"    	column="order_date"    />
 		<result property="ecCompanyId"    	column="ec_company_id"    />
 		<result property="orderStatus"    	column="order_status"    />
@@ -30,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="receiverAddr"    	column="receiver_addr"    />
 		<result property="receiverPost"    	column="receiver_post"    />
 		<result property="deliverMoney"    	column="deliver_money"    />
+		<result property="goodsName"    	column="goods_name"    />
 		<result property="goodsMoney"    	column="goods_money"    />
 		<result property="goodsNum"    		column="goods_num"    />
 		<result property="weight"    		column="weight"    />
@@ -39,7 +41,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="selectOrderVo">
 		select 
 			o.orderid, 
-			o.order_no, 
+			o.order_no,
+			o.waybill_no,
 			o.order_date, 
 			o.ec_company_id, 
 			o.order_status, 
@@ -63,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			o.receiver_addr, 
 			o.receiver_post, 
 			o.deliver_money, 
+			o.goods_name, 
 			o.goods_money, 
 			o.goods_num, 
 			o.weight, 
@@ -76,6 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<where>  
 			<if test="orderid != null "> and orderid = #{orderid}</if>
  			<if test="orderNo != null  and orderNo != '' "> and order_no = #{orderNo}</if>
+ 			<if test="waybillNo != null  and waybillNo != '' "> and waybill_no = #{waybillNo}</if>
  			<if test="orderDate != null "> and order_date = #{orderDate}</if>
  			<if test="ecCompanyId != null  and ecCompanyId != '' "> and ec_company_id = #{ecCompanyId}</if>
  			<if test="orderStatus != null "> and order_status = #{orderStatus}</if>
@@ -114,6 +119,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into ex_order
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+			<if test="waybillNo != null  and waybillNo != ''  ">waybill_no,</if>
 			<if test="orderDate != null  ">order_date,</if>
 			<if test="ecCompanyId != null  and ecCompanyId != ''  ">ec_company_id,</if>
 			<if test="orderStatus != null  ">order_status,</if>
@@ -143,6 +149,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+			<if test="waybillNo != null  and waybillNo != ''  ">#{waybillNo},</if>
 			<if test="orderDate != null  ">#{orderDate},</if>
 			<if test="ecCompanyId != null  and ecCompanyId != ''  ">#{ecCompanyId},</if>
 			<if test="orderStatus != null  ">#{orderStatus},</if>
@@ -175,7 +182,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateOrder" parameterType="Order">
 		update ex_order
 		<trim prefix="SET" suffixOverrides=",">
-			<if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
 			<if test="orderDate != null  ">order_date = #{orderDate},</if>
 			<if test="ecCompanyId != null  and ecCompanyId != ''  ">ec_company_id = #{ecCompanyId},</if>
 			<if test="orderStatus != null  ">order_status = #{orderStatus},</if>
@@ -219,4 +225,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</foreach>
 	</delete>
     
+    
+    <!-- 根据运单号查询订单信息 -->
+    <select id="selectOrderByWaybillNo" parameterType="String" resultMap="OrderResult">
+		<include refid="selectOrderVo"/>
+		where waybill_no=#{waybillNo}
+	</select>
 </mapper>

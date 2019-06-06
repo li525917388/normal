@@ -1,6 +1,8 @@
 package com.ruoyi.ex.mapper;
 
+import com.ruoyi.ex.domain.ScanInfo;
 import com.ruoyi.ex.domain.Waybill;
+
 import java.util.List;	
 
 /**
@@ -58,5 +60,21 @@ public interface WaybillMapper
      * @return 结果
      */
 	public int deleteWaybillByIds(String[] waybillIds);
+
+	
+	/**
+	 * 新增扫描记录
+	 * @param scanInfo
+	 * @return
+	 */
+	public int insertScanInfo(ScanInfo scanInfo);
+
+	
+	
+	/**
+	 * 更新运单明细
+	 * @param waybill
+	 */
+	public void updateWaybillDetail(Waybill waybill);
 	
 }

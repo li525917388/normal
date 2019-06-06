@@ -21,6 +21,8 @@ public class Order extends BaseEntity
 	private Long orderid;
 	/** 订单号 */
 	private String orderNo;
+	/** 运单号 */
+	private String waybillNo;
 	/** 订单日期 */
 	private Date orderDate;
 	/** 电商id */
@@ -67,6 +69,8 @@ public class Order extends BaseEntity
 	private Integer receiverPost;
 	/** 运费 */
 	private BigDecimal deliverMoney;
+	/** 物品价值 */
+	private String goodsName;
 	/** 物品价值 */
 	private BigDecimal goodsMoney;
 	/** 物品数量 */
@@ -390,5 +394,21 @@ public class Order extends BaseEntity
 
 	public void setDispUserId(Long dispUserId) {
 		this.dispUserId = dispUserId;
+	}
+
+	public String getWaybillNo() {
+		return waybillNo;
+	}
+
+	public void setWaybillNo(String waybillNo) {
+		this.waybillNo = waybillNo;
+	}
+
+	public String getGoodsName() {
+		return goodsName;
+	}
+
+	public void setGoodsName(String goodsName) {
+		this.goodsName = goodsName;
 	}
 }

@@ -37,6 +37,9 @@ public class Waybill extends BaseEntity
 	private String goodsName;
 	/** 体积 */
 	private String volume;
+	
+	//详细信息
+	private Date pickupDate;	//取件日期
 
 	public void setWaybillId(Long waybillId) 
 	{
@@ -143,4 +146,12 @@ public class Waybill extends BaseEntity
             .append("volume", getVolume())
             .toString();
     }
+
+	public Date getPickupDate() {
+		return pickupDate;
+	}
+
+	public void setPickupDate(Date pickupDate) {
+		this.pickupDate = pickupDate;
+	}
 }
