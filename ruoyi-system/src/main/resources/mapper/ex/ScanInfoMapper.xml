@@ -5,25 +5,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.ex.mapper.ScanInfoMapper">
     
 	<resultMap type="ScanInfo" id="ScanInfoResult">
-		<result property="scanId"    column="id"    />
-		<result property="waybillNo"    column="waybill_no"    />
-		<result property="scanType"    column="scan_type"    />
-		<result property="scanTime"    column="scan_time"    />
-		<result property="scanUserId"    column="scan_user_id"    />
-		<result property="scanDeptId"    column="scan_dept_id"    />
-		<result property="remark"    column="remark"    />
-		<result property="nextDeptId"    column="next_dept_id"    />
-		<result property="previousDeptId"    column="previous_dept_id"    />
-		<result property="deliveryUserId"    column="delivery_user_id"    />
-		<result property="signer"    column="signer"    />
+		<result property="scanId"    		column="id"    />
+		<result property="waybillNo"    	column="waybill_no"    />
+		<result property="scanType"    		column="scan_type"    />
+		<result property="scanTime"    		column="scan_time"    />
+		<result property="scanUserId"    	column="scan_user_id"    />
+		<result property="scanUser"    		column="scan_user"    />
+		<result property="scanDeptId"    	column="scan_dept_id"    />
+		<result property="scanDept"    		column="scan_dept"    />
+		<result property="remark"    		column="remark"    />
+		<result property="nextDeptId"    	column="next_dept_id"    />
+		<result property="nextDept"    		column="next_dept"    />
+		<result property="deliveryUserId"   column="delivery_user_id"    />
+		<result property="deliveryUser"   	column="delivery_user"    />
+		<result property="signer"    		column="signer"    />
 	</resultMap>
 	
-	<sql id="selectScanInfoVo">
-		select id, waybill_no, scan_type, scan_time, scan_user_id, scan_dept_id, remark, next_dept_id, previous_dept_id, delivery_user_id from ex_scan_temp
+	<sql id="selectScanTempVo">
+		select st.id, st.waybill_no, st.scan_type, st.scan_time, st.scan_user_id, st.scan_dept_id, st.remark, st.next_dept_id, st.delivery_user_id, 
+			d1.dept_name as scan_dept,
+			d2.dept_name as next_dept,
+			u1.user_name as scan_user,
+			u2.user_name as delivery_user
+		from ex_scan_temp st
+			left join sys_dept d1 on st.scan_dept_id=d1.dept_id 
+			left join sys_dept d2 on st.next_dept_id=d2.dept_id 
+			left join sys_user u1 on st.scan_user_id=u1.user_id
+			left join sys_user u2 on st.delivery_user_id=u2.user_id
 	</sql>
 	
-	<select id="selectScanInfoList" parameterType="ScanInfo" resultMap="ScanInfoResult">
-		<include refid="selectScanInfoVo"/>
+	<select id="selectScanTempList" parameterType="ScanInfo" resultMap="ScanInfoResult">
+		<include refid="selectScanTempVo"/>
 		<where>  
 			<if test="scanId != null "> and id = #{scanId}</if>
  			<if test="waybillNo != null  and waybillNo != '' "> and waybill_no = #{waybillNo}</if>
@@ -33,17 +45,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="scanDeptId != null "> and scan_dept_id = #{scanDeptId}</if>
  			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
  			<if test="nextDeptId != null "> and next_dept_id = #{nextDeptId}</if>
- 			<if test="previousDeptId != null "> and previous_dept_id = #{previousDeptId}</if>
  			<if test="deliveryUserId != null "> and delivery_user_id = #{deliveryUserId}</if>
  		</where>
 	</select>
 	
-	<select id="selectScanInfoById" parameterType="Long" resultMap="ScanInfoResult">
-		<include refid="selectScanInfoVo"/>
+	<select id="selectScanTempById" parameterType="Long" resultMap="ScanInfoResult">
+		<include refid="selectScanTempVo"/>
 		where id = #{scanId}
 	</select>
         
-	<insert id="insertScanInfo" parameterType="ScanInfo" useGeneratedKeys="true" keyProperty="scanId">
+	<insert id="insertScanTemp" parameterType="ScanInfo" useGeneratedKeys="true" keyProperty="scanId">
 		insert into ex_scan_temp
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="waybillNo != null  and waybillNo != ''  ">waybill_no,</if>
@@ -53,7 +64,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="scanDeptId != null  ">scan_dept_id,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
 			<if test="nextDeptId != null  ">next_dept_id,</if>
-			<if test="previousDeptId != null  ">previous_dept_id,</if>
 			<if test="deliveryUserId != null  ">delivery_user_id,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -64,12 +74,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="scanDeptId != null  ">#{scanDeptId},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
 			<if test="nextDeptId != null  ">#{nextDeptId},</if>
-			<if test="previousDeptId != null  ">#{previousDeptId},</if>
 			<if test="deliveryUserId != null  ">#{deliveryUserId},</if>
 		</trim>
 	</insert>
 	 
-	<update id="updateScanInfo" parameterType="ScanInfo">
+	<update id="updateScanTemp" parameterType="ScanInfo">
 		update ex_scan_temp
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="waybillNo != null  and waybillNo != ''  ">waybill_no = #{waybillNo},</if>
@@ -79,21 +88,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="scanDeptId != null  ">scan_dept_id = #{scanDeptId},</if>
 			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
 			<if test="nextDeptId != null  ">next_dept_id = #{nextDeptId},</if>
-			<if test="previousDeptId != null  ">previous_dept_id = #{previousDeptId},</if>
 			<if test="deliveryUserId != null  ">delivery_user_id = #{deliveryUserId},</if>
 		</trim>
 		where id = #{scanId}
 	</update>
 
-	<delete id="deleteScanInfoById" parameterType="Long">
+	<delete id="deleteScanTempById" parameterType="Long">
 		delete from ex_scan_temp where id = #{scanId}
 	</delete>
 	
-	<delete id="deleteScanInfoByIds" parameterType="String">
+	<delete id="deleteScanTempByIds" parameterType="String">
 		delete from ex_scan_temp where id in 
 		<foreach item="scanId" collection="array" open="(" separator="," close=")">
  			#{scanId}
 		</foreach>
 	</delete>
+	
+	
+	<!-- 新增实际扫描记录 -->
+	<insert id="insertScanInfo" parameterType="ScanInfo" useGeneratedKeys="true" keyProperty="scanId">
+		insert into ex_scan_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="waybillNo != null  and waybillNo != ''  ">waybill_no,</if>
+			<if test="scanType != null  ">scan_type,</if>
+			<if test="scanTime != null  ">scan_time,</if>
+			<if test="scanUserId != null  ">scan_user_id,</if>
+			<if test="scanDeptId != null  ">scan_dept_id,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="nextDeptId != null  ">next_dept_id,</if>
+			<if test="deliveryUserId != null  ">delivery_user_id,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="waybillNo != null  and waybillNo != ''  ">#{waybillNo},</if>
+			<if test="scanType != null  ">#{scanType},</if>
+			<if test="scanTime != null  ">#{scanTime},</if>
+			<if test="scanUserId != null  ">#{scanUserId},</if>
+			<if test="scanDeptId != null  ">#{scanDeptId},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="nextDeptId != null  ">#{nextDeptId},</if>
+			<if test="deliveryUserId != null  ">#{deliveryUserId},</if>
+		</trim>
+	</insert>
     
 </mapper>

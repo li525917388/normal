@@ -14,17 +14,20 @@
 				</div>
 			</div>
 			
-			<div class="form-group">
-				<label class="col-sm-3 control-label">下一站：</label>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">扫描员：</label>
 				<div class="col-sm-8">
-					<div class="input-group">
-						<input id="nextDeptId" name="nextDeptId" type="hidden">
-                    	<input onclick="selectDeptTree()" id="nextDept" type="text" placeholder="请选择" class="form-control" required>
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    </div>
+					<input id="scanUserId" name="scanUserId" class="form-control" type="text">
 				</div>
 			</div>
-		
+			
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">扫描网点：</label>
+				<div class="col-sm-8">
+					<input id="scanDeptId" name="scanDeptId" class="form-control" type="text">
+				</div>
+			</div>
+			
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">备注：</label>
 				<div class="col-sm-8">
@@ -35,7 +38,7 @@
 	</div>
     <div th:include="include::footer"></div>
     <script type="text/javascript">
-		var prefix = ctx + "ex/scanInfo/departure"
+		var prefix = ctx + "ex/scanInfo/pickup"
 		$("#form-scanInfo-add").validate({
 			rules:{
 				xxxx:{
@@ -50,34 +53,6 @@
 	            $.operate.save(prefix + "/add", $('#form-scanInfo-add').serialize());
 	        }
 	    }
-		
-		
-		/*部门管理-新增-选择父部门树*/
-		function selectDeptTree() {
-			
-			var deptId = $("#nextDeptId").val();
-			if(deptId == ""){
-				deptId = "100";
-			}
-			var options = {
-				title: '网点选择',
-				width: "380",
-				url: ctx + "system/dept/selectDeptTree/" + deptId,
-				callBack: doSubmit
-			};
-			$.modal.openOptions(options);
-		}
-		
-		
-		function doSubmit(index, layero){
-			var tree = layero.find("iframe")[0].contentWindow.$._tree;
-			//if ($.tree.notAllowParents(tree)) {
-				var body = layer.getChildFrame('body', index);
-    			$("#nextDeptId").val(body.find('#treeId').val());
-    			$("#nextDept").val(body.find('#treeName').val());
-    			layer.close(index);
-			//}
-		}
 	</script>
 </body>
 </html>

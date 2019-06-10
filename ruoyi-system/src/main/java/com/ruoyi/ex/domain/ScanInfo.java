@@ -27,15 +27,21 @@ public class ScanInfo extends BaseEntity {
 	
 	private Long scanUserId;		//扫描员工ID
 	
+	private String scanUser;		//扫描员工姓名
+	
 	private Long scanDeptId;		//扫描网点ID
+	
+	private String scanDept;		//扫描网点名称
 	
 	private String remark;			//备注
 	
-	private Long nextDeptId;		//上一站
+	private Long nextDeptId;		//上一站或下一站
 	
-	private Long previousDeptId;	//下一站
+	private String nextDept;		//上一站或下一站名称
+		
+	private Long deliveryUserId;	//派送人id
 	
-	private Long deliveryUserId;	//派送人
+	private String deliveryUser;	//派送人名称
 	
 	private String signer;			//签收人
 
@@ -103,14 +109,6 @@ public class ScanInfo extends BaseEntity {
 		this.nextDeptId = nextDeptId;
 	}
 
-	public Long getPreviousDeptId() {
-		return previousDeptId;
-	}
-
-	public void setPreviousDeptId(Long previousDeptId) {
-		this.previousDeptId = previousDeptId;
-	}
-
 	public Long getDeliveryUserId() {
 		return deliveryUserId;
 	}
@@ -129,6 +127,38 @@ public class ScanInfo extends BaseEntity {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getScanUser() {
+		return scanUser;
+	}
+
+	public void setScanUser(String scanUser) {
+		this.scanUser = scanUser;
+	}
+
+	public String getScanDept() {
+		return scanDept;
+	}
+
+	public void setScanDept(String scanDept) {
+		this.scanDept = scanDept;
+	}
+
+	public String getNextDept() {
+		return nextDept;
+	}
+
+	public void setNextDept(String nextDept) {
+		this.nextDept = nextDept;
+	}
+
+	public String getDeliveryUser() {
+		return deliveryUser;
+	}
+
+	public void setDeliveryUser(String deliveryUser) {
+		this.deliveryUser = deliveryUser;
 	}
 	
 }

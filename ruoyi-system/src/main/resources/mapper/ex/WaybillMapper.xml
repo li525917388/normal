@@ -94,6 +94,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where waybill_id = #{waybillId}
 	</update>
 	
+	
+	<!-- 更新运单信息根据运单号 -->
+	<update id="updateWaybillByNo" parameterType="Waybill">
+		update ex_waybill
+		<set>
+			<if test="orderId != null  ">order_id = #{orderId},</if>
+			<if test="waybillStatus != null  ">waybill_status = #{waybillStatus},</if>
+			<if test="sendDate != null  ">send_date = #{sendDate},</if>
+			<if test="receiverName != null  and receiverName != ''  ">receiver_name = #{receiverName},</if>
+			<if test="receiverPhone != null  and receiverPhone != ''  ">receiver_phone = #{receiverPhone},</if>
+			<if test="weight != null  ">weight = #{weight},</if>
+			<if test="goodsName != null  and goodsName != ''  ">goods_name = #{goodsName},</if>
+			<if test="volume != null  and volume != ''  ">volume = #{volume},</if>
+		</set>
+		where waybill_no = #{waybillNo}
+	</update>
+	
 
 	<delete id="deleteWaybillById" parameterType="Long">
 		delete from ex_waybill where waybill_id = #{waybillId}

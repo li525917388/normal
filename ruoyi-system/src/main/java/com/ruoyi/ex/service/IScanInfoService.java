@@ -1,6 +1,7 @@
 package com.ruoyi.ex.service;
 
 import com.ruoyi.ex.domain.ScanInfo;
+
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public interface IScanInfoService
      * @param scanId 扫描ID
      * @return 扫描信息
      */
-	public ScanInfo selectScanInfoById(Long scanId);
+	public ScanInfo selectScanTempById(Long scanId);
 	
 	/**
      * 查询扫描列表
@@ -25,7 +26,7 @@ public interface IScanInfoService
      * @param scanInfo 扫描信息
      * @return 扫描集合
      */
-	public List<ScanInfo> selectScanInfoList(ScanInfo scanInfo);
+	public List<ScanInfo> selectScanTempList(ScanInfo scanInfo);
 	
 	/**
      * 新增扫描
@@ -33,7 +34,7 @@ public interface IScanInfoService
      * @param scanInfo 扫描信息
      * @return 结果
      */
-	public int insertScanInfo(ScanInfo scanInfo);
+	public int insertScanTemp(ScanInfo scanInfo);
 	
 	/**
      * 修改扫描
@@ -41,7 +42,7 @@ public interface IScanInfoService
      * @param scanInfo 扫描信息
      * @return 结果
      */
-	public int updateScanInfo(ScanInfo scanInfo);
+	public int updateScanTemp(ScanInfo scanInfo);
 		
 	/**
      * 删除扫描信息
@@ -49,6 +50,15 @@ public interface IScanInfoService
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-	public int deleteScanInfoByIds(String ids);
+	public int deleteScanTempByIds(String ids);
+
+	
+	
+	/**
+	 * 扫描信息上传
+	 * @param ids
+	 * @return
+	 */
+	public int uploadScanInfoByIds(String ids);
 	
 }

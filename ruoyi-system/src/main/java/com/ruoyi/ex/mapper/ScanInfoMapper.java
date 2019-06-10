@@ -17,7 +17,7 @@ public interface ScanInfoMapper
      * @param scanId 扫描ID
      * @return 扫描信息
      */
-	public ScanInfo selectScanInfoById(Long scanId);
+	public ScanInfo selectScanTempById(Long scanId);
 	
 	/**
      * 查询扫描列表
@@ -25,7 +25,7 @@ public interface ScanInfoMapper
      * @param scanInfo 扫描信息
      * @return 扫描集合
      */
-	public List<ScanInfo> selectScanInfoList(ScanInfo scanInfo);
+	public List<ScanInfo> selectScanTempList(ScanInfo scanInfo);
 	
 	/**
      * 新增扫描
@@ -33,7 +33,7 @@ public interface ScanInfoMapper
      * @param scanInfo 扫描信息
      * @return 结果
      */
-	public int insertScanInfo(ScanInfo scanInfo);
+	public int insertScanTemp(ScanInfo scanInfo);
 	
 	/**
      * 修改扫描
@@ -41,7 +41,7 @@ public interface ScanInfoMapper
      * @param scanInfo 扫描信息
      * @return 结果
      */
-	public int updateScanInfo(ScanInfo scanInfo);
+	public int updateScanTemp(ScanInfo scanInfo);
 	
 	/**
      * 删除扫描
@@ -49,7 +49,7 @@ public interface ScanInfoMapper
      * @param scanId 扫描ID
      * @return 结果
      */
-	public int deleteScanInfoById(Long scanId);
+	public int deleteScanTempById(Long scanId);
 	
 	/**
      * 批量删除扫描
@@ -57,6 +57,15 @@ public interface ScanInfoMapper
      * @param scanIds 需要删除的数据ID
      * @return 结果
      */
-	public int deleteScanInfoByIds(String[] scanIds);
+	public int deleteScanTempByIds(String[] scanIds);
+
+	
+	
+	/**
+	 * 新增实际扫描记录
+	 * @param scanInfo
+	 * @return
+	 */
+	public int insertScanInfo(ScanInfo scanInfo);
 	
 }

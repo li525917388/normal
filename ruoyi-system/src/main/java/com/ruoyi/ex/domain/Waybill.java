@@ -23,8 +23,9 @@ public class Waybill extends BaseEntity
 	private String waybillNo;
 	/** 订单ID */
 	private Long orderId;
-	/** 运单状态 */
-	private Integer waybillStatus;
+
+	private Integer waybillStatus;	//运单状态。10=已揽收，20=运输中，40=派件中，50=已签收
+	
 	/** 寄件日期 */
 	private Date sendDate;
 	/** 收件人姓名 */

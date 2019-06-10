@@ -56,4 +56,9 @@ public enum BusinessType
      * 清空
      */
     CLEAN,
+    
+    /**
+     * 上传
+     */
+    UPLOAD,
 }

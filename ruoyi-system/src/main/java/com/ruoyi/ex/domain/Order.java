@@ -28,7 +28,7 @@ public class Order extends BaseEntity
 	/** 电商id */
 	private String ecCompanyId;
 	/** 订单状态 */
-	private Integer orderStatus;
+	private Integer orderStatus;		//1=待处理，2=调度网点，3=调度业务员，4=已收取，5=已完成，0=已取消
 	/** 订单来源 */
 	private String orderSource;
 	/** 客户ID */

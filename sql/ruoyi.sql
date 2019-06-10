@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-05-31 22:49:06
+Date: 2019-06-10 17:40:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -887,6 +887,7 @@ DROP TABLE IF EXISTS `ex_order`;
 CREATE TABLE `ex_order` (
   `orderid` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '订单id',
   `order_no` varchar(64) NOT NULL COMMENT '订单号',
+  `waybill_no` varchar(32) DEFAULT NULL COMMENT '运单编号',
   `order_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '订单日期',
   `ec_company_id` varchar(32) DEFAULT NULL COMMENT '电商id',
   `order_status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '订单状态',
@@ -909,6 +910,7 @@ CREATE TABLE `ex_order` (
   `receiver_addr` varchar(255) DEFAULT NULL COMMENT '收件详细地址',
   `receiver_post` int(6) DEFAULT NULL COMMENT '收件邮编',
   `deliver_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '运费',
+  `goods_name` varchar(100) DEFAULT NULL COMMENT '物品名称',
   `goods_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '物品价值',
   `goods_num` int(11) DEFAULT NULL COMMENT '物品数量',
   `weight` decimal(10,3) DEFAULT '0.000' COMMENT '重量',
@@ -921,7 +923,59 @@ CREATE TABLE `ex_order` (
 -- ----------------------------
 -- Records of ex_order
 -- ----------------------------
-INSERT INTO `ex_order` VALUES ('1', '20190528162903000001', '2019-05-28 16:29:13', 'SYSTEM', '3', '1', '1', '李德欢', '13145804664', '01', '0101', '010101', '01010101', '深圳是固戍', '10101', 'xxx', '10010', '02', '0202', '020202', '02020202', '北京', '20202', '30.00', '400.00', '1', '4.000', '1', null, '4');
+INSERT INTO `ex_order` VALUES ('1', '20190528162903000001', '820000001', '2019-05-28 16:29:13', 'SYSTEM', '4', '1', '1', '李德欢', '13145804664', '01', '0101', '010101', '01010101', '深圳是固戍', '10101', 'xxx', '10010', '02', '0202', '020202', '02020202', '北京', '20202', '30.00', '笔记本', '400.00', '1', '4.000', '1', null, '4');
+
+-- ----------------------------
+-- Table structure for ex_scan_info
+-- ----------------------------
+DROP TABLE IF EXISTS `ex_scan_info`;
+CREATE TABLE `ex_scan_info` (
+  `scan_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '扫描id',
+  `waybill_no` varchar(16) NOT NULL COMMENT '运单编号',
+  `scan_type` tinyint(4) NOT NULL COMMENT '扫描类型',
+  `scan_time` datetime NOT NULL COMMENT '扫描时间',
+  `scan_user_id` int(11) NOT NULL COMMENT '扫描员',
+  `scan_dept_id` int(11) NOT NULL COMMENT '扫描网点',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `next_dept_id` int(11) DEFAULT NULL COMMENT '下一站',
+  `previous_dept_id` int(11) DEFAULT NULL COMMENT '上一站',
+  `delivery_user_id` int(11) DEFAULT NULL COMMENT '派送人',
+  `signer` varchar(64) DEFAULT NULL COMMENT '签收人',
+  PRIMARY KEY (`scan_id`),
+  KEY `ind_scan_info_waybill_no` (`waybill_no`),
+  KEY `ind_scan_info_scan_time` (`scan_time`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='扫描信息表';
+
+-- ----------------------------
+-- Records of ex_scan_info
+-- ----------------------------
+INSERT INTO `ex_scan_info` VALUES ('3', '820000001', '10', '2019-06-05 14:35:46', '1', '103', null, null, null, null, null);
+INSERT INTO `ex_scan_info` VALUES ('4', '820000001', '20', '2019-06-06 14:49:09', '1', '103', '测试', '104', null, null, null);
+INSERT INTO `ex_scan_info` VALUES ('5', '820000001', '30', '2019-06-10 14:31:02', '1', '104', '测试', null, '103', null, null);
+INSERT INTO `ex_scan_info` VALUES ('6', '820000001', '40', '2019-06-10 14:34:24', '1', '105', '派件', null, null, '1', null);
+
+-- ----------------------------
+-- Table structure for ex_scan_temp
+-- ----------------------------
+DROP TABLE IF EXISTS `ex_scan_temp`;
+CREATE TABLE `ex_scan_temp` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `waybill_no` varchar(64) NOT NULL COMMENT '运单编号',
+  `scan_type` tinyint(4) DEFAULT NULL,
+  `scan_time` datetime DEFAULT NULL COMMENT '扫描时间',
+  `scan_user_id` int(11) DEFAULT NULL COMMENT '扫描员',
+  `scan_dept_id` int(11) NOT NULL COMMENT '扫描网点',
+  `remark` varchar(255) DEFAULT NULL,
+  `next_dept_id` int(11) DEFAULT NULL COMMENT '下一站',
+  `previous_dept_id` int(11) DEFAULT NULL COMMENT '上一站',
+  `delivery_user_id` int(11) DEFAULT NULL COMMENT '派送人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='扫描信息临时表';
+
+-- ----------------------------
+-- Records of ex_scan_temp
+-- ----------------------------
+INSERT INTO `ex_scan_temp` VALUES ('7', '82000001', '20', '2019-06-10 17:08:19', '1', '103', '1', '102', null, null);
 
 -- ----------------------------
 -- Table structure for ex_waybill
@@ -939,12 +993,13 @@ CREATE TABLE `ex_waybill` (
   `goods_name` varchar(100) DEFAULT NULL COMMENT '物品名称',
   `volume` varchar(100) DEFAULT NULL COMMENT '体积',
   PRIMARY KEY (`waybill_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='运单信息';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='运单信息';
 
 -- ----------------------------
 -- Records of ex_waybill
 -- ----------------------------
 INSERT INTO `ex_waybill` VALUES ('1', '82000001', '1', '10', '2019-05-31 10:54:01', '11', '12345679890', '2.500', '电脑', '1');
+INSERT INTO `ex_waybill` VALUES ('9', '820000001', '1', '40', null, 'xxx', '10010', '4.000', '笔记本', null);
 
 -- ----------------------------
 -- Table structure for ex_waybill_detail
@@ -954,12 +1009,13 @@ CREATE TABLE `ex_waybill_detail` (
   `waybill_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '运单id',
   `pickup_date` datetime DEFAULT NULL COMMENT '收件日期',
   PRIMARY KEY (`waybill_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ex_waybill_detail
 -- ----------------------------
 INSERT INTO `ex_waybill_detail` VALUES ('1', null);
+INSERT INTO `ex_waybill_detail` VALUES ('9', '2019-06-05 14:35:46');
 
 -- ----------------------------
 -- Table structure for qrtz_blob_triggers
@@ -1107,7 +1163,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 -- ----------------------------
 -- Records of qrtz_scheduler_state
 -- ----------------------------
-INSERT INTO `qrtz_scheduler_state` VALUES ('RuoyiScheduler', 'ldh-PC1559309166184', '1559314135121', '15000');
+INSERT INTO `qrtz_scheduler_state` VALUES ('RuoyiScheduler', 'ldh-PC1560159480217', '1560159603569', '15000');
 
 -- ----------------------------
 -- Table structure for qrtz_simple_triggers
@@ -1184,8 +1240,8 @@ CREATE TABLE `qrtz_triggers` (
 -- ----------------------------
 -- Records of qrtz_triggers
 -- ----------------------------
-INSERT INTO `qrtz_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', 'TASK_CLASS_NAME1', 'DEFAULT', null, '1559309170000', '-1', '5', 'PAUSED', 'CRON', '1559309166000', '0', null, '2', '');
-INSERT INTO `qrtz_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', 'TASK_CLASS_NAME2', 'DEFAULT', null, '1559309180000', '-1', '5', 'PAUSED', 'CRON', '1559309166000', '0', null, '2', '');
+INSERT INTO `qrtz_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME1', 'DEFAULT', 'TASK_CLASS_NAME1', 'DEFAULT', null, '1560159480000', '-1', '5', 'PAUSED', 'CRON', '1560159480000', '0', null, '2', '');
+INSERT INTO `qrtz_triggers` VALUES ('RuoyiScheduler', 'TASK_CLASS_NAME2', 'DEFAULT', 'TASK_CLASS_NAME2', 'DEFAULT', null, '1560159480000', '-1', '5', 'PAUSED', 'CRON', '1560159480000', '0', null, '2', '');
 
 -- ----------------------------
 -- Table structure for req_requisition
@@ -1321,7 +1377,7 @@ CREATE TABLE `sys_dict_data` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dict_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8 COMMENT='字典数据表';
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COMMENT='字典数据表';
 
 -- ----------------------------
 -- Records of sys_dict_data
@@ -1362,13 +1418,20 @@ INSERT INTO `sys_dict_data` VALUES ('33', '2', '到付', '2', 'ex_order_paytype'
 INSERT INTO `sys_dict_data` VALUES ('34', '3', '月结', '3', 'ex_order_paytype', null, null, 'Y', '0', 'admin', '2019-05-30 09:30:11', '', null, '月结');
 INSERT INTO `sys_dict_data` VALUES ('35', '1', '已揽收', '10', 'ex_waybill_status', '', 'info', 'Y', '0', 'admin', '2019-05-31 19:46:09', 'admin', '2019-05-31 19:51:24', '已揽收');
 INSERT INTO `sys_dict_data` VALUES ('36', '2', '运输中', '20', 'ex_waybill_status', null, 'primary', 'Y', '0', 'admin', '2019-05-31 19:46:55', '', null, '发件，到件');
-INSERT INTO `sys_dict_data` VALUES ('37', '3', '派件中', '30', 'ex_waybill_status', null, 'primary', 'Y', '0', 'admin', '2019-05-31 19:47:17', '', null, '派件中');
-INSERT INTO `sys_dict_data` VALUES ('38', '4', '已签收', '40', 'ex_waybill_status', null, 'success', 'Y', '0', 'admin', '2019-05-31 19:47:41', '', null, '签收');
-INSERT INTO `sys_dict_data` VALUES ('39', '5', '已退件', '50', 'ex_waybill_status', '', 'default', 'Y', '0', 'admin', '2019-05-31 19:48:53', 'admin', '2019-05-31 19:51:30', '退件，退件确认，退件签收');
-INSERT INTO `sys_dict_data` VALUES ('40', '6', '滞留中', '60', 'ex_waybill_status', null, 'danger', 'Y', '0', 'admin', '2019-05-31 19:49:17', '', null, '疑难件，留仓件');
+INSERT INTO `sys_dict_data` VALUES ('37', '3', '派件中', '40', 'ex_waybill_status', '', 'primary', 'Y', '0', 'admin', '2019-05-31 19:47:17', 'admin', '2019-06-05 16:06:10', '派件中');
+INSERT INTO `sys_dict_data` VALUES ('38', '4', '已签收', '50', 'ex_waybill_status', '', 'success', 'Y', '0', 'admin', '2019-05-31 19:47:41', 'admin', '2019-06-05 16:06:17', '签收');
+INSERT INTO `sys_dict_data` VALUES ('39', '5', '已退件', '60', 'ex_waybill_status', '', 'default', 'Y', '0', 'admin', '2019-05-31 19:48:53', 'admin', '2019-06-05 16:06:25', '退件，退件确认，退件签收');
+INSERT INTO `sys_dict_data` VALUES ('40', '6', '滞留中', '70', 'ex_waybill_status', '', 'danger', 'Y', '0', 'admin', '2019-05-31 19:49:17', 'admin', '2019-06-05 16:06:35', '疑难件，留仓件');
 INSERT INTO `sys_dict_data` VALUES ('41', '1', '文件类', 'DOC', 'ex_waybill_goodstype', null, 'info', 'Y', '0', 'admin', '2019-05-31 22:32:25', '', null, '文件类型');
 INSERT INTO `sys_dict_data` VALUES ('42', '2', '包裹', 'PAR', 'ex_waybill_goodstype', null, 'success', 'Y', '0', 'admin', '2019-05-31 22:33:07', '', null, '普通包裹');
 INSERT INTO `sys_dict_data` VALUES ('43', '1', '普通快递', 'EZ', 'ex_waybill_expresstype', null, 'primary', 'Y', '0', 'admin', '2019-05-31 22:35:48', '', null, '普通快递');
+INSERT INTO `sys_dict_data` VALUES ('44', '4', '已收取', '4', 'ex_order_status', '', 'success', 'Y', '0', 'admin', '2019-05-31 22:55:45', 'admin', '2019-06-05 14:30:30', '已做收件扫描');
+INSERT INTO `sys_dict_data` VALUES ('45', '0', '已取消', '0', 'ex_order_status', null, 'default', 'Y', '0', 'admin', '2019-05-31 22:56:18', '', null, '已取消');
+INSERT INTO `sys_dict_data` VALUES ('46', '1', '收件', '10', 'ex_scan_scantype', null, 'primary', 'Y', '0', 'admin', '2019-06-05 16:09:45', '', null, '收件');
+INSERT INTO `sys_dict_data` VALUES ('47', '2', '发件', '20', 'ex_scan_scantype', null, 'info', 'Y', '0', 'admin', '2019-06-05 16:10:26', '', null, '发件');
+INSERT INTO `sys_dict_data` VALUES ('48', '3', '到件', '30', 'ex_scan_scantype', null, 'info', 'Y', '0', 'admin', '2019-06-05 16:10:51', '', null, '到件');
+INSERT INTO `sys_dict_data` VALUES ('49', '4', '派件', '40', 'ex_scan_scantype', null, null, 'Y', '0', 'admin', '2019-06-05 16:11:07', '', null, '派件');
+INSERT INTO `sys_dict_data` VALUES ('50', '5', '签收', '50', 'ex_scan_scantype', null, 'success', 'Y', '0', 'admin', '2019-06-05 16:11:24', '', null, '签收');
 
 -- ----------------------------
 -- Table structure for sys_dict_type
@@ -1386,7 +1449,7 @@ CREATE TABLE `sys_dict_type` (
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`dict_id`),
   UNIQUE KEY `dict_type` (`dict_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='字典类型表';
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='字典类型表';
 
 -- ----------------------------
 -- Records of sys_dict_type
@@ -1406,6 +1469,7 @@ INSERT INTO `sys_dict_type` VALUES ('12', '支付方式', 'ex_order_paytype', '0
 INSERT INTO `sys_dict_type` VALUES ('13', '运单状态', 'ex_waybill_status', '0', 'admin', '2019-05-31 19:45:28', '', null, '运单状态。10=已揽收，20=运输中，30=派件中，40=已签收，50=已退件，60=滞留中');
 INSERT INTO `sys_dict_type` VALUES ('14', '物品类型', 'ex_waybill_goodstype', '0', 'admin', '2019-05-31 22:27:43', '', null, '运单物品类型。');
 INSERT INTO `sys_dict_type` VALUES ('15', '快件类型', 'ex_waybill_expresstype', '0', 'admin', '2019-05-31 22:34:46', '', null, '快件类型。');
+INSERT INTO `sys_dict_type` VALUES ('16', '扫描类型', 'ex_scan_scantype', '0', 'admin', '2019-06-05 16:09:24', '', null, '扫描类型。10=收件，20=发件，30=到件，40=派件，50=签收');
 
 -- ----------------------------
 -- Table structure for sys_job
@@ -1472,7 +1536,7 @@ CREATE TABLE `sys_logininfor` (
   `msg` varchar(255) DEFAULT '' COMMENT '提示消息',
   `login_time` datetime DEFAULT NULL COMMENT '访问时间',
   PRIMARY KEY (`info_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=229 DEFAULT CHARSET=utf8 COMMENT='系统访问记录';
+) ENGINE=InnoDB AUTO_INCREMENT=239 DEFAULT CHARSET=utf8 COMMENT='系统访问记录';
 
 -- ----------------------------
 -- Records of sys_logininfor
@@ -1606,6 +1670,16 @@ INSERT INTO `sys_logininfor` VALUES ('225', 'admin', '127.0.0.1', '内网IP', 'C
 INSERT INTO `sys_logininfor` VALUES ('226', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-05-31 21:08:54');
 INSERT INTO `sys_logininfor` VALUES ('227', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-05-31 21:23:52');
 INSERT INTO `sys_logininfor` VALUES ('228', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-05-31 21:26:14');
+INSERT INTO `sys_logininfor` VALUES ('229', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-06-03 18:30:51');
+INSERT INTO `sys_logininfor` VALUES ('230', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-06-04 11:11:13');
+INSERT INTO `sys_logininfor` VALUES ('231', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '1', '验证码错误', '2019-06-05 09:42:02');
+INSERT INTO `sys_logininfor` VALUES ('232', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-06-05 09:42:07');
+INSERT INTO `sys_logininfor` VALUES ('233', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-06-06 08:35:33');
+INSERT INTO `sys_logininfor` VALUES ('234', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '退出成功', '2019-06-06 14:55:58');
+INSERT INTO `sys_logininfor` VALUES ('235', 'ldh', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '1', '用户不存在/密码错误', '2019-06-06 14:56:07');
+INSERT INTO `sys_logininfor` VALUES ('236', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-06-06 14:56:14');
+INSERT INTO `sys_logininfor` VALUES ('237', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-06-10 13:53:29');
+INSERT INTO `sys_logininfor` VALUES ('238', 'admin', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', '0', '登录成功', '2019-06-10 15:09:31');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -1627,14 +1701,14 @@ CREATE TABLE `sys_menu` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1083 DEFAULT CHARSET=utf8 COMMENT='菜单权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=1088 DEFAULT CHARSET=utf8 COMMENT='菜单权限表';
 
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
 INSERT INTO `sys_menu` VALUES ('1', '系统管理', '0', '1', '#', 'M', '0', '', 'fa fa-gear', 'admin', '2018-03-16 11:33:00', 'ry', '2018-03-16 11:33:00', '系统管理目录');
-INSERT INTO `sys_menu` VALUES ('2', '系统监控', '0', '2', '#', 'M', '0', '', 'fa fa-video-camera', 'admin', '2018-03-16 11:33:00', 'ry', '2018-03-16 11:33:00', '系统监控目录');
-INSERT INTO `sys_menu` VALUES ('3', '系统工具', '0', '3', '#', 'M', '0', '', 'fa fa-bars', 'admin', '2018-03-16 11:33:00', 'ry', '2018-03-16 11:33:00', '系统工具目录');
+INSERT INTO `sys_menu` VALUES ('2', '系统监控', '0', '98', '#', 'M', '0', '', 'fa fa-video-camera', 'admin', '2018-03-16 11:33:00', 'admin', '2019-06-05 17:36:16', '系统监控目录');
+INSERT INTO `sys_menu` VALUES ('3', '系统工具', '0', '99', '#', 'M', '0', '', 'fa fa-bars', 'admin', '2018-03-16 11:33:00', 'admin', '2019-06-05 17:36:03', '系统工具目录');
 INSERT INTO `sys_menu` VALUES ('100', '用户管理', '1', '1', '/system/user', 'C', '0', 'system:user:view', '#', 'admin', '2018-03-16 11:33:00', 'ry', '2018-03-16 11:33:00', '用户管理菜单');
 INSERT INTO `sys_menu` VALUES ('101', '角色管理', '1', '2', '/system/role', 'C', '0', 'system:role:view', '#', 'admin', '2018-03-16 11:33:00', 'ry', '2018-03-16 11:33:00', '角色管理菜单');
 INSERT INTO `sys_menu` VALUES ('102', '菜单管理', '1', '3', '/system/menu', 'C', '0', 'system:menu:view', '#', 'admin', '2018-03-16 11:33:00', 'ry', '2018-03-16 11:33:00', '菜单管理菜单');
@@ -1729,13 +1803,18 @@ INSERT INTO `sys_menu` VALUES ('1072', '中心派遣网点', '1071', '1', 'disp/
 INSERT INTO `sys_menu` VALUES ('1073', '订单调度', '1071', '2', 'disp/orderDispatch', 'C', '0', null, '#', 'admin', '2019-05-29 17:51:09', '', null, '');
 INSERT INTO `sys_menu` VALUES ('1074', '调度网点', '1068', '1', '#', 'F', '0', 'ex:order:dispSite', '#', 'admin', '2019-05-29 19:30:08', '', null, '');
 INSERT INTO `sys_menu` VALUES ('1075', '调度业务员', '1074', '2', '#', 'F', '0', 'ex:order:dispSalesman', '#', 'admin', '2019-05-29 19:31:22', '', null, '');
-INSERT INTO `sys_menu` VALUES ('1076', '收件扫描', '1067', '3', 'ex/order/pickup', 'C', '0', 'ex:waybill:pickup:list', '#', 'admin', '2019-05-31 10:40:03', 'admin', '2019-05-31 21:24:23', '');
+INSERT INTO `sys_menu` VALUES ('1076', '收件扫描', '1067', '3', 'ex/waybill/pickup', 'C', '0', 'ex:waybill:pickup:view', '#', 'admin', '2019-05-31 10:40:03', 'admin', '2019-06-10 15:15:27', '');
 INSERT INTO `sys_menu` VALUES ('1077', '运单管理', '1067', '2', '/ex/waybill', 'C', '0', 'ex:waybill:view', '#', 'admin', '2018-03-01 00:00:00', 'admin', '2019-05-31 19:58:17', '运单菜单');
 INSERT INTO `sys_menu` VALUES ('1078', '运单查询', '1077', '1', '#', 'F', '0', 'ex:waybill:list', '#', 'admin', '2018-03-01 00:00:00', 'ry', '2018-03-01 00:00:00', '');
 INSERT INTO `sys_menu` VALUES ('1079', '运单新增', '1077', '2', '#', 'F', '0', 'ex:waybill:add', '#', 'admin', '2018-03-01 00:00:00', 'ry', '2018-03-01 00:00:00', '');
 INSERT INTO `sys_menu` VALUES ('1080', '运单修改', '1077', '3', '#', 'F', '0', 'ex:waybill:edit', '#', 'admin', '2018-03-01 00:00:00', 'ry', '2018-03-01 00:00:00', '');
 INSERT INTO `sys_menu` VALUES ('1081', '运单删除', '1077', '4', '#', 'F', '0', 'ex:waybill:remove', '#', 'admin', '2018-03-01 00:00:00', 'ry', '2018-03-01 00:00:00', '');
-INSERT INTO `sys_menu` VALUES ('1082', '发件扫描', '1067', '4', 'ex/departure', 'C', '0', 'ex:waybill:departure:list', '#', 'admin', '2019-05-31 21:10:23', '', null, '');
+INSERT INTO `sys_menu` VALUES ('1082', '发件扫描', '1067', '4', 'ex/scanInfo/departure', 'C', '0', 'ex:scanInfo:departure:view', '#', 'admin', '2019-05-31 21:10:23', 'admin', '2019-06-06 09:33:39', '');
+INSERT INTO `sys_menu` VALUES ('1083', '收件操作', '1076', '1', '#', 'F', '0', 'ex:waybill:pickup:oper', '#', 'admin', '2019-06-04 11:12:11', '', null, '');
+INSERT INTO `sys_menu` VALUES ('1084', '查询', '0', '4', '#', 'M', '0', null, 'fa fa-search', 'admin', '2019-06-05 14:38:36', '', null, '');
+INSERT INTO `sys_menu` VALUES ('1085', '快件跟踪', '1084', '1', 'ex/track', 'C', '0', 'ex:trackl:view', '#', 'admin', '2019-06-05 14:41:58', '', null, '');
+INSERT INTO `sys_menu` VALUES ('1086', '到件扫描', '1067', '5', 'ex/scanInfo/arrival', 'C', '0', 'ex:scanInfo:arrival:view', '#', 'admin', '2019-06-10 14:15:53', 'admin', '2019-06-10 14:18:18', '');
+INSERT INTO `sys_menu` VALUES ('1087', '派件扫描', '1067', '6', 'ex/scanInfo/delivery', 'C', '0', 'ex:scanInfo:delivery:view', '#', 'admin', '2019-06-10 14:17:48', 'admin', '2019-06-10 14:18:36', '');
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -1781,7 +1860,7 @@ CREATE TABLE `sys_oper_log` (
   `error_msg` varchar(2000) DEFAULT '' COMMENT '错误消息',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`oper_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=253 DEFAULT CHARSET=utf8 COMMENT='操作日志记录';
+) ENGINE=InnoDB AUTO_INCREMENT=307 DEFAULT CHARSET=utf8 COMMENT='操作日志记录';
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -1939,6 +2018,60 @@ INSERT INTO `sys_oper_log` VALUES ('249', '字典数据', '1', 'com.ruoyi.web.co
 INSERT INTO `sys_oper_log` VALUES ('250', '字典数据', '1', 'com.ruoyi.web.controller.system.SysDictDataController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/add', '127.0.0.1', '内网IP', '{\r\n  \"dictLabel\" : [ \"包裹\" ],\r\n  \"dictValue\" : [ \"PAR\" ],\r\n  \"dictType\" : [ \"ex_waybill_goodstype\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"2\" ],\r\n  \"listClass\" : [ \"success\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"普通包裹\" ]\r\n}', '0', null, '2019-05-31 22:33:07');
 INSERT INTO `sys_oper_log` VALUES ('251', '字典类型', '1', 'com.ruoyi.web.controller.system.SysDictTypeController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/add', '127.0.0.1', '内网IP', '{\r\n  \"dictName\" : [ \"快件类型\" ],\r\n  \"dictType\" : [ \"ex_waybill_expresstype\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"快件类型。\" ]\r\n}', '0', null, '2019-05-31 22:34:46');
 INSERT INTO `sys_oper_log` VALUES ('252', '字典数据', '1', 'com.ruoyi.web.controller.system.SysDictDataController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/add', '127.0.0.1', '内网IP', '{\r\n  \"dictLabel\" : [ \"普通快递\" ],\r\n  \"dictValue\" : [ \"EZ\" ],\r\n  \"dictType\" : [ \"ex_waybill_expresstype\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"1\" ],\r\n  \"listClass\" : [ \"primary\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"普通快递\" ]\r\n}', '0', null, '2019-05-31 22:35:48');
+INSERT INTO `sys_oper_log` VALUES ('253', '字典数据', '1', 'com.ruoyi.web.controller.system.SysDictDataController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/add', '127.0.0.1', '内网IP', '{\r\n  \"dictLabel\" : [ \"已收取\" ],\r\n  \"dictValue\" : [ \"3\" ],\r\n  \"dictType\" : [ \"ex_order_status\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"4\" ],\r\n  \"listClass\" : [ \"success\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"已做收件扫描\" ]\r\n}', '0', null, '2019-05-31 22:55:45');
+INSERT INTO `sys_oper_log` VALUES ('254', '字典数据', '1', 'com.ruoyi.web.controller.system.SysDictDataController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/add', '127.0.0.1', '内网IP', '{\r\n  \"dictLabel\" : [ \"已取消\" ],\r\n  \"dictValue\" : [ \"0\" ],\r\n  \"dictType\" : [ \"ex_order_status\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"0\" ],\r\n  \"listClass\" : [ \"default\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"已取消\" ]\r\n}', '0', null, '2019-05-31 22:56:18');
+INSERT INTO `sys_oper_log` VALUES ('255', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/edit', '127.0.0.1', '内网IP', '{\r\n  \"menuId\" : [ \"1076\" ],\r\n  \"parentId\" : [ \"1067\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"收件扫描\" ],\r\n  \"url\" : [ \"ex/waybill/pickup\" ],\r\n  \"perms\" : [ \"ex:waybill:pickup:list\" ],\r\n  \"orderNum\" : [ \"3\" ],\r\n  \"icon\" : [ \"#\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-04 11:11:44');
+INSERT INTO `sys_oper_log` VALUES ('256', '菜单管理', '1', 'com.ruoyi.web.controller.system.SysMenuController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/add', '127.0.0.1', '内网IP', '{\r\n  \"parentId\" : [ \"1076\" ],\r\n  \"menuType\" : [ \"F\" ],\r\n  \"menuName\" : [ \"收件操作\" ],\r\n  \"url\" : [ \"\" ],\r\n  \"perms\" : [ \"ex:waybill:pickup:oper\" ],\r\n  \"orderNum\" : [ \"1\" ],\r\n  \"icon\" : [ \"\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-04 11:12:11');
+INSERT INTO `sys_oper_log` VALUES ('257', '收件操作', '2', 'com.ruoyi.web.controller.ex.WaybillController.pickupOper()', '1', 'admin', '罗湖分拨中心', '/ex/waybill/pickup/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"12313\" ],\r\n  \"orderId\" : [ \"123\" ],\r\n  \"waybillStatus\" : [ \"\" ],\r\n  \"receiverName\" : [ \"\" ],\r\n  \"receiverPhone\" : [ \"\" ],\r\n  \"weight\" : [ \"\" ],\r\n  \"goodsName\" : [ \"\" ],\r\n  \"volume\" : [ \"\" ]\r\n}', '1', '修改订单状态失败', '2019-06-04 11:41:57');
+INSERT INTO `sys_oper_log` VALUES ('258', '收件操作', '2', 'com.ruoyi.web.controller.ex.WaybillController.pickupOper()', '1', 'admin', '罗湖分拨中心', '/ex/waybill/pickup/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"orderId\" : [ \"\" ],\r\n  \"orderNo\" : [ \"20190528162903000001\" ],\r\n  \"receiverName\" : [ \"xxx\" ],\r\n  \"receiverPhone\" : [ \"10010\" ],\r\n  \"weight\" : [ \"4\" ],\r\n  \"goodsName\" : [ \"笔记本\" ],\r\n  \"volume\" : [ \"3\" ]\r\n}', '1', '修改订单状态失败', '2019-06-05 10:15:53');
+INSERT INTO `sys_oper_log` VALUES ('259', '收件操作', '2', 'com.ruoyi.web.controller.ex.WaybillController.pickupOper()', '1', 'admin', '罗湖分拨中心', '/ex/waybill/pickup/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"orderid\" : [ \"1\" ],\r\n  \"orderNo\" : [ \"20190528162903000001\" ],\r\n  \"receiverName\" : [ \"xxx\" ],\r\n  \"receiverPhone\" : [ \"10010\" ],\r\n  \"weight\" : [ \"4\" ],\r\n  \"goodsName\" : [ \"笔记本\" ],\r\n  \"volume\" : [ \"\" ]\r\n}', '1', '修改订单状态失败', '2019-06-05 10:22:20');
+INSERT INTO `sys_oper_log` VALUES ('260', '收件操作', '2', 'com.ruoyi.web.controller.ex.WaybillController.pickupOper()', '1', 'admin', '罗湖分拨中心', '/ex/waybill/pickup/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"orderId\" : [ \"1\" ],\r\n  \"orderNo\" : [ \"20190528162903000001\" ],\r\n  \"receiverName\" : [ \"xxx\" ],\r\n  \"receiverPhone\" : [ \"10010\" ],\r\n  \"weight\" : [ \"4\" ],\r\n  \"goodsName\" : [ \"笔记本\" ],\r\n  \"volume\" : [ \"\" ]\r\n}', '1', '\r\n### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'isnert into ex_scan_info(\n    			waybill_no,\n    			scan_type,\n    			scan_time,\' at line 1\r\n### The error may involve com.ruoyi.ex.mapper.WaybillMapper.insertScanInfo-Inline\r\n### The error occurred while setting parameters\r\n### SQL: isnert into ex_scan_info(        waybill_no,        scan_type,        scan_time,        scan_user_id,        scan_dept_id,        remark,        next_dept_id,        previous_dept_id,        delivery_user_id,        signer       ) values(        ?,        ?,        ?,        ?,        ?,        ?,        ?,        ?,        ?,        ?       )\r\n### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'isnert into ex_scan_info(\n    			waybill_no,\n    			scan_type,\n    			scan_time,\' at line 1\n; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'isnert into ex_scan_info(\n    			waybill_no,\n    			scan_type,\n    			scan_time,\' at line 1', '2019-06-05 10:24:27');
+INSERT INTO `sys_oper_log` VALUES ('261', '收件操作', '2', 'com.ruoyi.web.controller.ex.WaybillController.pickupOper()', '1', 'admin', '罗湖分拨中心', '/ex/waybill/pickup/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"orderId\" : [ \"1\" ],\r\n  \"orderNo\" : [ \"20190528162903000001\" ],\r\n  \"receiverName\" : [ \"xxx\" ],\r\n  \"receiverPhone\" : [ \"10010\" ],\r\n  \"weight\" : [ \"4\" ],\r\n  \"goodsName\" : [ \"笔记本\" ],\r\n  \"volume\" : [ \"\" ]\r\n}', '1', '\r\n### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'isnert into ex_scan_info(\n    			waybill_no,\n    			scan_type,\n    			scan_time,\' at line 1\r\n### The error may involve com.ruoyi.ex.mapper.WaybillMapper.insertScanInfo-Inline\r\n### The error occurred while setting parameters\r\n### SQL: isnert into ex_scan_info(        waybill_no,        scan_type,        scan_time,        scan_user_id,        scan_dept_id,        remark,        next_dept_id,        previous_dept_id,        delivery_user_id,        signer       ) values(        ?,        ?,        ?,        ?,        ?,        ?,        ?,        ?,        ?,        ?       )\r\n### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'isnert into ex_scan_info(\n    			waybill_no,\n    			scan_type,\n    			scan_time,\' at line 1\n; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'isnert into ex_scan_info(\n    			waybill_no,\n    			scan_type,\n    			scan_time,\' at line 1', '2019-06-05 10:26:24');
+INSERT INTO `sys_oper_log` VALUES ('262', '收件操作', '2', 'com.ruoyi.web.controller.ex.WaybillController.pickupOper()', '1', 'admin', '罗湖分拨中心', '/ex/waybill/pickup/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"orderId\" : [ \"1\" ],\r\n  \"orderNo\" : [ \"20190528162903000001\" ],\r\n  \"receiverName\" : [ \"xxx\" ],\r\n  \"receiverPhone\" : [ \"10010\" ],\r\n  \"weight\" : [ \"4\" ],\r\n  \"goodsName\" : [ \"笔记本\" ],\r\n  \"volume\" : [ \"\" ]\r\n}', '0', null, '2019-06-05 10:28:46');
+INSERT INTO `sys_oper_log` VALUES ('263', '收件操作', '2', 'com.ruoyi.web.controller.ex.WaybillController.pickupOper()', '1', 'admin', '罗湖分拨中心', '/ex/waybill/pickup/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"orderId\" : [ \"1\" ],\r\n  \"orderNo\" : [ \"20190528162903000001\" ],\r\n  \"receiverName\" : [ \"xxx\" ],\r\n  \"receiverPhone\" : [ \"10010\" ],\r\n  \"weight\" : [ \"4\" ],\r\n  \"goodsName\" : [ \"笔记本\" ],\r\n  \"volume\" : [ \"\" ]\r\n}', '0', null, '2019-06-05 14:29:33');
+INSERT INTO `sys_oper_log` VALUES ('264', '字典数据', '2', 'com.ruoyi.web.controller.system.SysDictDataController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/edit', '127.0.0.1', '内网IP', '{\r\n  \"dictCode\" : [ \"44\" ],\r\n  \"dictLabel\" : [ \"已收取\" ],\r\n  \"dictValue\" : [ \"4\" ],\r\n  \"dictType\" : [ \"ex_order_status\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"4\" ],\r\n  \"listClass\" : [ \"success\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"已做收件扫描\" ]\r\n}', '0', null, '2019-06-05 14:30:30');
+INSERT INTO `sys_oper_log` VALUES ('265', '收件操作', '2', 'com.ruoyi.web.controller.ex.WaybillController.pickupOper()', '1', 'admin', '罗湖分拨中心', '/ex/waybill/pickup/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"orderId\" : [ \"1\" ],\r\n  \"orderNo\" : [ \"20190528162903000001\" ],\r\n  \"receiverName\" : [ \"xxx\" ],\r\n  \"receiverPhone\" : [ \"10010\" ],\r\n  \"weight\" : [ \"4\" ],\r\n  \"goodsName\" : [ \"笔记本\" ],\r\n  \"volume\" : [ \"\" ]\r\n}', '1', 'nested exception is org.apache.ibatis.exceptions.PersistenceException: \r\n### Error updating database.  Cause: java.lang.IllegalArgumentException: invalid comparison: java.util.Date and java.lang.String\r\n### Cause: java.lang.IllegalArgumentException: invalid comparison: java.util.Date and java.lang.String', '2019-06-05 14:32:53');
+INSERT INTO `sys_oper_log` VALUES ('266', '收件操作', '2', 'com.ruoyi.web.controller.ex.WaybillController.pickupOper()', '1', 'admin', '罗湖分拨中心', '/ex/waybill/pickup/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"orderId\" : [ \"1\" ],\r\n  \"orderNo\" : [ \"20190528162903000001\" ],\r\n  \"receiverName\" : [ \"xxx\" ],\r\n  \"receiverPhone\" : [ \"10010\" ],\r\n  \"weight\" : [ \"4\" ],\r\n  \"goodsName\" : [ \"笔记本\" ],\r\n  \"volume\" : [ \"\" ]\r\n}', '0', null, '2019-06-05 14:35:46');
+INSERT INTO `sys_oper_log` VALUES ('267', '菜单管理', '1', 'com.ruoyi.web.controller.system.SysMenuController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/add', '127.0.0.1', '内网IP', '{\r\n  \"parentId\" : [ \"0\" ],\r\n  \"menuType\" : [ \"M\" ],\r\n  \"menuName\" : [ \"查询\" ],\r\n  \"url\" : [ \"\" ],\r\n  \"perms\" : [ \"\" ],\r\n  \"orderNum\" : [ \"4\" ],\r\n  \"icon\" : [ \"fa fa-search\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-05 14:38:37');
+INSERT INTO `sys_oper_log` VALUES ('268', '菜单管理', '1', 'com.ruoyi.web.controller.system.SysMenuController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/add', '127.0.0.1', '内网IP', '{\r\n  \"parentId\" : [ \"1084\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"快件跟踪\" ],\r\n  \"url\" : [ \"ex/track\" ],\r\n  \"perms\" : [ \"ex:trackl:view\" ],\r\n  \"orderNum\" : [ \"1\" ],\r\n  \"icon\" : [ \"\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-05 14:41:59');
+INSERT INTO `sys_oper_log` VALUES ('269', '字典数据', '2', 'com.ruoyi.web.controller.system.SysDictDataController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/edit', '127.0.0.1', '内网IP', '{\r\n  \"dictCode\" : [ \"37\" ],\r\n  \"dictLabel\" : [ \"派件中\" ],\r\n  \"dictValue\" : [ \"40\" ],\r\n  \"dictType\" : [ \"ex_waybill_status\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"3\" ],\r\n  \"listClass\" : [ \"primary\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"派件中\" ]\r\n}', '0', null, '2019-06-05 16:06:10');
+INSERT INTO `sys_oper_log` VALUES ('270', '字典数据', '2', 'com.ruoyi.web.controller.system.SysDictDataController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/edit', '127.0.0.1', '内网IP', '{\r\n  \"dictCode\" : [ \"38\" ],\r\n  \"dictLabel\" : [ \"已签收\" ],\r\n  \"dictValue\" : [ \"50\" ],\r\n  \"dictType\" : [ \"ex_waybill_status\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"4\" ],\r\n  \"listClass\" : [ \"success\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"签收\" ]\r\n}', '0', null, '2019-06-05 16:06:17');
+INSERT INTO `sys_oper_log` VALUES ('271', '字典数据', '2', 'com.ruoyi.web.controller.system.SysDictDataController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/edit', '127.0.0.1', '内网IP', '{\r\n  \"dictCode\" : [ \"39\" ],\r\n  \"dictLabel\" : [ \"已退件\" ],\r\n  \"dictValue\" : [ \"60\" ],\r\n  \"dictType\" : [ \"ex_waybill_status\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"5\" ],\r\n  \"listClass\" : [ \"default\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"退件，退件确认，退件签收\" ]\r\n}', '0', null, '2019-06-05 16:06:25');
+INSERT INTO `sys_oper_log` VALUES ('272', '字典数据', '2', 'com.ruoyi.web.controller.system.SysDictDataController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/edit', '127.0.0.1', '内网IP', '{\r\n  \"dictCode\" : [ \"40\" ],\r\n  \"dictLabel\" : [ \"滞留中\" ],\r\n  \"dictValue\" : [ \"70\" ],\r\n  \"dictType\" : [ \"ex_waybill_status\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"6\" ],\r\n  \"listClass\" : [ \"danger\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"疑难件，留仓件\" ]\r\n}', '0', null, '2019-06-05 16:06:35');
+INSERT INTO `sys_oper_log` VALUES ('273', '字典类型', '1', 'com.ruoyi.web.controller.system.SysDictTypeController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/add', '127.0.0.1', '内网IP', '{\r\n  \"dictName\" : [ \"扫描类型\" ],\r\n  \"dictType\" : [ \"ex_scan_scantype\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"扫描类型。10=收件，20=发件，30=到件，40=派件，50=签收\" ]\r\n}', '0', null, '2019-06-05 16:09:24');
+INSERT INTO `sys_oper_log` VALUES ('274', '字典数据', '1', 'com.ruoyi.web.controller.system.SysDictDataController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/add', '127.0.0.1', '内网IP', '{\r\n  \"dictLabel\" : [ \"收件\" ],\r\n  \"dictValue\" : [ \"10\" ],\r\n  \"dictType\" : [ \"ex_scan_scantype\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"1\" ],\r\n  \"listClass\" : [ \"primary\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"收件\" ]\r\n}', '0', null, '2019-06-05 16:09:45');
+INSERT INTO `sys_oper_log` VALUES ('275', '字典数据', '1', 'com.ruoyi.web.controller.system.SysDictDataController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/add', '127.0.0.1', '内网IP', '{\r\n  \"dictLabel\" : [ \"发件\" ],\r\n  \"dictValue\" : [ \"20\" ],\r\n  \"dictType\" : [ \"ex_scan_scantype\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"2\" ],\r\n  \"listClass\" : [ \"info\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"发件\" ]\r\n}', '0', null, '2019-06-05 16:10:26');
+INSERT INTO `sys_oper_log` VALUES ('276', '字典数据', '1', 'com.ruoyi.web.controller.system.SysDictDataController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/add', '127.0.0.1', '内网IP', '{\r\n  \"dictLabel\" : [ \"到件\" ],\r\n  \"dictValue\" : [ \"30\" ],\r\n  \"dictType\" : [ \"ex_scan_scantype\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"3\" ],\r\n  \"listClass\" : [ \"info\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"到件\" ]\r\n}', '0', null, '2019-06-05 16:10:51');
+INSERT INTO `sys_oper_log` VALUES ('277', '字典数据', '1', 'com.ruoyi.web.controller.system.SysDictDataController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/add', '127.0.0.1', '内网IP', '{\r\n  \"dictLabel\" : [ \"派件\" ],\r\n  \"dictValue\" : [ \"40\" ],\r\n  \"dictType\" : [ \"ex_scan_scantype\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"4\" ],\r\n  \"listClass\" : [ \"\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"派件\" ]\r\n}', '0', null, '2019-06-05 16:11:07');
+INSERT INTO `sys_oper_log` VALUES ('278', '字典数据', '1', 'com.ruoyi.web.controller.system.SysDictDataController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/dict/data/add', '127.0.0.1', '内网IP', '{\r\n  \"dictLabel\" : [ \"签收\" ],\r\n  \"dictValue\" : [ \"50\" ],\r\n  \"dictType\" : [ \"ex_scan_scantype\" ],\r\n  \"cssClass\" : [ \"\" ],\r\n  \"dictSort\" : [ \"5\" ],\r\n  \"listClass\" : [ \"success\" ],\r\n  \"isDefault\" : [ \"Y\" ],\r\n  \"status\" : [ \"0\" ],\r\n  \"remark\" : [ \"签收\" ]\r\n}', '0', null, '2019-06-05 16:11:24');
+INSERT INTO `sys_oper_log` VALUES ('279', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/edit', '127.0.0.1', '内网IP', '{\r\n  \"menuId\" : [ \"3\" ],\r\n  \"parentId\" : [ \"0\" ],\r\n  \"menuType\" : [ \"M\" ],\r\n  \"menuName\" : [ \"系统工具\" ],\r\n  \"url\" : [ \"#\" ],\r\n  \"perms\" : [ \"\" ],\r\n  \"orderNum\" : [ \"99\" ],\r\n  \"icon\" : [ \"fa fa-bars\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-05 17:36:03');
+INSERT INTO `sys_oper_log` VALUES ('280', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/edit', '127.0.0.1', '内网IP', '{\r\n  \"menuId\" : [ \"2\" ],\r\n  \"parentId\" : [ \"0\" ],\r\n  \"menuType\" : [ \"M\" ],\r\n  \"menuName\" : [ \"系统监控\" ],\r\n  \"url\" : [ \"#\" ],\r\n  \"perms\" : [ \"\" ],\r\n  \"orderNum\" : [ \"98\" ],\r\n  \"icon\" : [ \"fa fa-video-camera\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-05 17:36:16');
+INSERT INTO `sys_oper_log` VALUES ('281', '代码生成', '8', 'com.ruoyi.generator.controller.GenController.batchGenCode()', '1', 'admin', '罗湖分拨中心', '/tool/gen/batchGenCode', '127.0.0.1', '内网IP', '{\r\n  \"tables\" : [ \"ex_scan_info\" ]\r\n}', '0', null, '2019-06-05 17:37:15');
+INSERT INTO `sys_oper_log` VALUES ('282', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/edit', '127.0.0.1', '内网IP', '{\r\n  \"menuId\" : [ \"1082\" ],\r\n  \"parentId\" : [ \"1067\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"发件扫描\" ],\r\n  \"url\" : [ \"ex/departure\" ],\r\n  \"perms\" : [ \"ex:scanInfo:departure:view\" ],\r\n  \"orderNum\" : [ \"4\" ],\r\n  \"icon\" : [ \"#\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-06 08:36:42');
+INSERT INTO `sys_oper_log` VALUES ('283', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/edit', '127.0.0.1', '内网IP', '{\r\n  \"menuId\" : [ \"1082\" ],\r\n  \"parentId\" : [ \"1067\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"发件扫描\" ],\r\n  \"url\" : [ \"ex/scanInfo/departure\" ],\r\n  \"perms\" : [ \"ex:scanInfo:departure:view\" ],\r\n  \"orderNum\" : [ \"4\" ],\r\n  \"icon\" : [ \"#\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-06 09:33:39');
+INSERT INTO `sys_oper_log` VALUES ('284', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSave()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"1\" ],\r\n  \"scanType\" : [ \"1\" ],\r\n  \"scanTime\" : [ \"1\" ],\r\n  \"scanUserId\" : [ \"1\" ],\r\n  \"scanDeptId\" : [ \"1\" ],\r\n  \"remark\" : [ \"1\" ],\r\n  \"nextDeptId\" : [ \"1\" ],\r\n  \"previousDeptId\" : [ \"1\" ],\r\n  \"deliveryUserId\" : [ \"1\" ],\r\n  \"signer\" : [ \"1\" ]\r\n}', '1', '\r\n### Error updating database.  Cause: java.sql.SQLException: Field \'scan_time\' doesn\'t have a default value\r\n### The error may involve com.ruoyi.ex.mapper.ScanInfoMapper.insertScanInfo-Inline\r\n### The error occurred while setting parameters\r\n### SQL: insert into ex_scan_info    ( waybill_no,    scan_type,        scan_user_id,    scan_dept_id,    remark,    next_dept_id,    previous_dept_id,    delivery_user_id )     values ( ?,    ?,        ?,    ?,    ?,    ?,    ?,    ? )\r\n### Cause: java.sql.SQLException: Field \'scan_time\' doesn\'t have a default value\n; Field \'scan_time\' doesn\'t have a default value; nested exception is java.sql.SQLException: Field \'scan_time\' doesn\'t have a default value', '2019-06-06 09:46:42');
+INSERT INTO `sys_oper_log` VALUES ('285', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSave()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"1\" ],\r\n  \"scanType\" : [ \"1\" ],\r\n  \"scanTime\" : [ \"\" ],\r\n  \"scanUserId\" : [ \"1\" ],\r\n  \"scanDeptId\" : [ \"1\" ],\r\n  \"remark\" : [ \"1\" ],\r\n  \"nextDeptId\" : [ \"1\" ],\r\n  \"previousDeptId\" : [ \"1\" ],\r\n  \"deliveryUserId\" : [ \"1\" ],\r\n  \"signer\" : [ \"1\" ]\r\n}', '1', '\r\n### Error updating database.  Cause: java.sql.SQLException: Field \'scan_time\' doesn\'t have a default value\r\n### The error may involve com.ruoyi.ex.mapper.ScanInfoMapper.insertScanInfo-Inline\r\n### The error occurred while setting parameters\r\n### SQL: insert into ex_scan_info    ( waybill_no,    scan_type,        scan_user_id,    scan_dept_id,    remark,    next_dept_id,    previous_dept_id,    delivery_user_id )     values ( ?,    ?,        ?,    ?,    ?,    ?,    ?,    ? )\r\n### Cause: java.sql.SQLException: Field \'scan_time\' doesn\'t have a default value\n; Field \'scan_time\' doesn\'t have a default value; nested exception is java.sql.SQLException: Field \'scan_time\' doesn\'t have a default value', '2019-06-06 09:47:20');
+INSERT INTO `sys_oper_log` VALUES ('286', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSave()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"1\" ],\r\n  \"scanType\" : [ \"1\" ],\r\n  \"scanTime\" : [ \"2019-06-06 10:00:00\" ],\r\n  \"scanUserId\" : [ \"1\" ],\r\n  \"scanDeptId\" : [ \"1\" ],\r\n  \"remark\" : [ \"1\" ],\r\n  \"nextDeptId\" : [ \"1\" ],\r\n  \"previousDeptId\" : [ \"1\" ],\r\n  \"deliveryUserId\" : [ \"1\" ],\r\n  \"signer\" : [ \"1\" ]\r\n}', '0', null, '2019-06-06 09:47:30');
+INSERT INTO `sys_oper_log` VALUES ('287', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSave()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"11\" ],\r\n  \"scanType\" : [ \"1\" ],\r\n  \"scanTime\" : [ \"\" ],\r\n  \"scanUserId\" : [ \"1\" ],\r\n  \"scanDeptId\" : [ \"1\" ],\r\n  \"remark\" : [ \"1\" ],\r\n  \"nextDeptId\" : [ \"1\" ],\r\n  \"previousDeptId\" : [ \"1\" ],\r\n  \"deliveryUserId\" : [ \"1\" ],\r\n  \"signer\" : [ \"1\" ]\r\n}', '0', null, '2019-06-06 14:40:02');
+INSERT INTO `sys_oper_log` VALUES ('288', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSave()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"1\" ],\r\n  \"scanType\" : [ \"1\" ],\r\n  \"scanTime\" : [ \"1\" ],\r\n  \"scanUserId\" : [ \"\" ],\r\n  \"scanDeptId\" : [ \"1\" ],\r\n  \"remark\" : [ \"1\" ],\r\n  \"nextDeptId\" : [ \"1\" ],\r\n  \"previousDeptId\" : [ \"1\" ],\r\n  \"deliveryUserId\" : [ \"1\" ],\r\n  \"signer\" : [ \"1\" ]\r\n}', '0', null, '2019-06-06 14:40:22');
+INSERT INTO `sys_oper_log` VALUES ('289', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSave()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/add', '127.0.0.1', '内网IP', '{\r\n  \"waybillNo\" : [ \"1\" ],\r\n  \"scanType\" : [ \"1\" ],\r\n  \"scanTime\" : [ \"\" ],\r\n  \"scanUserId\" : [ \"1\" ],\r\n  \"scanDeptId\" : [ \"1\" ],\r\n  \"remark\" : [ \"1\" ],\r\n  \"nextDeptId\" : [ \"1\" ],\r\n  \"previousDeptId\" : [ \"1\" ],\r\n  \"deliveryUserId\" : [ \"1\" ],\r\n  \"signer\" : [ \"1\" ]\r\n}', '0', null, '2019-06-06 14:42:42');
+INSERT INTO `sys_oper_log` VALUES ('290', '扫描', '3', 'com.ruoyi.web.controller.ex.ScanInfoController.remove()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/remove', '127.0.0.1', '内网IP', '{\r\n  \"ids\" : [ \"3\" ]\r\n}', '0', null, '2019-06-06 14:42:55');
+INSERT INTO `sys_oper_log` VALUES ('291', '扫描', '3', 'com.ruoyi.web.controller.ex.ScanInfoController.remove()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/remove', '127.0.0.1', '内网IP', '{\r\n  \"ids\" : [ \"2\" ]\r\n}', '0', null, '2019-06-06 14:42:56');
+INSERT INTO `sys_oper_log` VALUES ('292', '扫描', '3', 'com.ruoyi.web.controller.ex.ScanInfoController.remove()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/remove', '127.0.0.1', '内网IP', '{\r\n  \"ids\" : [ \"1\" ]\r\n}', '0', null, '2019-06-06 14:42:59');
+INSERT INTO `sys_oper_log` VALUES ('293', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSave()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/add', '127.0.0.1', '内网IP', '{\r\n  \"scanType\" : [ \"20\" ],\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"scanUserId\" : [ \"1\" ],\r\n  \"scanDeptId\" : [ \"103\" ],\r\n  \"remark\" : [ \"测试\" ],\r\n  \"nextDeptId\" : [ \"104\" ]\r\n}', '0', null, '2019-06-06 14:48:57');
+INSERT INTO `sys_oper_log` VALUES ('294', '上传扫描数据', '10', 'com.ruoyi.web.controller.ex.ScanInfoController.uploadDeparture()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/upload', '127.0.0.1', '内网IP', '{\r\n  \"ids\" : [ \"4\" ]\r\n}', '0', null, '2019-06-10 13:55:11');
+INSERT INTO `sys_oper_log` VALUES ('295', '菜单管理', '1', 'com.ruoyi.web.controller.system.SysMenuController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/add', '127.0.0.1', '内网IP', '{\r\n  \"parentId\" : [ \"1067\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"到件扫描\" ],\r\n  \"url\" : [ \"sys/dictionary/arrival\" ],\r\n  \"perms\" : [ \"ex:waybill:arrival:view\" ],\r\n  \"orderNum\" : [ \"5\" ],\r\n  \"icon\" : [ \"\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-10 14:15:53');
+INSERT INTO `sys_oper_log` VALUES ('296', '菜单管理', '1', 'com.ruoyi.web.controller.system.SysMenuController.addSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/add', '127.0.0.1', '内网IP', '{\r\n  \"parentId\" : [ \"1067\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"派件扫描\" ],\r\n  \"url\" : [ \"ex/scanInfo/delivery\" ],\r\n  \"perms\" : [ \"ex:waybill:delivery:view\" ],\r\n  \"orderNum\" : [ \"6\" ],\r\n  \"icon\" : [ \"\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-10 14:17:48');
+INSERT INTO `sys_oper_log` VALUES ('297', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/edit', '127.0.0.1', '内网IP', '{\r\n  \"menuId\" : [ \"1086\" ],\r\n  \"parentId\" : [ \"1067\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"到件扫描\" ],\r\n  \"url\" : [ \"ex/scanInfo/arrival\" ],\r\n  \"perms\" : [ \"ex:scanInfo:arrival:view\" ],\r\n  \"orderNum\" : [ \"5\" ],\r\n  \"icon\" : [ \"#\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-10 14:18:18');
+INSERT INTO `sys_oper_log` VALUES ('298', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/edit', '127.0.0.1', '内网IP', '{\r\n  \"menuId\" : [ \"1087\" ],\r\n  \"parentId\" : [ \"1067\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"派件扫描\" ],\r\n  \"url\" : [ \"ex/scanInfo/delivery\" ],\r\n  \"perms\" : [ \"ex:scanInfo:delivery:view\" ],\r\n  \"orderNum\" : [ \"6\" ],\r\n  \"icon\" : [ \"#\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-10 14:18:36');
+INSERT INTO `sys_oper_log` VALUES ('299', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/edit', '127.0.0.1', '内网IP', '{\r\n  \"menuId\" : [ \"1076\" ],\r\n  \"parentId\" : [ \"1067\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"收件扫描\" ],\r\n  \"url\" : [ \"ex/scanInfo/pickup\" ],\r\n  \"perms\" : [ \"ex:scanInfo:pickup:view\" ],\r\n  \"orderNum\" : [ \"3\" ],\r\n  \"icon\" : [ \"#\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-10 14:18:58');
+INSERT INTO `sys_oper_log` VALUES ('300', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSaveArrival()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/arrival/add', '127.0.0.1', '内网IP', '{\r\n  \"scanType\" : [ \"20\" ],\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"previousDeptId\" : [ \"103\" ],\r\n  \"scanUserId\" : [ \"1\" ],\r\n  \"scanDeptId\" : [ \"104\" ],\r\n  \"remark\" : [ \"测试\" ]\r\n}', '1', '\r\n### Error updating database.  Cause: java.sql.SQLException: Field \'next_dept_id\' doesn\'t have a default value\r\n### The error may involve com.ruoyi.ex.mapper.ScanInfoMapper.insertScanTemp-Inline\r\n### The error occurred while setting parameters\r\n### SQL: insert into ex_scan_temp    ( waybill_no,    scan_type,    scan_time,    scan_user_id,    scan_dept_id,    remark,        previous_dept_id )     values ( ?,    ?,    ?,    ?,    ?,    ?,        ? )\r\n### Cause: java.sql.SQLException: Field \'next_dept_id\' doesn\'t have a default value\n; Field \'next_dept_id\' doesn\'t have a default value; nested exception is java.sql.SQLException: Field \'next_dept_id\' doesn\'t have a default value', '2019-06-10 14:29:57');
+INSERT INTO `sys_oper_log` VALUES ('301', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSaveArrival()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/arrival/add', '127.0.0.1', '内网IP', '{\r\n  \"scanType\" : [ \"20\" ],\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"previousDeptId\" : [ \"103\" ],\r\n  \"scanUserId\" : [ \"1\" ],\r\n  \"scanDeptId\" : [ \"104\" ],\r\n  \"remark\" : [ \"测试\" ]\r\n}', '0', null, '2019-06-10 14:31:02');
+INSERT INTO `sys_oper_log` VALUES ('302', '上传扫描数据', '10', 'com.ruoyi.web.controller.ex.ScanInfoController.uploadDeparture()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/upload', '127.0.0.1', '内网IP', '{\r\n  \"ids\" : [ \"5\" ]\r\n}', '0', null, '2019-06-10 14:31:13');
+INSERT INTO `sys_oper_log` VALUES ('303', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSaveDelivery()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/delivery/add', '127.0.0.1', '内网IP', '{\r\n  \"scanType\" : [ \"20\" ],\r\n  \"waybillNo\" : [ \"820000001\" ],\r\n  \"deliveryUserId\" : [ \"1\" ],\r\n  \"scanUserId\" : [ \"1\" ],\r\n  \"scanDeptId\" : [ \"105\" ],\r\n  \"remark\" : [ \"派件\" ]\r\n}', '0', null, '2019-06-10 14:34:24');
+INSERT INTO `sys_oper_log` VALUES ('304', '上传扫描数据', '10', 'com.ruoyi.web.controller.ex.ScanInfoController.uploadDeparture()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/upload', '127.0.0.1', '内网IP', '{\r\n  \"ids\" : [ \"6\" ]\r\n}', '0', null, '2019-06-10 14:34:29');
+INSERT INTO `sys_oper_log` VALUES ('305', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.editSave()', '1', 'admin', '罗湖分拨中心', '/system/menu/edit', '127.0.0.1', '内网IP', '{\r\n  \"menuId\" : [ \"1076\" ],\r\n  \"parentId\" : [ \"1067\" ],\r\n  \"menuType\" : [ \"C\" ],\r\n  \"menuName\" : [ \"收件扫描\" ],\r\n  \"url\" : [ \"ex/waybill/pickup\" ],\r\n  \"perms\" : [ \"ex:waybill:pickup:view\" ],\r\n  \"orderNum\" : [ \"3\" ],\r\n  \"icon\" : [ \"#\" ],\r\n  \"visible\" : [ \"0\" ]\r\n}', '0', null, '2019-06-10 15:15:27');
+INSERT INTO `sys_oper_log` VALUES ('306', '扫描', '1', 'com.ruoyi.web.controller.ex.ScanInfoController.addSaveDeparture()', '1', 'admin', '罗湖分拨中心', '/ex/scanInfo/departure/add', '127.0.0.1', '内网IP', '{\r\n  \"scanType\" : [ \"20\" ],\r\n  \"waybillNo\" : [ \"82000001\" ],\r\n  \"nextDeptId\" : [ \"102\" ],\r\n  \"remark\" : [ \"1\" ]\r\n}', '0', null, '2019-06-10 17:08:19');
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -2206,7 +2339,7 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('1', '103', 'admin', '安东尼', '00', 'ry@163.com', '15888888888', '1', '2019/05/30/3a23ac03badbb93fed917b8f6d0bf60b.jpg', '29c67a30398638269fe600f73a054934', '111111', '0', '0', '127.0.0.1', '2019-05-31 21:26:14', 'admin', '2018-03-16 11:33:00', 'ry', '2019-05-31 21:26:14', '管理员');
+INSERT INTO `sys_user` VALUES ('1', '103', 'admin', '安东尼', '00', 'ry@163.com', '15888888888', '1', '2019/05/30/3a23ac03badbb93fed917b8f6d0bf60b.jpg', '29c67a30398638269fe600f73a054934', '111111', '0', '0', '127.0.0.1', '2019-06-10 15:09:30', 'admin', '2018-03-16 11:33:00', 'ry', '2019-06-10 15:09:30', '管理员');
 INSERT INTO `sys_user` VALUES ('2', '105', 'ry', '若依', '00', 'ry@qq.com', '15666666666', '1', '', '8e6d98b90472783cc73c17047ddccf36', '222222', '0', '0', '127.0.0.1', '2018-03-16 11:33:00', 'admin', '2018-03-16 11:33:00', 'admin', '2019-03-15 16:18:10', '测试员');
 INSERT INTO `sys_user` VALUES ('3', '105', 'chenxj', '陈绪军', '00', '541285665@qq.com', '13147856985', '0', '', '6fbb1c657608a0dc1f5e2d7461eff5df', 'fe59ed', '0', '0', '127.0.0.1', '2019-04-30 15:53:18', 'admin', '2019-04-01 18:58:18', 'admin', '2019-04-30 15:53:18', 'ss');
 INSERT INTO `sys_user` VALUES ('4', '103', 'tangyl', '唐亚亮', '00', '5478525@qq.com', '13587458966', '0', '', '2daa3c20fa2ee530fe6a5de92684699a', 'f62357', '0', '0', '127.0.0.1', '2019-04-02 14:35:27', 'admin', '2019-04-01 19:04:37', 'admin', '2019-04-30 15:10:22', '');
@@ -2234,7 +2367,7 @@ CREATE TABLE `sys_user_online` (
 -- ----------------------------
 -- Records of sys_user_online
 -- ----------------------------
-INSERT INTO `sys_user_online` VALUES ('187412cf-756c-4ea8-9ae4-6d560fcf6978', 'admin', '罗湖分拨中心', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', 'on_line', '2019-05-31 21:08:52', '2019-05-31 22:39:40', '1800000');
+INSERT INTO `sys_user_online` VALUES ('9d106e5e-95ff-49ce-8714-a3ccc59e4c6d', 'admin', '罗湖分拨中心', '127.0.0.1', '内网IP', 'Chrome', 'Windows 7', 'on_line', '2019-06-10 16:28:27', '2019-06-10 17:39:09', '1800000');
 
 -- ----------------------------
 -- Table structure for sys_user_post

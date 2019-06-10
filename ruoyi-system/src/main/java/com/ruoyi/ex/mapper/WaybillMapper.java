@@ -45,6 +45,15 @@ public interface WaybillMapper
      */
 	public int updateWaybill(Waybill waybill);
 	
+	
+	/**
+	 * 修改运单(根据运单号)
+	 * @param waybill 运单信息
+	 * @return 结果
+	 */
+	public int updateWaybillByNo(Waybill waybill);
+	
+	
 	/**
      * 删除运单
      * 
