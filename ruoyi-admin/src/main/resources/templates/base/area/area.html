@@ -11,22 +11,30 @@
 					<div class="select-list">
 						<ul>
 							<li>
-								客户名称：<input type="text" name="custName"/>
+								地区编码：<input type="text" name="areaCode"/>
 							</li>
 
 							<li>
-								登录账号：<input type="text" name="loginName"/>
+								地区名：<input type="text" name="areaName"/>
 							</li>
 
 							<li>
-								客户电话：<input type="text" name="custPhone"/>
-							</li>
-
-							<li>
-								客户类型：<select name="custType" th:with="type=${@dict.getType('base_customer_type')}">
+								地区级别：<select name="level" th:with="type=${@dict.getType('base_area_level')}">
 									<option value="">所有</option>
 									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
 								</select>
+							</li>
+
+							<li>
+								城市编码：<input type="text" name="cityCode"/>
+							</li>
+
+							<li>
+								经纬度：<input type="text" name="center"/>
+							</li>
+
+							<li>
+								地区父节点：<input type="text" name="parentId"/>
 							</li>
 
 							<li>
@@ -39,16 +47,16 @@
 			</div>
 			
 	        <div class="btn-group-sm" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="base:customer:add">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="base:area:add">
 					<i class="fa fa-plus"></i> 添加
 				</a>
-				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="base:customer:edit">
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="base:area:edit">
 					<i class="fa fa-edit"></i> 修改
 				</a>
-				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="base:customer:remove">
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="base:area:remove">
 					<i class="fa fa-remove"></i> 删除
 				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="base:customer:export">
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="base:area:export">
 						<i class="fa fa-download"></i> 导出
 				 </a>
 			</div>
@@ -59,9 +67,9 @@
 	</div>
     <div th:include="include :: footer"></div>
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('base:customer:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('base:customer:remove')}]];
-        var prefix = ctx + "base/customer";
+        var editFlag = [[${@permission.hasPermi('base:area:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('base:area:remove')}]];
+        var prefix = ctx + "base/area";
 
         $(function() {
             var options = {
@@ -70,70 +78,48 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
 				exportUrl: prefix + "/export",
-                modalName: "客户",
+                modalName: "地区码",
 		        showExport: true,
+				clickToSelect: true,
                 columns: [{
 		            checkbox: true
 		        },
 				{
-					field : 'custId', 
-					title : '',
+					field : 'areaId', 
+					title : '地区Id',
 					visible: false
 				},
 				{
-					field : 'custName', 
-					title : '客户名称',
+					field : 'areaCode', 
+					title : '地区编码',
 					sortable: true
 				},
 				{
-					field : 'loginName', 
-					title : '登录账号',
+					field : 'areaName', 
+					title : '地区名',
 					sortable: true
 				},
 				{
-					field : 'password', 
-					title : '密码',
-					sortable: true
-				},
-				{
-					field : 'custPhone', 
-					title : '客户电话',
-					sortable: true
-				},
-				{
-					field : 'custType', 
-					title : '客户类型',
+					field : 'level', 
+					title : '地区级别',
 					sortable: true,
 					formatter: function(value, row, index) {
-		            	return $.table.selectDictLabel([[${@dict.getType('base_customer_type')}]], row.custType);
+		            	return $.table.selectDictLabel([[${@dict.getType('base_area_level')}]], row.level);
 		            }
 				},
 				{
-					field : 'custProv', 
-					title : '省',
-					sortable: true,
-					visible: false
-				},
-				{
-					field : 'custCity', 
-					title : '市',
-					sortable: true,
-					visible: false
-				},
-				{
-					field : 'custArea', 
-					title : '区/县',
-					sortable: true,
-					visible: false
-				},
-				{
-					field : 'custAddr', 
-					title : '详细地址',
+					field : 'cityCode', 
+					title : '城市编码',
 					sortable: true
 				},
 				{
-					field : 'remark', 
-					title : '备注',
+					field : 'center', 
+					title : '经纬度',
+					sortable: true
+				},
+				{
+					field : 'parentId', 
+					title : '地区父节点',
 					sortable: true
 				},
 		        {
@@ -141,8 +127,8 @@
 		            align: 'center',
 		            formatter: function(value, row, index) {
 		            	var actions = [];
-		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.custId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.custId + '\')"><i class="fa fa-remove"></i>删除</a>');
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.areaId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.areaId + '\')"><i class="fa fa-remove"></i>删除</a>');
 						return actions.join('');
 		            }
 		        }]

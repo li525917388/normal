@@ -23,7 +23,7 @@
 							</li>
 
 							<li>
-								上一站：<input type="text" name="nextDeptId"/>
+								派件员：<input type="text" name="deliveryUserId"/>
 							</li>
 
 							<li>
@@ -37,22 +37,22 @@
 			
 	        <div class="btn-group-sm" id="toolbar" role="group">
 	        
-	        	<a class="btn btn-info btn-select disabled" onclick="uploadScan()" shiro:hasPermission="ex:scanInfo:upload">
+	        	<a class="btn btn-info btn-select disabled" onclick="uploadScan()" shiro:hasPermission="ex:scanInfo:self:upload">
 					<i class="fa fa-upload"></i> 上传
 				</a>
 				
 				&nbsp;&nbsp;&nbsp;
 				
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="ex:scanInfo:arrival:add">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="ex:scanInfo:self:add">
 					<i class="fa fa-plus"></i> 添加
 				</a>
-				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="ex:scanInfo:arrival:edit">
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="ex:scanInfo:self:edit">
 					<i class="fa fa-edit"></i> 修改
 				</a>
-				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="ex:scanInfo:arrival:remove">
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="ex:scanInfo:self:remove">
 					<i class="fa fa-remove"></i> 删除
 				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="ex:scanInfo:arrival:export">
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="ex:scanInfo:export">
 						<i class="fa fa-download"></i> 导出
 				</a>
 			</div>
@@ -63,9 +63,9 @@
 	</div>
     <div th:include="include :: footer"></div>
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('ex:scanInfo:arrival:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('ex:scanInfo:arrival:remove')}]];
-        var prefix = ctx + "ex/scanInfo/arrival";
+        var editFlag = [[${@permission.hasPermi('ex:scanInfo:self:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('ex:scanInfo:self:remove')}]];
+        var prefix = ctx + "ex/scanInfo/self";
 
         $(function() {
             var options = {
@@ -73,7 +73,7 @@
                 createUrl: prefix + "/add",
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
-				exportUrl: prefix + "/export",
+				exportUrl: ctx + "ex/scanInfo/export",
                 modalName: "扫描",
 		        showExport: true,
                 columns: [{
@@ -87,11 +87,6 @@
 				{
 					field : 'waybillNo', 
 					title : '运单编号',
-					sortable: true
-				},
-				{
-					field : 'nextDept', 
-					title : '上一站',
 					sortable: true
 				},
 				{

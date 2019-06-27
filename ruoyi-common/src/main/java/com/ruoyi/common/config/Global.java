@@ -17,7 +17,9 @@ public class Global
 {
     private static final Logger log = LoggerFactory.getLogger(Global.class);
 
-    private static String NAME = "application.yml";
+    private static String NAME = "application";
+    private static String SUFFIX = ".yml";
+    private static String ACTIVE;
 
     /**
      * 当前对象实例
@@ -56,7 +58,28 @@ public class Global
             Map<?, ?> yamlMap = null;
             try
             {
-                yamlMap = YamlUtil.loadYaml(NAME);
+                yamlMap = YamlUtil.loadYaml(NAME + SUFFIX);
+                value = String.valueOf(YamlUtil.getProperty(yamlMap, key));
+                
+                if(ACTIVE == null){
+                	ACTIVE = String.valueOf(YamlUtil.getProperty(yamlMap, "spring.profiles.active"));
+                }
+                
+                map.put(key, value != null ? value : StringUtils.EMPTY);
+            }
+            catch (FileNotFoundException e)
+            {
+                log.error("获取全局配置异常 {}", key);
+            }
+        }
+        
+        //获取延伸配置文件
+        if (value == null || "null".equals(value))
+        {
+            Map<?, ?> yamlMap = null;
+            try
+            {
+                yamlMap = YamlUtil.loadYaml(NAME + "-" + ACTIVE + SUFFIX);
                 value = String.valueOf(YamlUtil.getProperty(yamlMap, key));
                 map.put(key, value != null ? value : StringUtils.EMPTY);
             }
@@ -65,6 +88,7 @@ public class Global
                 log.error("获取全局配置异常 {}", key);
             }
         }
+        
         return value;
     }
 

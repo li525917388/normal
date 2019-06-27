@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.fin.mapper.PriceStandardMapper">
+    
+	<resultMap type="PriceStandard" id="PriceStandardResult">
+		<result property="id"    			column="id"    />
+		<result property="sendArea"    		column="send_area"    />
+		<result property="sendAreaName"    	column="send_area_name"    />
+		<result property="receiveArea"    	column="receive_area"    />
+		<result property="receiveAreaName"	column="receive_area_name"    />
+		<result property="priceType"    	column="price_type"    />
+		<result property="serverType"    	column="server_type"    />
+		<result property="goodsType"    	column="goods_type"    />
+		<result property="weightMode"    	column="weight_mode"    />
+		<result property="remark"    		column="remark"    />
+		<result property="validTimeStart" 	column="valid_time_start"    />
+		<result property="validTimeEnd"    	column="valid_time_end"    />
+		<result property="valid"    		column="valid"    />
+	</resultMap>
+	
+	<sql id="selectPriceStandardVo">
+		select id, send_area, send_area_name, receive_area, receive_area_name, price_type, server_type, goods_type, weight_mode, remark, valid_time_start, valid_time_end, valid from fin_price_standard
+	</sql>
+	
+	<select id="selectPriceStandardList" parameterType="PriceStandard" resultMap="PriceStandardResult">
+		<include refid="selectPriceStandardVo"/>
+		<where>  
+			<if test="id != null "> and id = #{id}</if>
+ 			<if test="sendArea != null  and sendArea != '' "> and send_area = #{sendArea}</if>
+ 			<if test="receiveArea != null  and receiveArea != '' "> and receive_area = #{receiveArea}</if>
+ 			<if test="priceType != null "> and price_type = #{priceType}</if>
+ 			<if test="serverType != null "> and server_type = #{serverType}</if>
+ 			<if test="goodsType != null  and goodsType != '' "> and goods_type = #{goodsType}</if>
+ 			<if test="weightMode != null "> and weight_mode = #{weightMode}</if>
+ 			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+ 			<if test="validTimeStart != null "> and valid_time_start = #{validTimeStart}</if>
+ 			<if test="validTimeEnd != null "> and valid_time_end = #{validTimeEnd}</if>
+ 			<if test="valid != null "> and valid = #{valid}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectPriceStandardById" parameterType="Long" resultMap="PriceStandardResult">
+		<include refid="selectPriceStandardVo"/>
+		where id = #{id}
+	</select>
+        
+	<insert id="insertPriceStandard" parameterType="PriceStandard">
+		insert into fin_price_standard
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="sendArea != null  and sendArea != ''  ">send_area,</if>
+			<if test="sendAreaName != null  and sendAreaName != ''  ">send_area_name,</if>
+			<if test="receiveArea != null  and receiveArea != ''  ">receive_area,</if>
+			<if test="receiveAreaName != null  and receiveAreaName != ''  ">receive_area_name,</if>
+			<if test="priceType != null  ">price_type,</if>
+			<if test="serverType != null  ">server_type,</if>
+			<if test="goodsType != null  and goodsType != ''  ">goods_type,</if>
+			<if test="weightMode != null  ">weight_mode,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="validTimeStart != null  ">valid_time_start,</if>
+			<if test="validTimeEnd != null  ">valid_time_end,</if>
+			<if test="valid != null  ">valid,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="sendArea != null  and sendArea != ''  ">#{sendArea},</if>
+			<if test="sendAreaName != null  and sendAreaName != ''  ">#{sendAreaName},</if>
+			<if test="receiveArea != null  and receiveArea != ''  ">#{receiveArea},</if>
+			<if test="receiveAreaName != null  and receiveAreaName != ''  ">#{receiveAreaName},</if>
+			<if test="priceType != null  ">#{priceType},</if>
+			<if test="serverType != null  ">#{serverType},</if>
+			<if test="goodsType != null  and goodsType != ''  ">#{goodsType},</if>
+			<if test="weightMode != null  ">#{weightMode},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="validTimeStart != null  ">#{validTimeStart},</if>
+			<if test="validTimeEnd != null  ">#{validTimeEnd},</if>
+			<if test="valid != null  ">#{valid},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updatePriceStandard" parameterType="PriceStandard">
+		update fin_price_standard
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="sendArea != null  and sendArea != ''  ">send_area = #{sendArea},</if>
+			<if test="sendAreaName != null  and sendAreaName != ''  ">send_area_name = #{sendAreaName},</if>
+			<if test="receiveArea != null  and receiveArea != ''  ">receive_area = #{receiveArea},</if>
+			<if test="receiveAreaName != null  and receiveAreaName != ''  ">receive_area_name = #{receiveAreaName},</if>
+			<if test="priceType != null  ">price_type = #{priceType},</if>
+			<if test="serverType != null  ">server_type = #{serverType},</if>
+			<if test="goodsType != null  and goodsType != ''  ">goods_type = #{goodsType},</if>
+			<if test="weightMode != null  ">weight_mode = #{weightMode},</if>
+			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+			<if test="validTimeStart != null  ">valid_time_start = #{validTimeStart},</if>
+			<if test="validTimeEnd != null  ">valid_time_end = #{validTimeEnd},</if>
+			<if test="valid != null  ">valid = #{valid},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deletePriceStandardById" parameterType="Long">
+		delete from fin_price_standard where id = #{id}
+	</delete>
+	
+	<delete id="deletePriceStandardByIds" parameterType="String">
+		delete from fin_price_standard where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+ 			#{id}
+		</foreach>
+	</delete>
+    
+</mapper>

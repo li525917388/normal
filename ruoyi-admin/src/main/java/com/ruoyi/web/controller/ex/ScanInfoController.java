@@ -79,10 +79,35 @@ public class ScanInfoController extends BaseController
     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(ScanInfo scanInfo) {
+		
+		//获取登录用户
+		SysUser user = ShiroUtils.getSysUser();
+		scanInfo.setScanUserId(user.getUserId()); //扫描员
+		scanInfo.setScanDeptId(user.getDeptId()); //扫描网点
+		
     	List<ScanInfo> list = scanInfoService.selectScanTempList(scanInfo);
         ExcelUtil<ScanInfo> util = new ExcelUtil<ScanInfo>(ScanInfo.class);
         return util.exportExcel(list, "scanInfo");
     }
+	
+	
+
+	/**
+	 * 上传数据
+	 * @param ids
+	 * @return
+	 */
+	@RequiresPermissions("ex:scanInfo:upload")
+	@Log(title = "上传扫描数据", businessType = BusinessType.UPLOAD)
+	@PostMapping( "/upload")
+	@ResponseBody
+	public AjaxResult upload(String ids) {
+		
+		return toAjax(scanInfoService.uploadScanInfoByIds(ids));
+	}
+	
+	
+	
 	
 	
 	
@@ -91,7 +116,7 @@ public class ScanInfoController extends BaseController
 	 * @return
 	 */
 	@GetMapping("/pickup/add")
-	public String addPickup()
+	public String pickupAdd()
 	{
 	    return prefix + "/pickup/add";
 	}
@@ -106,7 +131,7 @@ public class ScanInfoController extends BaseController
 	@Log(title = "收件扫描", businessType = BusinessType.INSERT)
 	@PostMapping("/pickup/add")
 	@ResponseBody
-	public AjaxResult addSavePickup(ScanInfo scanInfo) {
+	public AjaxResult pickupAddSave(ScanInfo scanInfo) {
 		
 		//获取登录用户
 		SysUser user = ShiroUtils.getSysUser();
@@ -127,7 +152,7 @@ public class ScanInfoController extends BaseController
 	 * @return
 	 */
 	@GetMapping("/pickup/edit/{scanId}")
-	public String editPickup(@PathVariable("scanId") Long scanId, ModelMap mmap) {
+	public String pickupEdit(@PathVariable("scanId") Long scanId, ModelMap mmap) {
 		ScanInfo scanInfo = scanInfoService.selectScanTempById(scanId);
 		mmap.put("scanInfo", scanInfo);
 	    return prefix + "/pickup/edit";
@@ -144,7 +169,7 @@ public class ScanInfoController extends BaseController
 	@Log(title = "收件扫描", businessType = BusinessType.UPDATE)
 	@PostMapping("/pickup/edit")
 	@ResponseBody
-	public AjaxResult editSavePickup(ScanInfo scanInfo) {
+	public AjaxResult pickupEditSave(ScanInfo scanInfo) {
 		
 		scanInfo.setScanType(10); 	//收件
 		return toAjax(scanInfoService.updateScanTemp(scanInfo));
@@ -158,7 +183,7 @@ public class ScanInfoController extends BaseController
 	@Log(title = "收件扫描", businessType = BusinessType.DELETE)
 	@PostMapping( "/pickup/remove")
 	@ResponseBody
-	public AjaxResult removePickup(String ids) {		
+	public AjaxResult pickupRemove(String ids) {		
 		return toAjax(scanInfoService.deleteScanTempByIds(ids));
 	}
 	
@@ -202,7 +227,7 @@ public class ScanInfoController extends BaseController
 	 * @return
 	 */
 	@GetMapping("/departure/add")
-	public String addDeparture()
+	public String departureAdd()
 	{
 	    return prefix + "/departure/add";
 	}
@@ -216,7 +241,7 @@ public class ScanInfoController extends BaseController
 	@Log(title = "扫描", businessType = BusinessType.INSERT)
 	@PostMapping("/departure/add")
 	@ResponseBody
-	public AjaxResult addSaveDeparture(ScanInfo scanInfo) {
+	public AjaxResult departureAddSave(ScanInfo scanInfo) {
 		
 		//获取登录用户
 		SysUser user = ShiroUtils.getSysUser();
@@ -236,7 +261,7 @@ public class ScanInfoController extends BaseController
 	 * @return
 	 */
 	@GetMapping("/departure/edit/{scanId}")
-	public String editDeparture(@PathVariable("scanId") Long scanId, ModelMap mmap) {
+	public String departureEdit(@PathVariable("scanId") Long scanId, ModelMap mmap) {
 		ScanInfo scanInfo = scanInfoService.selectScanTempById(scanId);
 		mmap.put("scanInfo", scanInfo);
 	    return prefix + "/departure/edit";
@@ -251,7 +276,7 @@ public class ScanInfoController extends BaseController
 	@Log(title = "扫描", businessType = BusinessType.UPDATE)
 	@PostMapping("/departure/edit")
 	@ResponseBody
-	public AjaxResult editSaveDeparture(ScanInfo scanInfo) {
+	public AjaxResult departureEditSave(ScanInfo scanInfo) {
 		
 		scanInfo.setScanType(20); 		//发件
 		return toAjax(scanInfoService.updateScanTemp(scanInfo));
@@ -266,25 +291,128 @@ public class ScanInfoController extends BaseController
 	@Log(title = "发件扫描", businessType = BusinessType.DELETE)
 	@PostMapping( "/departure/remove")
 	@ResponseBody
-	public AjaxResult removeDeparture(String ids) {		
+	public AjaxResult departureRemove(String ids) {		
 		return toAjax(scanInfoService.deleteScanTempByIds(ids));
 	}
 	
 	
 	
+
 	/**
-	 * 上传数据
-	 * @param ids
+	 * 跳转到件页面
 	 * @return
 	 */
-	@RequiresPermissions("ex:scanInfo:upload")
-	@Log(title = "上传扫描数据", businessType = BusinessType.UPLOAD)
-	@PostMapping( "/upload")
-	@ResponseBody
-	public AjaxResult uploadDeparture(String ids) {
-		
-		return toAjax(scanInfoService.uploadScanInfoByIds(ids));
+	@RequiresPermissions("ex:scanInfo:arrival:view")
+	@GetMapping("/arrival")
+	public String arrival() {
+	    return prefix + "/arrival/arrival";
 	}
+	
+	
+	/**
+	 * 查询到件扫描列表
+	 */
+	@RequiresPermissions("ex:scanInfo:arrival:list")
+	@PostMapping("/arrival/list")
+	@ResponseBody
+	public TableDataInfo arrivalList(ScanInfo scanInfo) {
+		startPage();
+		
+		//获取当前登录信息
+		SysUser user = ShiroUtils.getSysUser();
+		
+		scanInfo.setScanType(30);		//到件
+		scanInfo.setScanUserId(user.getUserId());	//当前登录人
+		
+        List<ScanInfo> list = scanInfoService.selectScanTempList(scanInfo);
+		return getDataTable(list);
+	}
+	
+	
+	
+	/**
+	 * 新增到件扫描页面
+	 * @return
+	 */
+	@GetMapping("/arrival/add")
+	public String arrivalAdd()
+	{
+	    return prefix + "/arrival/add";
+	}
+	
+	
+	
+	
+	/**
+	 * 新增保存到件扫描
+	 * @param scanInfo
+	 * @return
+	 */
+	@RequiresPermissions("ex:scanInfo:arrival:add")
+	@Log(title = "扫描", businessType = BusinessType.INSERT)
+	@PostMapping("/arrival/add")
+	@ResponseBody
+	public AjaxResult arrivalAddSave(ScanInfo scanInfo) {
+		
+		//获取登录用户
+		SysUser user = ShiroUtils.getSysUser();
+		
+		scanInfo.setScanType(30);			//到件扫描
+		scanInfo.setScanTime(new Date());
+		scanInfo.setScanUserId(user.getUserId()); //扫描员
+		scanInfo.setScanDeptId(user.getDeptId()); //扫描网点
+		
+		return toAjax(scanInfoService.insertScanTemp(scanInfo));
+	}
+	
+	
+	
+	
+	/**
+	 * 修改发件扫描页面
+	 * @param scanId
+	 * @param mmap
+	 * @return
+	 */
+	@GetMapping("/arrival/edit/{scanId}")
+	public String arrivalEdit(@PathVariable("scanId") Long scanId, ModelMap mmap)
+	{
+		ScanInfo scanInfo = scanInfoService.selectScanTempById(scanId);
+		mmap.put("scanInfo", scanInfo);
+	    return prefix + "/arrival/edit";
+	}
+	
+	
+	
+	/**
+	 * 修改保存到件扫描
+	 * @param scanInfo
+	 * @return
+	 */
+	@RequiresPermissions("ex:scanInfo:arrival:edit")
+	@Log(title = "到件扫描", businessType = BusinessType.UPDATE)
+	@PostMapping("/arrival/edit")
+	@ResponseBody
+	public AjaxResult arrivalEditSave(ScanInfo scanInfo) {
+		
+		scanInfo.setScanType(30);		//到件
+		
+		return toAjax(scanInfoService.updateScanTemp(scanInfo));
+	}
+	
+	
+	
+	/**
+	 * 删除到件扫描
+	 */
+	@RequiresPermissions("ex:scanInfo:arrival:remove")
+	@Log(title = "派件扫描", businessType = BusinessType.DELETE)
+	@PostMapping( "/arrival/remove")
+	@ResponseBody
+	public AjaxResult arrivalRemove(String ids) {	
+		return toAjax(scanInfoService.deleteScanTempByIds(ids));
+	}
+	
 	
 	
 	
@@ -325,7 +453,7 @@ public class ScanInfoController extends BaseController
 	 * @return
 	 */
 	@GetMapping("/delivery/add")
-	public String addDelivery()
+	public String deliveryAdd()
 	{
 	    return prefix + "/delivery/add";
 	}
@@ -342,7 +470,7 @@ public class ScanInfoController extends BaseController
 	@Log(title = "扫描", businessType = BusinessType.INSERT)
 	@PostMapping("/delivery/add")
 	@ResponseBody
-	public AjaxResult addSaveDelivery(ScanInfo scanInfo) {
+	public AjaxResult deliveryAddSave(ScanInfo scanInfo) {
 		
 		//获取登录用户
 		SysUser user = ShiroUtils.getSysUser();
@@ -359,13 +487,13 @@ public class ScanInfoController extends BaseController
 	
 	
 	/**
-	 * 修改发件扫描页面
+	 * 修改派件扫描页面
 	 * @param scanId
 	 * @param mmap
 	 * @return
 	 */
 	@GetMapping("/delivery/edit/{scanId}")
-	public String editDelivery(@PathVariable("scanId") Long scanId, ModelMap mmap)
+	public String deliveryEdit(@PathVariable("scanId") Long scanId, ModelMap mmap)
 	{
 		ScanInfo scanInfo = scanInfoService.selectScanTempById(scanId);
 		mmap.put("scanInfo", scanInfo);
@@ -375,7 +503,7 @@ public class ScanInfoController extends BaseController
 	
 	
 	/**
-	 * 修改保存到件扫描
+	 * 修改保存派件扫描
 	 * @param scanInfo
 	 * @return
 	 */
@@ -383,7 +511,7 @@ public class ScanInfoController extends BaseController
 	@Log(title = "派件扫描", businessType = BusinessType.UPDATE)
 	@PostMapping("/delivery/edit")
 	@ResponseBody
-	public AjaxResult editSaveDelivery(ScanInfo scanInfo) {
+	public AjaxResult deliveryEditSave(ScanInfo scanInfo) {
 		
 		scanInfo.setScanType(40);		//派件
 		
@@ -399,37 +527,38 @@ public class ScanInfoController extends BaseController
 	@Log(title = "派件扫描", businessType = BusinessType.DELETE)
 	@PostMapping( "/delivery/remove")
 	@ResponseBody
-	public AjaxResult removeDelivery(String ids) {		
+	public AjaxResult deliveryRemove(String ids) {		
 		return toAjax(scanInfoService.deleteScanTempByIds(ids));
 	}
 	
 	
 	
 	
+
 	/**
-	 * 跳转到件页面
+	 * 跳转自提件页面
 	 * @return
 	 */
-	@RequiresPermissions("ex:scanInfo:arrival:view")
-	@GetMapping("/arrival")
-	public String arrival() {
-	    return prefix + "/arrival/arrival";
+	@RequiresPermissions("ex:scanInfo:self:view")
+	@GetMapping("/self")
+	public String self() {
+	    return prefix + "/self/self";
 	}
 	
 	
 	/**
-	 * 查询派件扫描列表
+	 * 查询自提件扫描列表
 	 */
-	@RequiresPermissions("ex:scanInfo:arrival:list")
-	@PostMapping("/arrival/list")
+	@RequiresPermissions("ex:scanInfo:self:list")
+	@PostMapping("/self/list")
 	@ResponseBody
-	public TableDataInfo arrivalList(ScanInfo scanInfo) {
+	public TableDataInfo selfList(ScanInfo scanInfo) {
 		startPage();
 		
 		//获取当前登录信息
 		SysUser user = ShiroUtils.getSysUser();
 		
-		scanInfo.setScanType(30);		//到件
+		scanInfo.setScanType(41);		//自提
 		scanInfo.setScanUserId(user.getUserId());	//当前登录人
 		
         List<ScanInfo> list = scanInfoService.selectScanTempList(scanInfo);
@@ -439,33 +568,33 @@ public class ScanInfoController extends BaseController
 	
 	
 	/**
-	 * 新增派件扫描页面
+	 * 新增自提件扫描页面
 	 * @return
 	 */
-	@GetMapping("/arrival/add")
-	public String addArrival()
+	@GetMapping("/self/add")
+	public String selfAdd()
 	{
-	    return prefix + "/arrival/add";
+	    return prefix + "/self/add";
 	}
 	
 	
 	
 	
 	/**
-	 * 新增保存派件扫描
+	 * 新增保存自提件扫描
 	 * @param scanInfo
 	 * @return
 	 */
-	@RequiresPermissions("ex:scanInfo:arrival:add")
-	@Log(title = "扫描", businessType = BusinessType.INSERT)
-	@PostMapping("/arrival/add")
+	@RequiresPermissions("ex:scanInfo:self:add")
+	@Log(title = "自提件扫描", businessType = BusinessType.INSERT)
+	@PostMapping("/self/add")
 	@ResponseBody
-	public AjaxResult addSaveArrival(ScanInfo scanInfo) {
+	public AjaxResult selfAddSave(ScanInfo scanInfo) {
 		
 		//获取登录用户
 		SysUser user = ShiroUtils.getSysUser();
-		
-		scanInfo.setScanType(30);			//到件扫描
+				
+		scanInfo.setScanType(41);			//自提件扫描
 		scanInfo.setScanTime(new Date());
 		scanInfo.setScanUserId(user.getUserId()); //扫描员
 		scanInfo.setScanDeptId(user.getDeptId()); //扫描网点
@@ -477,33 +606,33 @@ public class ScanInfoController extends BaseController
 	
 	
 	/**
-	 * 修改发件扫描页面
+	 * 修改自提件扫描页面
 	 * @param scanId
 	 * @param mmap
 	 * @return
 	 */
-	@GetMapping("/arrival/edit/{scanId}")
-	public String editArrival(@PathVariable("scanId") Long scanId, ModelMap mmap)
+	@GetMapping("/self/edit/{scanId}")
+	public String selfEdit(@PathVariable("scanId") Long scanId, ModelMap mmap)
 	{
 		ScanInfo scanInfo = scanInfoService.selectScanTempById(scanId);
 		mmap.put("scanInfo", scanInfo);
-	    return prefix + "/arrival/edit";
+	    return prefix + "/self/edit";
 	}
 	
 	
 	
 	/**
-	 * 修改保存到件扫描
+	 * 修改保存自提件扫描
 	 * @param scanInfo
 	 * @return
 	 */
-	@RequiresPermissions("ex:scanInfo:arrival:edit")
-	@Log(title = "到件扫描", businessType = BusinessType.UPDATE)
-	@PostMapping("/arrival/edit")
+	@RequiresPermissions("ex:scanInfo:self:edit")
+	@Log(title = "自提件扫描", businessType = BusinessType.UPDATE)
+	@PostMapping("/self/edit")
 	@ResponseBody
-	public AjaxResult editSaveArrival(ScanInfo scanInfo) {
+	public AjaxResult selfEditSave(ScanInfo scanInfo) {
 		
-		scanInfo.setScanType(30);		//到件
+		scanInfo.setScanType(41);		//自提件
 		
 		return toAjax(scanInfoService.updateScanTemp(scanInfo));
 	}
@@ -511,13 +640,17 @@ public class ScanInfoController extends BaseController
 	
 	
 	/**
-	 * 删除派件扫描
+	 * 删除自提件扫描
 	 */
-	@RequiresPermissions("ex:scanInfo:arrival:remove")
-	@Log(title = "派件扫描", businessType = BusinessType.DELETE)
-	@PostMapping( "/arrival/remove")
+	@RequiresPermissions("ex:scanInfo:self:remove")
+	@Log(title = "自提件扫描", businessType = BusinessType.DELETE)
+	@PostMapping( "/self/remove")
 	@ResponseBody
-	public AjaxResult removeArrival(String ids) {	
+	public AjaxResult selfRemove(String ids) {		
 		return toAjax(scanInfoService.deleteScanTempByIds(ids));
 	}
+	
+	
+	
+	
 }

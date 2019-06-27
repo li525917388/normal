@@ -61,22 +61,27 @@ public class TrackServiceImpl implements ITrackService {
 		switch (scanInfo.getScanType()) {
 		case 10:
 			track.setOpType("已揽件");
-			track.setContent("【" + scanInfo.getScanDeptId() + "】的收件员 【" + scanInfo.getScanUserId() + "】 已揽件");
+			track.setContent("【" + scanInfo.getScanDept() + "】的收件员 【" + scanInfo.getScanUser() + "】 已揽件");
 			break;
 			
 		case 20:
 			track.setOpType("发件");
-			track.setContent("快件正由 【" + scanInfo.getScanDeptId() + "】 发往 【" + scanInfo.getNextDeptId() + "】 途中");
+			track.setContent("快件正由 【" + scanInfo.getScanDept() + "】 发往 【" + scanInfo.getNextDept() + "】 途中");
 			break;
 
 		case 30:
 			track.setOpType("到件");
-			track.setContent("快件已到达 【" + scanInfo.getScanDeptId() + "】");
+			track.setContent("快件已到达 【" + scanInfo.getScanDept() + "】");
 			break;
 			
 		case 40:
 			track.setOpType("派件");
-			track.setContent("【" + scanInfo.getScanDeptId() + "】的派件员 " + scanInfo.getDeliveryUserId() + " 正在派件");
+			track.setContent("【" + scanInfo.getScanDept() + "】的派件员 " + scanInfo.getDeliveryUser() + " 正在派件");
+			break;
+			
+		case 41:
+			track.setOpType("自提件");
+			track.setContent("自提件，请到 【" + scanInfo.getScanDept() + "】 自提，扫描员： " + scanInfo.getScanUser() + "");
 			break;
 			
 		case 50:

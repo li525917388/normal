@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.base.mapper.AreaMapper">
+    
+	<resultMap type="Area" id="AreaResult">
+		<result property="areaId"    column="area_id"    />
+		<result property="areaCode"    column="area_code"    />
+		<result property="areaName"    column="area_name"    />
+		<result property="level"    column="level"    />
+		<result property="cityCode"    column="city_code"    />
+		<result property="center"    column="center"    />
+		<result property="parentId"    column="parent_id"    />
+	</resultMap>
+	
+	<sql id="selectAreaVo">
+		select area_id, area_code, area_name, level, city_code, center, parent_id from base_area
+	</sql>
+	
+	<select id="selectAreaList" parameterType="Area" resultMap="AreaResult">
+		<include refid="selectAreaVo"/>
+		<where>  
+			<if test="areaId != null "> and area_id = #{areaId}</if>
+ 			<if test="areaCode != null  and areaCode != '' "> and area_code = #{areaCode}</if>
+ 			<if test="areaName != null  and areaName != '' "> and area_name = #{areaName}</if>
+ 			<if test="level != null "> and level = #{level}</if>
+ 			<if test="cityCode != null  and cityCode != '' "> and city_code = #{cityCode}</if>
+ 			<if test="center != null  and center != '' "> and center = #{center}</if>
+ 			<if test="parentId != null "> and parent_id = #{parentId}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectAreaById" parameterType="Integer" resultMap="AreaResult">
+		<include refid="selectAreaVo"/>
+		where area_id = #{areaId}
+	</select>
+        
+	<insert id="insertArea" parameterType="Area" useGeneratedKeys="true" keyProperty="areaId">
+		insert into base_area
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="areaCode != null  and areaCode != ''  ">area_code,</if>
+			<if test="areaName != null  and areaName != ''  ">area_name,</if>
+			<if test="level != null  ">level,</if>
+			<if test="cityCode != null  and cityCode != ''  ">city_code,</if>
+			<if test="center != null  and center != ''  ">center,</if>
+			<if test="parentId != null  ">parent_id,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="areaCode != null  and areaCode != ''  ">#{areaCode},</if>
+			<if test="areaName != null  and areaName != ''  ">#{areaName},</if>
+			<if test="level != null  ">#{level},</if>
+			<if test="cityCode != null  and cityCode != ''  ">#{cityCode},</if>
+			<if test="center != null  and center != ''  ">#{center},</if>
+			<if test="parentId != null  ">#{parentId},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updateArea" parameterType="Area">
+		update base_area
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="areaCode != null  and areaCode != ''  ">area_code = #{areaCode},</if>
+			<if test="areaName != null  and areaName != ''  ">area_name = #{areaName},</if>
+			<if test="level != null  ">level = #{level},</if>
+			<if test="cityCode != null  and cityCode != ''  ">city_code = #{cityCode},</if>
+			<if test="center != null  and center != ''  ">center = #{center},</if>
+			<if test="parentId != null  ">parent_id = #{parentId},</if>
+		</trim>
+		where area_id = #{areaId}
+	</update>
+
+	<delete id="deleteAreaById" parameterType="Integer">
+		delete from base_area where area_id = #{areaId}
+	</delete>
+	
+	<delete id="deleteAreaByIds" parameterType="String">
+		delete from base_area where area_id in 
+		<foreach item="areaId" collection="array" open="(" separator="," close=")">
+ 			#{areaId}
+		</foreach>
+	</delete>
+    
+    
+    <!-- 查询地区树结构 -->
+	<select id="selectAreaTree" parameterType="Area" resultType="Ztree">
+		select 
+			area_id as id, 
+			area_name as name,  
+			CONCAT(area_name,area_code) as title,  
+			parent_id as pid
+		from base_area
+		<where>  
+			<if test="areaId != null "> and area_id = #{areaId}</if>
+ 			<if test="areaCode != null  and areaCode != '' "> and area_code = #{areaCode}</if>
+ 			<if test="areaName != null  and areaName != '' "> and area_name = #{areaName}</if>
+ 			<if test="level != null "> and level &lt;= #{level}</if>
+ 			<if test="cityCode != null  and cityCode != '' "> and city_code = #{cityCode}</if>
+ 			<if test="center != null  and center != '' "> and center = #{center}</if>
+ 			<if test="parentId != null "> and parent_id = #{parentId}</if>
+ 		</where>
+	</select>
+    
+</mapper>

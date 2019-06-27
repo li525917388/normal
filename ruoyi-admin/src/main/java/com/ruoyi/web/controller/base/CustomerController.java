@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.base;
 
 import java.util.List;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,12 +11,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.base.domain.Area;
 import com.ruoyi.base.domain.Customer;
+import com.ruoyi.base.service.IAreaService;
 import com.ruoyi.base.service.ICustomerService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 
@@ -33,6 +38,9 @@ public class CustomerController extends BaseController
 	
 	@Autowired
 	private ICustomerService customerService;
+
+	@Autowired
+	private IAreaService areaService;
 	
 	@RequiresPermissions("base:customer:view")
 	@GetMapping()
@@ -72,8 +80,12 @@ public class CustomerController extends BaseController
 	 * 新增客户
 	 */
 	@GetMapping("/add")
-	public String add()
-	{
+	public String add(ModelMap mmap) {
+		
+		Area area = new Area();
+		area.setLevel(1);
+		mmap.addAttribute("provList", areaService.selectAreaList(area ));
+		
 	    return prefix + "/add";
 	}
 	
@@ -97,6 +109,22 @@ public class CustomerController extends BaseController
 	{
 		Customer customer = customerService.selectCustomerById(custId);
 		mmap.put("customer", customer);
+		
+		//省
+		Area area = new Area();
+		area.setLevel(1);
+		mmap.addAttribute("provList", areaService.selectAreaList(area));
+		
+		//寄件市
+		area.setLevel(2);
+		area.setParentId(Convert.toInt(customer.getCustProv()));
+		mmap.addAttribute("cityList", areaService.selectAreaList(area));
+		
+		//寄件区
+		area.setLevel(3);
+		area.setParentId(Convert.toInt(customer.getCustCity()));
+		mmap.addAttribute("areaList", areaService.selectAreaList(area));
+		
 	    return prefix + "/edit";
 	}
 	

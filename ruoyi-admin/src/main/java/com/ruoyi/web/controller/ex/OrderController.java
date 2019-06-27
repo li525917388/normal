@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ruoyi.base.domain.Area;
+import com.ruoyi.base.service.IAreaService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.ex.domain.Order;
@@ -36,6 +38,9 @@ public class OrderController extends BaseController
 	
 	@Autowired
 	private IOrderService orderService;
+	
+	@Autowired
+	private IAreaService areaService;
 	
 	@RequiresPermissions("ex:order:view")
 	@GetMapping()
@@ -75,8 +80,12 @@ public class OrderController extends BaseController
 	 * 新增订单
 	 */
 	@GetMapping("/add")
-	public String add()
-	{
+	public String add(ModelMap mmap) {
+		
+		Area area = new Area();
+		area.setLevel(1);
+		mmap.addAttribute("pnovince", areaService.selectAreaList(area ));
+		
 	    return prefix + "/add";
 	}
 	
@@ -100,6 +109,32 @@ public class OrderController extends BaseController
 	{
 		Order order = orderService.selectOrderById(orderid);
 		mmap.put("order", order);
+		
+		//省
+		Area area = new Area();
+		area.setLevel(1);
+		mmap.addAttribute("pnovince", areaService.selectAreaList(area));
+		
+		//寄件市
+		area.setLevel(2);
+		area.setParentId(Convert.toInt(order.getSenderProv()));
+		mmap.addAttribute("senderCity", areaService.selectAreaList(area));
+		
+		//寄件区
+		area.setLevel(3);
+		area.setParentId(Convert.toInt(order.getSenderCity()));
+		mmap.addAttribute("senderArea", areaService.selectAreaList(area));
+		
+		//收件市
+		area.setLevel(2);
+		area.setParentId(Convert.toInt(order.getReceiverProv()));
+		mmap.addAttribute("receiverCity", areaService.selectAreaList(area));
+		
+		//收件区
+		area.setLevel(3);
+		area.setParentId(Convert.toInt(order.getReceiverCity()));
+		mmap.addAttribute("receiverArea", areaService.selectAreaList(area));
+		
 	    return prefix + "/edit";
 	}
 	

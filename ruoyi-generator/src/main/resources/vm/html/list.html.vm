@@ -76,18 +76,19 @@
 #end
 #end
 
-        $(function() {
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
+		$(function() {
+			var options = {
+				url: prefix + "/list",
+				createUrl: prefix + "/add",
+				updateUrl: prefix + "/edit/{id}",
+				removeUrl: prefix + "/remove",
 				exportUrl: prefix + "/export",
-                modalName: "${tableComment}",
-		        showExport: true,
-                columns: [{
-		            checkbox: true
-		        },
+				modalName: "${tableComment}",
+				showExport: true,
+				clickToSelect: true,
+				columns: [{
+					checkbox: true
+				},
 #foreach($column in $columns)
 #if($column.columnName == $primaryKey.columnName)
 				{

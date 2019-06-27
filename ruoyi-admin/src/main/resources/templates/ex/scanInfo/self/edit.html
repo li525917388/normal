@@ -14,23 +14,24 @@
 			</div>
 			
 			<div class="form-group">	
-				<label class="col-sm-3 control-label">上一站：</label>
+				<label class="col-sm-3 control-label">派件员：</label>
 				<div class="col-sm-8">
-					<div class="input-group">
-						<input id="nextDeptId" name="nextDeptId" th:field="*{nextDeptId}" type="hidden">
-                    	<input onclick="selectDeptTree()" id="nextDept" th:field="*{nextDept}" type="text" placeholder="请选择" class="form-control" required>
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    </div>
+					<input id="deliveryUserId" name="deliveryUserId" th:field="*{deliveryUserId}" class="form-control" type="text">
 				</div>
 			</div>
 			
 			<div class="form-group">	
-				<label class="col-sm-3 control-label">扫描类型：</label>
+				<label class="col-sm-3 control-label">扫描员：</label>
 				<div class="col-sm-8">
-					<input id="scanType" name="scanType" th:field="*{scanType}" class="form-control" type="text">
+					<input id="scanUserId" name="scanUserId" th:field="*{scanUserId}" class="form-control" type="text">
 				</div>
 			</div>
-			
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">扫描网点：</label>
+				<div class="col-sm-8">
+					<input id="scanDeptId" name="scanDeptId" th:field="*{scanDeptId}" class="form-control" type="text">
+				</div>
+			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">备注：</label>
 				<div class="col-sm-8">
@@ -42,7 +43,7 @@
     </div>
     <div th:include="include::footer"></div>
     <script type="text/javascript">
-		var prefix = ctx + "ex/scanInfo/arrival";
+		var prefix = ctx + "ex/scanInfo/self";
 		$("#form-scanInfo-edit").validate({
 			rules:{
 				xxxx:{
@@ -57,36 +58,6 @@
 	            $.operate.save(prefix + "/edit", $('#form-scanInfo-edit').serialize());
 	        }
 	    }
-		
-		
-		
-		
-		/*部门管理-新增-选择父部门树*/
-		function selectDeptTree() {
-			
-			var deptId = $("#nextDeptId").val();
-			if(deptId == ""){
-				deptId = "100";
-			}
-			var options = {
-				title: '网点选择',
-				width: "380",
-				url: ctx + "system/dept/selectDeptTree/" + deptId,
-				callBack: doSubmit
-			};
-			$.modal.openOptions(options);
-		}
-		
-		
-		function doSubmit(index, layero){
-			var tree = layero.find("iframe")[0].contentWindow.$._tree;
-			//if ($.tree.notAllowParents(tree)) {
-				var body = layer.getChildFrame('body', index);
-    			$("#nextDeptId").val(body.find('#treeId').val());
-    			$("#nextDept").val(body.find('#treeName').val());
-    			layer.close(index);
-			//}
-		}
 	</script>
 </body>
 </html>

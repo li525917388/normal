@@ -11,14 +11,14 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">订单号：</label>
 				<div class="col-sm-8">
-					<input id="orderNo" name="orderNo" class="form-control" type="text">
+					<input id="orderNo" name="orderNo" class="form-control" type="text" required>
 				</div>
 			</div>
 			
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">电商id：</label>
 				<div class="col-sm-8">
-					<input id="ecCompanyId" name="ecCompanyId" class="form-control" type="text">
+					<input id="ecCompanyId" name="ecCompanyId" class="form-control" type="text" required>
 				</div>
 			</div>
 			
@@ -47,31 +47,46 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">寄件人姓名：</label>
 				<div class="col-sm-8">
-					<input id="senderName" name="senderName" class="form-control" type="text">
+					<input id="senderName" name="senderName" class="form-control" type="text" required>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">寄件人电话：</label>
 				<div class="col-sm-8">
-					<input id="senderPhone" name="senderPhone" class="form-control" type="text">
+					<input id="senderPhone" name="senderPhone" class="form-control" type="text" required>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">寄件省：</label>
 				<div class="col-sm-8">
-					<input id="senderProv" name="senderProv" class="form-control" type="text">
+					<select class="form-control" id="senderProv" name="senderProv" onchange="getCitys(this,'sender','City');" required>
+						<option value="">--选择省--</option>
+							<option th:each="pro:${pnovince}" th:value="${pro.areaId}">
+								[[${pro.areaName}]]
+							</option>
+					</select>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">寄件市：</label>
 				<div class="col-sm-8">
-					<input id="senderCity" name="senderCity" class="form-control" type="text">
+					<select class="form-control" id="senderCity" name="senderCity" onchange="getCitys(this,'sender','Area');" required>
+						<option value="">--选择市--</option>
+						<option th:each="city : ${city}" th:value=',${city.areaId}'>
+							[[${city.areaName}]]
+						</option>
+					</select>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">寄件区/县：</label>
 				<div class="col-sm-8">
-					<input id="senderArea" name="senderArea" class="form-control" type="text">
+					<select class="form-control" id="senderArea" name="senderArea" selectVl="${(mMerchant.areaCode)!}" required>
+						<option value="">--选择区--</option>
+						<option th:each="district : ${district}" th:value="${district.areaId}">
+							[[^{district.areaName}]]
+						</option>
+					</select>
 				</div>
 			</div>
 			<div class="form-group">	
@@ -83,7 +98,7 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">寄件详细地址：</label>
 				<div class="col-sm-8">
-					<textarea id="senderAddr" name="senderAddr" class="form-control" rows="" cols=""></textarea>
+					<textarea id="senderAddr" name="senderAddr" style="resize:none"  class="form-control"></textarea>
 				</div>
 			</div>
 			<div class="form-group">	
@@ -98,31 +113,46 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">收件人：</label>
 				<div class="col-sm-8">
-					<input id="receiverName" name="receiverName" class="form-control" type="text">
+					<input id="receiverName" name="receiverName" class="form-control" type="text" required>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">收件电话：</label>
 				<div class="col-sm-8">
-					<input id="receiverPhone" name="receiverPhone" class="form-control" type="text">
+					<input id="receiverPhone" name="receiverPhone" class="form-control" type="text" required>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">收件省：</label>
 				<div class="col-sm-8">
-					<input id="receiverProv" name="receiverProv" class="form-control" type="text">
+					<select class="form-control" id="receiverProv" name="receiverProv" onchange="getCitys(this,'receiver','City');" required>
+						<option value="">--选择省--</option>
+							<option th:each="pro:${pnovince}" th:value="${pro.areaId}">
+								[[${pro.areaName}]]
+							</option>
+					</select>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">收件市：</label>
 				<div class="col-sm-8">
-					<input id="receiverCity" name="receiverCity" class="form-control" type="text">
+					<select class="form-control" id="receiverCity" name="receiverCity" onchange="getCitys(this,'receiver','Area');" required>
+						<option value="">--选择市--</option>
+						<option th:each="city : ${city}" th:value=',${city.areaId}'>
+							[[${city.areaName}]]
+						</option>
+					</select>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">收件区/县：</label>
 				<div class="col-sm-8">
-					<input id="receiverArea" name="receiverArea" class="form-control" type="text">
+					<select class="form-control" id="receiverArea" name="receiverArea" required>
+						<option value="">--选择区--</option>
+						<option th:each="district : ${district}" th:value="${district.areaId}">
+							[[${district.areaName}]]
+						</option>
+					</select>
 				</div>
 			</div>
 			<div class="form-group">	
@@ -134,7 +164,7 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">收件详细地址：</label>
 				<div class="col-sm-8">
-					<textarea id="receiverAddr" name="receiverAddr" class="form-control" rows="" cols="" ></textarea>
+					<textarea id="receiverAddr" name="receiverAddr" style="resize:none"  class="form-control" required></textarea>
 				</div>
 			</div>
 			<div class="form-group">	
@@ -174,7 +204,7 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">支付方式：</label>
 				<div class="col-sm-8">
-					<input id="payType" name="payType" class="form-control" type="text">
+					<input id="payType" name="payType" class="form-control" type="text" required>
 				</div>
 			</div>
 		</form>
@@ -199,6 +229,42 @@
 	            $.operate.save(prefix + "/add", $('#form-order-add').serialize());
 	        }
 	    }
+		
+		
+		//省市改变
+		function getCitys(obj,type,selName) {
+			if ($(obj).val() == '') {//如果为空 则清空后面的数据
+				if ('City' == selName) {
+					$("#" + type + selName).html('');
+					$("#" + type + selName).append("<option value=''>--选择市--</option>");
+					$("#" + type + selName).val('');
+				}
+				$("#" + type + "Area").html('');
+				$("#" + type + "Area").append("<option value=''>--选择区--</option>");
+				$("#" + type + "Area").val('');
+			} else {//否则调后台查询二级 三级 市区数据
+				$.ajax({
+					url: "/base/area/queryList", 
+					data: {"parentId": $(obj).val()}, 
+					type: "post",
+					success: function (data) {
+						if (data) {
+							$("#" + type + selName).html('');
+							$("#" + type + selName).append("<option value=''>--选择市--</option>");
+							$("#" + type + selName).val('');
+							$.each(data, function (i, v) {
+								$("#" + type + selName).append("<option value='" + v.areaId + "'>" + v.areaName + "</option>");
+							});
+							if (selName == 'City') {
+								$("#" + type + "Area").html('');
+								$("#" + type + "Area").append("<option value=''>--选择区--</option>");
+								$("#" + type + "Area").val('');
+							}
+						}
+					}
+				});
+			}
+		};
 	</script>
 </body>
 </html>
