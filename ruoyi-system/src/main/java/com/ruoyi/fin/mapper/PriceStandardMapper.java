@@ -1,6 +1,8 @@
 package com.ruoyi.fin.mapper;
 
 import com.ruoyi.fin.domain.PriceStandard;
+import com.ruoyi.fin.domain.PriceStandardDetail;
+
 import java.util.List;	
 
 /**
@@ -58,5 +60,14 @@ public interface PriceStandardMapper
      * @return 结果
      */
 	public int deletePriceStandardByIds(String[] ids);
+
+	
+	
+	/**
+	 * 报价试算
+	 * @param priceStandard
+	 * @return
+	 */
+	public List<PriceStandardDetail> calculateQuery(PriceStandard priceStandard);
 	
 }

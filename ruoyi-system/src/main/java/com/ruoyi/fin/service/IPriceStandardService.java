@@ -1,6 +1,9 @@
 package com.ruoyi.fin.service;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.fin.domain.PriceStandard;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -50,5 +53,14 @@ public interface IPriceStandardService
      * @return 结果
      */
 	public int deletePriceStandardByIds(String ids);
+
+	
+	/**
+	 * 报价试算
+	 * @param priceStandard
+	 * @param weight
+	 * @return
+	 */
+	public AjaxResult calculateQuery(PriceStandard priceStandard, BigDecimal weight);
 	
 }

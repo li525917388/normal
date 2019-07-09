@@ -110,4 +110,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</foreach>
 	</delete>
     
+    
+    <!-- 试算 -->
+    <select id="calculateQuery" parameterType="PriceStandard" resultType="PriceStandardDetail">
+    	<![CDATA[
+	    	select 
+	    		pd.formula,
+	    		pd.min_weight as minWeight,
+	    		pd.max_weight as maxWeight,
+	    		pd.min_type as minType,
+	    		pd.max_type as maxType
+	    	from fin_price_standard p 
+	    	left join fin_price_standard_detail pd on pd.price_id=p.id 
+	    	where p.send_area like concat('%', #{sendArea}, '%') 
+	    	  and p.receive_area like concat('%', #{receiveArea}, '%') 
+	    	  and p.valid = 1 
+	    	  and p.valid_time_start<=SYSDATE() 
+			  and p.valid_time_end>=SYSDATE() 
+			  and p.goods_type = #{goodsType} 
+			  and p.server_type = #{serverType}
+			  and p.price_type = #{priceType}
+			order by pd.min_weight,pd.min_type
+    	]]>
+    </select>
 </mapper>

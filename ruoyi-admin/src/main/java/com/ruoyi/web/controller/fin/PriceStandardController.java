@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.fin;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -17,12 +18,14 @@ import com.ruoyi.base.service.IAreaService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.fin.domain.PriceStandard;
+import com.ruoyi.fin.service.IPriceStandardDetailService;
 import com.ruoyi.fin.service.IPriceStandardService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.Ztree;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 
 /**
@@ -39,6 +42,9 @@ public class PriceStandardController extends BaseController
 	
 	@Autowired
 	private IPriceStandardService priceStandardService;
+	
+	@Autowired
+	private IPriceStandardDetailService priceStandardDetailService;
 	
 	@Autowired
 	private IAreaService areaService;
@@ -94,7 +100,15 @@ public class PriceStandardController extends BaseController
 	@PostMapping("/add")
 	@ResponseBody
 	public AjaxResult addSave(PriceStandard priceStandard) {
+		
+		//发件地格式
+		priceStandard.setSendArea("," + priceStandard.getSendArea() + ",");
+		priceStandard.setSendAreaName("," + priceStandard.getSendAreaName() + ",");
+		
+		//收件地格式
 		priceStandard.setReceiveArea("," + priceStandard.getReceiveArea() + ",");
+		priceStandard.setReceiveAreaName("," + priceStandard.getReceiveAreaName() + ",");
+		
 		return toAjax(priceStandardService.insertPriceStandard(priceStandard));
 	}
 
@@ -117,9 +131,37 @@ public class PriceStandardController extends BaseController
 	@PostMapping("/edit")
 	@ResponseBody
 	public AjaxResult editSave(PriceStandard priceStandard) {
-		priceStandard.setReceiveArea("," + priceStandard.getReceiveArea() + ",");
+		
+		//发件地址格式化
+		if(!StringUtils.isEmpty(priceStandard.getSendArea()) && ',' != priceStandard.getSendArea().charAt(0)) {
+			priceStandard.setSendArea("," + priceStandard.getSendArea() + ",");
+			priceStandard.setSendAreaName("," + priceStandard.getSendAreaName() + ",");
+		}
+		
+		//收件地址格式化
+		if(!StringUtils.isEmpty(priceStandard.getReceiveArea()) && ',' != priceStandard.getReceiveArea().charAt(0)) {
+			priceStandard.setReceiveArea("," + priceStandard.getReceiveArea() + ",");
+			priceStandard.setReceiveAreaName("," + priceStandard.getReceiveAreaName() + ",");
+		}
+
 		return toAjax(priceStandardService.updatePriceStandard(priceStandard));
 	}
+	
+	
+ 
+    
+    /**
+     * 报价有效值修改
+     */
+    @Log(title = "标准报价", businessType = BusinessType.UPDATE)
+    @RequiresPermissions("fin:priceStandard:edit")
+    @PostMapping("/changeValid")
+    @ResponseBody
+    public AjaxResult changeValid(PriceStandard priceStandard)
+    {
+        return toAjax(priceStandardService.updatePriceStandard(priceStandard));
+    }
+    
 	
 	/**
 	 * 删除标准报价
@@ -186,5 +228,53 @@ public class PriceStandardController extends BaseController
 		
         return list;
     }
+
+    
+    
+    /**
+	 * 标准报价详情列表
+	 */
+	@GetMapping("/detail/{id}")
+	public String detail(@PathVariable("id") Long id, ModelMap mmap) {
+		
+		mmap.put("priceId", id);
+		
+	    return prefix + "Detail/priceStandardDetail";
+	}
 	
+	
+	
+	/**
+	 * 试算页面跳转
+	 * @param mmap
+	 * @return
+	 */
+	@GetMapping("/calculate")
+	public String calculate(ModelMap mmap) {
+		
+	    return prefix + "/calculate";
+	}
+	
+    
+	
+	/**
+	 * 试算查询
+	 * @param priceStandard
+	 * @return
+	 */
+	@RequiresPermissions("fin:priceStandard:calculate")
+	@PostMapping("/calculate")
+	@ResponseBody
+	public AjaxResult calculateQuery(PriceStandard priceStandard, String weight) {
+		
+		//发件地格式
+		priceStandard.setSendArea("," + priceStandard.getSendArea() + ",");
+		priceStandard.setSendAreaName("," + priceStandard.getSendAreaName() + ",");
+		
+		//收件地格式
+		priceStandard.setReceiveArea("," + priceStandard.getReceiveArea() + ",");
+		priceStandard.setReceiveAreaName("," + priceStandard.getReceiveAreaName() + ",");
+		
+		return priceStandardService.calculateQuery(priceStandard, new BigDecimal(weight));
+	}
 }

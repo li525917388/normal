@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<style>
+	textarea{resize:none;}	
+</style>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+       
+       <div class="ibox float-e-margins">
+           <div class="ibox-title">
+               <h5>sql工具</h5>
+               <div class="ibox-tools">
+                 
+               </div>
+           </div>
+           <div class="ibox-content">
+               <div id="msg_div" class="alert alert-info">
+                  	 myBatis sql 日志参数格式化一键搞定。
+               </div>
+               <form id="sqlUtilForm" role="form" class="form-horizontal m-t">
+                   
+                   <div class="form-group">
+                       <label class="col-sm-3 control-label">原sql（Preparing）：</label>
+                       <div class="col-sm-9">
+                           <textarea id="sql" name="sql" class="form-control" placeholder="请输原sql" required></textarea>
+                       </div>
+                   </div>
+                   
+                   <div class="form-group">
+                       <label class="col-sm-3 control-label">参数（Parameters）：</label>
+                       <div class="col-sm-9">
+                           <textarea id="params" name="params" class="form-control" placeholder="请输参数" required></textarea>
+                       </div>
+                   </div>
+
+                   <div class="form-group">
+                       <div class="col-sm-12 col-sm-offset-3">
+							<button type="button" onclick="getResult()" class="btn btn-primary">提交</button>
+                       </div>
+                   </div>
+                   
+                   <div class="hr-line-dashed"></div>
+                   
+                   <div class="form-group">
+                       <label class="col-sm-3 control-label">结果：</label>
+                       <div class="col-sm-9">
+                           <textarea id="doResult" class="form-control" rows="6" placeholder=""></textarea>
+                       </div>
+                   </div>
+                   
+               </form>
+               <div class="clearfix"></div>
+           </div>
+       </div>
+        
+    </div>
+	<div th:include="include :: footer"></div>
+	<script>
+		var prefix = ctx + "tool/sqlutil";
+		
+		$("#sqlUtilForm").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function getResult() {
+	        if ($.validate.form()) {
+	        	
+	        	$.post(prefix + "/getResult", $('#sqlUtilForm').serialize(), function(res){
+	        		
+	        		if(res.code == 0){	        			
+	        			$("#doResult").val(res.data);
+	        			$("#msg_div").attr("class", "alert alert-success");
+	        			$("#msg_div").html("成功！");
+	        		}else{
+	        			$("#msg_div").attr("class", "alert alert-danger");
+	        			$("#msg_div").html(res.msg);
+	        		}
+	        	});
+	        }
+	    }
+	</script>
+</body>
+</html>

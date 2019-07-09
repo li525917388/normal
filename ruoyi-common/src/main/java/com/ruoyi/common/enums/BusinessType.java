@@ -61,4 +61,9 @@ public enum BusinessType
      * 上传
      */
     UPLOAD,
+    
+    /**
+     * 查询
+     */
+    QUERY,
 }

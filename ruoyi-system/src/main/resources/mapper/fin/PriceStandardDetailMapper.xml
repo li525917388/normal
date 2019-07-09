@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.fin.mapper.PriceStandardDetailMapper">
+    
+	<resultMap type="PriceStandardDetail" id="PriceStandardDetailResult">
+		<result property="id"    		column="id"    />
+		<result property="priceId"    	column="price_id"    />
+		<result property="range"    	column="range"    />
+		<result property="formula"    	column="formula"    />
+		<result property="remark"    	column="remark"    />
+		<result property="sortNo"    	column="sort_no"    />
+		<result property="minWeight"    column="min_weight"    />
+		<result property="maxWeight"    column="max_Weight"    />
+		<result property="minType"    	column="min_type"    />
+		<result property="maxType"    	column="max_type"    />
+	</resultMap>
+	
+	<sql id="selectPriceStandardDetailVo">
+		select id, price_id, `range`, formula, remark, sort_no, min_weight, max_Weight, min_type, max_type from fin_price_standard_detail
+	</sql>
+	
+	<select id="selectPriceStandardDetailList" parameterType="PriceStandardDetail" resultMap="PriceStandardDetailResult">
+		<include refid="selectPriceStandardDetailVo"/>
+		<where>  
+			<if test="id != null "> and id = #{id}</if>
+ 			<if test="priceId != null "> and price_id = #{priceId}</if>
+ 			<if test="range != null  and range != '' "> and `range` = #{range}</if>
+ 			<if test="formula != null  and formula != '' "> and formula = #{formula}</if>
+ 			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+ 			<if test="sortNo != null "> and sort_no = #{sortNo}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectPriceStandardDetailById" parameterType="Long" resultMap="PriceStandardDetailResult">
+		<include refid="selectPriceStandardDetailVo"/>
+		where id = #{id}
+	</select>
+        
+	<insert id="insertPriceStandardDetail" parameterType="PriceStandardDetail" useGeneratedKeys="true" keyProperty="id">
+		insert into fin_price_standard_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="priceId != null  ">price_id,</if>
+			<if test="range != null  and range != ''  ">`range`,</if>
+			<if test="formula != null  and formula != ''  ">formula,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="sortNo != null  ">sort_no,</if>
+			<if test="minWeight != null  ">min_weight,</if>
+			<if test="maxWeight != null  ">max_Weight,</if>
+			<if test="minType != null  ">min_type,</if>
+			<if test="maxType != null  ">max_type,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="priceId != null  ">#{priceId},</if>
+			<if test="range != null  and range != ''  ">#{range},</if>
+			<if test="formula != null  and formula != ''  ">#{formula},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="sortNo != null  ">#{sortNo},</if>
+			<if test="minWeight != null  ">#{minWeight},</if>
+			<if test="maxWeight != null  ">#{maxWeight},</if>
+			<if test="minType != null  ">#{minType},</if>
+			<if test="maxType != null  ">#{maxType},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updatePriceStandardDetail" parameterType="PriceStandardDetail">
+		update fin_price_standard_detail
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="priceId != null  ">price_id = #{priceId},</if>
+			<if test="range != null  and range != ''  ">`range` = #{range},</if>
+			<if test="formula != null  and formula != ''  ">formula = #{formula},</if>
+			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+			<if test="sortNo != null  ">sort_no = #{sortNo},</if>
+			<if test="minWeight != null  ">min_weight = #{minWeight},</if>
+			<if test="maxWeight != null  ">max_Weight = #{maxWeight},</if>
+			<if test="minType != null  ">min_type = #{minType},</if>
+			<if test="maxType != null  ">max_type = #{maxType},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deletePriceStandardDetailById" parameterType="Long">
+		delete from fin_price_standard_detail where id = #{id}
+	</delete>
+	
+	<delete id="deletePriceStandardDetailByIds" parameterType="String">
+		delete from fin_price_standard_detail where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+ 			#{id}
+		</foreach>
+	</delete>
+    
+    
+    <!-- 检查重量区间 -->
+    <select id="checkWeightRange" parameterType="PriceStandardDetail" resultType="Integer">
+    	<![CDATA[
+    	select count(1) from fin_price_standard_detail 
+    	where ((((min_weight < #{minWeight} and min_type=0)   or (min_weight <= #{minWeight} and min_type=1 and #{minType}=1)) and ((max_Weight > #{minWeight} and max_type=0)   or (max_Weight >= #{minWeight} and max_type=1 and #{minType}=1))) or 
+			   (((min_weight < #{maxWeight} and min_type=0)   or (min_weight <= #{maxWeight} and min_type=1 and #{maxType}=1)) and ((max_Weight > #{maxWeight} and max_type=0)   or (max_Weight >= #{maxWeight} and max_type=1 and #{maxType}=1))) or
+			   (((min_weight > #{minWeight} and #{minType}=0) or (min_weight >= #{minWeight} and min_type=1 and #{minType}=1)) and ((min_weight < #{maxWeight} and #{maxType}=0) or (min_weight <= #{maxWeight} and min_type=1 and #{maxType}=1))) or 
+			   (((max_Weight > #{minWeight} and #{minType}=0) or (max_Weight >= #{minWeight} and max_type=1 and #{minType}=1)) and ((max_Weight < #{maxWeight} and #{maxType}=0) or (max_Weight <= #{maxWeight} and max_type=1 and #{maxType}=1)))
+			  )
+			  and price_id = #{priceId}
+    	]]>
+    	
+    	<if test="id != null">
+    		and id = #{id}
+    	</if>
+    </select>
+    
+</mapper>
