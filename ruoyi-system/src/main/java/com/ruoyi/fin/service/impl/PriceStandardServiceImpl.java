@@ -48,8 +48,8 @@ public class PriceStandardServiceImpl implements IPriceStandardService
      * @return 标准报价集合
      */
 	@Override
-	public List<PriceStandard> selectPriceStandardList(PriceStandard priceStandard)
-	{
+	public List<PriceStandard> selectPriceStandardList(PriceStandard priceStandard) {
+		
 	    return priceStandardMapper.selectPriceStandardList(priceStandard);
 	}
 	

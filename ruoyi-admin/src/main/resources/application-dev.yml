@@ -10,6 +10,15 @@ ruoyi:
   profile: D:/profile/
   # 获取ip地址开关
   addressEnabled: true
+  # 邮件发送配置
+  email:
+    host: smtp.163.com
+    username: li525917388@163.com
+    password: lixinhuan1314
+    sendFrom: li525917388@163.com
+  shiro:
+    filter:
+      anon: /system/user/register,/noCheck/*
 
 # 开发环境配置
 server:

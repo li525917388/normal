@@ -1,23 +1,33 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
+import com.ruoyi.common.utils.EmailUtils;
+import com.ruoyi.common.utils.IpUtils;
 import com.ruoyi.common.utils.Md5Utils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.VeriCdoeUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.SysUserPost;
 import com.ruoyi.system.domain.SysUserRole;
+import com.ruoyi.system.domain.VerificationCode;
 import com.ruoyi.system.mapper.SysPostMapper;
 import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
@@ -25,6 +35,7 @@ import com.ruoyi.system.mapper.SysUserPostMapper;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.IVerificationCodeService;
 
 /**
  * 用户 业务层处理
@@ -53,6 +64,9 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     private ISysConfigService configService;
+    
+    @Autowired
+    private IVerificationCodeService verificationCodeService;
 
     /**
      * 根据条件分页查询用户对象
@@ -448,4 +462,120 @@ public class SysUserServiceImpl implements ISysUserService
         }
         return userMapper.updateUser(user);
     }
+
+    
+    /*
+     * 检查用户邮箱是否正确
+     * @see com.ruoyi.system.service.ISysUserService#checkUserEmail(com.ruoyi.system.domain.SysUser)
+     * 2019年7月10日
+     */
+    @Transactional
+	@Override
+	public AjaxResult checkUserEmail(SysUser user) {
+		
+		//获取用户信息
+		SysUser resUser = selectUserByLoginName(user.getLoginName());
+		
+		if(resUser == null){
+    		return AjaxResult.error("用户不存在");
+    		
+    	}else if(resUser.getEmail() == null){
+    		return AjaxResult.error("用户未设置邮箱，请更换验证方式或联系管理员");
+    		
+    	}else if(!resUser.getEmail().equals(user.getEmail())){
+    		return AjaxResult.error("邮箱不正确");
+    		
+    	}
+		
+		//获取邮件验证码时效
+    	String times = configService.selectConfigByKey("email.veriCode.time");
+    	int second = 120;	//默认2分钟
+    	try {
+			second = Integer.valueOf(times);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+		//加时间
+    	Calendar calendar = Calendar.getInstance();
+    	calendar.add(Calendar.SECOND, second);
+    	
+		
+		//生成简单验证码
+		String code = VeriCdoeUtils.getSimpleCode();
+    	
+    	VerificationCode verificationCode = new VerificationCode();
+    	verificationCode.setVeriCode(code);	//验证码
+    	verificationCode.setUsername(user.getLoginName()); //用户名
+    	verificationCode.setEmail(user.getEmail());	//email
+    	verificationCode.setCreateTime(new Date());	//创建时间
+    	verificationCode.setVaildTime(calendar.getTime());	//有效期限
+    	verificationCode.setVaild(1);	//有效值
+
+		int resCode = verificationCodeService.insertVerificationCode(verificationCode );
+		if(resCode == 0){
+			return AjaxResult.error("系统错误");
+		}
+    	
+		//发邮件
+		String res = sendEmail(resUser, code);
+		
+		if(!"ok".equals(res)){
+    		return AjaxResult.error(res);
+    	}
+
+		return AjaxResult.success();
+	}
+
+    
+    public String sendEmail(SysUser user, String code){
+    	
+    	String host = configService.selectConfigByKey("localhost");
+    	
+    	if(StringUtils.isEmpty(host) || "null".equals(host)){
+    		host = IpUtils.getHostIp(); //获取本机ip
+    	}
+    	
+    	String port = Global.getConfig("server.port");
+    	
+    	if(!"80".equals(port)){
+    		host += ":" + port;
+    	}
+    	
+    	String path = Global.getConfig("server.servlet.context-path");
+    	
+    	if(!StringUtils.isEmpty(path) && !"/".equals(path) && !"null".equals(path)){
+    		host += path;
+    	}
+
+    	String title = "修改密码";
+		
+    	String content = "您的验证码是：" + code + 
+    			"</br>您也可以点击下方链接，直接修改密码！</br></br><a href='http://" + host  + "/noCheck/checkEmailVeriCode?username=" + user.getLoginName() +
+    			"&email=" + user.getEmail() + "&code=" + code + 
+    			"&token=adfgs4j214234234j23jk4ik2394j32k4kj239432j4jj32k4k'>点这里</a>";
+    	
+		//开始发邮件
+    	String res = EmailUtils.sendEmail(user.getEmail(), title, content);
+    	
+    	
+    	return res;
+    }
+	
+	
+	/*
+	 * 验证邮箱验证码是否有效
+	 * @see com.ruoyi.system.service.ISysUserService#checkEmailVeriCode(java.lang.String, java.lang.String, java.lang.String)
+	 * 2019年7月10日
+	 */
+	@Override
+	public int checkEmailVeriCode(String code, String username, String email) {
+		
+		
+		
+		return 0;
+	}
+	
+
 }

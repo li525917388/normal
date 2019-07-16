@@ -28,15 +28,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<include refid="selectPriceStandardVo"/>
 		<where>  
 			<if test="id != null "> and id = #{id}</if>
- 			<if test="sendArea != null  and sendArea != '' "> and send_area = #{sendArea}</if>
- 			<if test="receiveArea != null  and receiveArea != '' "> and receive_area = #{receiveArea}</if>
+ 			<if test="sendArea != null  and sendArea != '' "> and send_area like concat('%,',  #{sendArea}, ',%')</if>
+ 			<if test="receiveArea != null  and receiveArea != '' "> and receive_area like concat('%,',  #{receiveArea}, ',%')</if>
  			<if test="priceType != null "> and price_type = #{priceType}</if>
  			<if test="serverType != null "> and server_type = #{serverType}</if>
  			<if test="goodsType != null  and goodsType != '' "> and goods_type = #{goodsType}</if>
  			<if test="weightMode != null "> and weight_mode = #{weightMode}</if>
- 			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
- 			<if test="validTimeStart != null "> and valid_time_start = #{validTimeStart}</if>
- 			<if test="validTimeEnd != null "> and valid_time_end = #{validTimeEnd}</if>
+ 			<if test="remark != null  and remark != '' "> and remark = concat('%',  #{remark}, '%')</if>
+ 			<if test="validTimeStart != null "> and valid_time_start &gt;= #{validTimeStart}</if>
+ 			<if test="validTimeEnd != null "> and valid_time_end &lt;= #{validTimeEnd}</if>
  			<if test="valid != null "> and valid = #{valid}</if>
  		</where>
 	</select>

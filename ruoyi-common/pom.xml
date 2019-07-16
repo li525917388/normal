@@ -83,6 +83,13 @@
 		    <artifactId>javax.servlet-api</artifactId>
 		</dependency>
 		
+		<!-- java 邮件 依赖 -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4</version>
+		</dependency>
+				
     </dependencies>
   
 </project>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.quartz.mapper.TaskMapper">
+
+	<!-- 查询邮件任务list -->
+	<select id="queryEmailTask" resultType="EmailTask">
+		<![CDATA[
+			select 
+				id,
+				email_url as emailUrl,
+				title,
+				content,
+				create_time as createTime,
+				status,
+				failure_num as failureNum,
+				source,
+				failure_reason as failureReason
+			from sys_email_task 
+			where create_time >= date_sub(sysdate(), interval '7 0:0:0' day_second) 
+				and status <> 1 
+				and failure_num < 6
+
+		]]>
+	</select>
+	
+	
+	<!-- 更新邮件任务发送状态 -->
+	<update id="updateEmailTaskStatus" parameterType="EmailTask">
+		update sys_email_task
+		set status=#{status} 
+			,failure_num=#{failureNum} 
+		<if test="status == 1">
+			,success_time = sysdate()
+		</if>
+		<if test="status == 2">
+			,failure_num = failure_num + 1
+			,failure_reason = #{failureReason} 
+		</if>
+		where id=#{id}
+	</update>
+	
+</mapper> 

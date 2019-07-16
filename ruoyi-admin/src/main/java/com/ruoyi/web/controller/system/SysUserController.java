@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.ruoyi.base.domain.Area;
+import com.ruoyi.base.service.IAreaService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -47,6 +51,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private SysPasswordService passwordService;
+    
+    @Autowired
+	private IAreaService areaService;
 
     @RequiresPermissions("system:user:view")
     @GetMapping()
@@ -230,4 +237,21 @@ public class SysUserController extends BaseController
     {
         return toAjax(userService.changeStatus(user));
     }
+    
+    
+    /**
+     * 注册跳转
+     */
+    @GetMapping("/register")
+    public String register(ModelMap mmap) {
+
+		Area area = new Area();
+		area.setLevel(1);
+		mmap.addAttribute("provList", areaService.selectAreaList(area ));
+		
+        return "register";
+    }
+    
+   
+    
 }

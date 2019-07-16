@@ -22,20 +22,20 @@
     </script>
 </head>
 
-<body class="signin">
+<body class="signin" style="color: rgba(255, 255, 255, .95)">
 
 	<a href="?lang=en_US"> 英语 </a>  
-<a href="?lang=zh_CN"> 中文 </a>  
+	<a href="?lang=zh_CN"> 中文 </a>  
 
     <div class="signinpanel">
         <div class="row">
             <div class="col-sm-7">
                 <div class="signin-info">
-                    <div class="logopanel m-b">
+                    <!-- <div class="logopanel m-b">
                         <h1><img alt="[ 若依 ]" src="../static/ruoyi.png" th:src="@{/ruoyi.png}"></h1>
-                    </div>
+                    </div> -->
                     <div class="m-b"></div>
-                    <h4>欢迎使用 <strong>企业 后台管理系统</strong></h4>
+                    <h2>欢迎使用 <strong>企业 后台管理系统</strong></h2>
                     <ul class="m-b">
                         <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> SpringBoot</li>
                         <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Mybatis</li>
@@ -43,14 +43,14 @@
                         <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Thymeleaf</li>
                         <li><i class="fa fa-arrow-circle-o-right m-r-xs"></i> Bootstrap</li>
                     </ul>
-                    <strong>还没有账号？ <a href="#">立即注册&raquo;</a></strong>
+                    <!-- <strong>还没有账号？ <a style="color: #ee0099;" href="/system/user/register">立即注册&raquo;</a></strong> -->
                 </div>
             </div>
             <div class="col-sm-5">
                 <form id="signupForm">
                     <h4 class="no-margins">[[#{user.login}]]：</h4>
                     <p class="m-t-md">你好，世界</p>
-                    <input type="text"     name="username" class="form-control uname"     placeholder="用户名" value="admin"    />
+                    <input type="text"     name="username" class="form-control uname"     placeholder="用户名" value=""    />
                     <!-- admin123 -->
                     <input type="password" name="password" class="form-control pword"     placeholder="密码"   value="" />
 					<div class="row m-t" th:if="${captchaEnabled==true}">
@@ -63,9 +63,16 @@
 							</a>
 						</div>
 					</div>
-                    <div class="checkbox-custom" th:classappend="${captchaEnabled==false} ? 'm-t'">
-				        <input type="checkbox" id="rememberme" name="rememberme"> <label for="rememberme">记住我</label>
-				    </div>
+					<div class="row" >
+						<div class="col-xs-7">
+		                    <div class="checkbox-custom" th:classappend="${captchaEnabled==false} ? 'm-t'">
+						        <input type="checkbox" id="rememberme" name="rememberme"> <label for="rememberme">记住我</label>
+						    </div>
+					    </div>
+					    <div class="col-xs-5">
+					       	<a href="/noCheck/findPassword" style="color: #555;" target="_blank">忘记密码？</a>
+					    </div>
+					</div>
                     <button class="btn btn-success btn-block" id="btnSubmit" data-loading="正在验证登录，请稍后...">登录</button>
                 </form>
             </div>

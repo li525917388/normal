@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.SysUser;
 
 /**
@@ -156,4 +158,25 @@ public interface ISysUserService
      * @return 结果
      */
     public int changeStatus(SysUser user);
+    
+    
+    
+    /**
+     * 检查用户邮箱是否正确
+     * @param user
+     * @return
+     */
+    public AjaxResult checkUserEmail(SysUser user);
+    
+    
+    
+    
+    /**
+     * 验证邮箱验证码是否有效
+     * @param code
+     * @param username
+     * @param email
+     * @return 1=成功，2=失败
+     */
+    public int checkEmailVeriCode(String code, String username, String email);
 }

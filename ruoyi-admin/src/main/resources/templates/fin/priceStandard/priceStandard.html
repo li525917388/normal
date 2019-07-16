@@ -11,43 +11,59 @@
 					<div class="select-list">
 						<ul>
 							<li>
-								寄件地：<input type="text" name="sendArea"/>
+								寄&nbsp;&nbsp;件&nbsp;&nbsp;地：
+								<input id="sendArea" name="sendArea" type="text" style="display: none;">
+								<input onclick="selectAreaTree('send')" id="sendAreaName" name="sendAreaName" type="text"  placeholder="请选择"  autocomplete="off">
+				                
 							</li>
 
 							<li>
-								收件地：<input type="text" name="receiveArea"/>
+								收&nbsp;&nbsp;件&nbsp;&nbsp;地：
+								<input id="receiveArea" name="receiveArea" type="text" style="display: none;">
+								<input onclick="selectAreaTree('receive')" id="receiveAreaName" name="receiveAreaName" type="text"  placeholder="请选择"  autocomplete="off">
+				                
 							</li>
 
 							<li>
-								费用类别：<input type="text" name="priceType"/>
+								费用类别：
+								<select id="priceType" name="priceType" th:with="type=${@dict.getType('ex_waybill_feetype')}">
+									<option value="">全部</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
 							</li>
 
 							<li>
-								服务方式：<input type="text" name="serverType"/>
+								服务方式：
+								<select id="serverType" name="serverType" th:with="type=${@dict.getType('ex_waybill_deliverytype')}">
+									<option value="">全部</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
 							</li>
 
 							<li>
-								物品类别：<input type="text" name="goodsType"/>
+								物品类别：
+								<select id="goodsType" name="goodsType" th:with="type=${@dict.getType('ex_waybill_goodstype')}">
+									<option value="">全部</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
 							</li>
 
 							<li>
-								重量模式：<input type="text" name="weightMode"/>
+								重量模式：
+								<input type="text" name="weightMode"/>
 							</li>
 
 							<li>
-								备注：<input type="text" name="remark"/>
+								备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：
+								<input type="text" name="remark"/>
 							</li>
 
 							<li>
-								有效期开始时间：<input type="text" name="validTimeStart"/>
-							</li>
-
-							<li>
-								有效期结束时间：<input type="text" name="validTimeEnd"/>
-							</li>
-
-							<li>
-								有效值：<input type="text" name="valid"/>
+								有&nbsp;&nbsp;效&nbsp;&nbsp;值：
+								<select id="valid" name="valid" th:with="type=${@dict.getType('comm_valid_list')}">
+									<option value="">全部</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
 							</li>
 
 							<li>
@@ -245,6 +261,42 @@
 				callBack: function (index, layero){
 					
 					layero.find("iframe")[0].contentWindow.submitHandler();
+				}
+			};
+			$.modal.openOptions(options);
+		}
+		
+		
+		
+		///选中地区
+		function selectAreaTree(sandr) {
+			
+			var type = "radio";
+			/* if(sandr == "send"){
+				type = "radio";
+			} */
+			
+			var options = {
+				title: '网点选择',
+				width: "380",
+				url: ctx + "fin/priceStandard/selectAreaTree/0?level=2&type=" + type + "&column=" + sandr,
+				callBack: function (index, layero){
+					var tree = layero.find("iframe")[0].contentWindow.$.tree;
+					
+					if(type == "checkbox"){
+						var areaIds = tree.getCheckedNodes("id");
+						var areaNames = tree.getCheckedNodes("name");
+						var body = layer.getChildFrame('body', index);
+		    			$("#" + sandr + "Area").val(areaIds);
+		    			$("#" + sandr + "AreaName").val(areaNames);
+		    			layer.close(index);
+					}else{
+						var body = layer.getChildFrame('body', index);
+		    			$("#" + sandr + "Area").val(body.find('#treeId').val());
+		    			$("#" + sandr + "AreaName").val(body.find('#treeName').val());
+		    			layer.close(index);
+					}
+					
 				}
 			};
 			$.modal.openOptions(options);

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VerificationCodeMapper">
+    
+	<resultMap type="VerificationCode" id="VerificationCodeResult">
+		<result property="id"    column="id"    />
+		<result property="veriCode"    column="veri_code"    />
+		<result property="createTime"    column="create_time"    />
+		<result property="username"    column="username"    />
+		<result property="email"    column="email"    />
+		<result property="vaildTime"    column="vaild_time"    />
+		<result property="vaild"    column="vaild"    />
+	</resultMap>
+	
+	<sql id="selectVerificationCodeVo">
+		select id, veri_code, create_time, username, email, vaild_time, vaild from sys_verification_code
+	</sql>
+	
+	<select id="selectVerificationCodeList" parameterType="VerificationCode" resultMap="VerificationCodeResult">
+		<include refid="selectVerificationCodeVo"/>
+		<where>  
+			<if test="id != null "> and id = #{id}</if>
+ 			<if test="veriCode != null  and veriCode != '' "> and veri_code = #{veriCode}</if>
+ 			<if test="createTime != null "> and create_time = #{createTime}</if>
+ 			<if test="username != null  and username != '' "> and username = #{username}</if>
+ 			<if test="email != null  and email != '' "> and email = #{email}</if>
+ 			<if test="vaildTime != null "> and vaild_time = #{vaildTime}</if>
+ 			<if test="vaild != null "> and vaild = #{vaild}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectVerificationCodeById" parameterType="Long" resultMap="VerificationCodeResult">
+		<include refid="selectVerificationCodeVo"/>
+		where id = #{id}
+	</select>
+        
+	<insert id="insertVerificationCode" parameterType="VerificationCode" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_verification_code
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="veriCode != null  and veriCode != ''  ">veri_code,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="username != null  and username != ''  ">username,</if>
+			<if test="email != null  and email != ''  ">email,</if>
+			<if test="vaildTime != null  ">vaild_time,</if>
+			<if test="vaild != null  ">vaild,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="veriCode != null  and veriCode != ''  ">#{veriCode},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="username != null  and username != ''  ">#{username},</if>
+			<if test="email != null  and email != ''  ">#{email},</if>
+			<if test="vaildTime != null  ">#{vaildTime},</if>
+			<if test="vaild != null  ">#{vaild},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updateVerificationCode" parameterType="VerificationCode">
+		update sys_verification_code
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="veriCode != null  and veriCode != ''  ">veri_code = #{veriCode},</if>
+			<if test="createTime != null  ">create_time = #{createTime},</if>
+			<if test="username != null  and username != ''  ">username = #{username},</if>
+			<if test="email != null  and email != ''  ">email = #{email},</if>
+			<if test="vaildTime != null  ">vaild_time = #{vaildTime},</if>
+			<if test="vaild != null  ">vaild = #{vaild},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteVerificationCodeById" parameterType="Long">
+		delete from sys_verification_code where id = #{id}
+	</delete>
+	
+	<delete id="deleteVerificationCodeByIds" parameterType="String">
+		delete from sys_verification_code where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+ 			#{id}
+		</foreach>
+	</delete>
+    
+    
+    <!-- 获取验证码信息 -->
+    <select id="getVerificationCode" parameterType="VerificationCode" resultMap="VerificationCodeResult">
+		<include refid="selectVerificationCodeVo"/>
+		where username = #{username}
+ 			and email = #{email}
+ 			and vaild_time &gt;= #{vaildTime}
+ 			and vaild = 1 
+ 		order by create_time desc
+ 		limit 0,1
+	</select>
+</mapper>

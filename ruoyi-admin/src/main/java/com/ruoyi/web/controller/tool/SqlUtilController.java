@@ -50,6 +50,10 @@ public class SqlUtilController {
 			return AjaxResult.error("老铁，你的参数不正确啊！");
 		}
 		
+		//验证sql
+		sql = formmat(sql);
+		
+		//计算结果
 		String res = sqlUtil(sql, params);
 		
 		AjaxResult ajaxResult = AjaxResult.success();
@@ -59,8 +63,29 @@ public class SqlUtilController {
 		return ajaxResult;
 	}
 	
-	
+	/**
+	 * 验证sql
+	 * @param sql
+	 * @return
+	 */
+	private String formmat(String sql) {
+		
+		//替换转移符
+		sql = sql.replaceAll("&gt;", ">").replaceAll("&lt;", "<");
+		
+		return sql;
+	}
+
+
+	/**
+	 * 算法
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
 	public String sqlUtil(String sql, String params){
+		
+		if(sql.indexOf('?') < 0) return sql;
 		
 		StringBuilder sb = new StringBuilder(sql);
 		
