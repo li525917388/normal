@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-scanSign-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">运单编号：</label>
+				<div class="col-sm-8">
+					<input id="waybillNo" name="waybillNo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">派送人：</label>
+				<div class="col-sm-8">
+					<input id="deliveryUserId" name="deliveryUserId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">签收人：</label>
+				<div class="col-sm-8">
+					<input id="signer" name="signer" class="form-control" type="text">
+				</div>
+			</div>
+			
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">代收货款：</label>
+				<div class="col-sm-8">
+					<input id="cod" name="cod" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">代签标识：</label>
+				<div class="col-sm-8">
+					<input id="proxyFlag" name="proxyFlag" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">服务类型：</label>
+				<div class="col-sm-8">
+					<input id="serviceType" name="serviceType" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "ex/scanSign"
+		$("#form-scanSign-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-scanSign-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

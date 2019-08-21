@@ -200,7 +200,7 @@ public class ScanInfoServiceImpl implements IScanInfoService
 			//【50】签收
 			case 50:
 				waybill = new Waybill();
-				waybill.setWaybillStatus(50);		//派件中
+				waybill.setWaybillStatus(50);		//签收
 				waybill.setWaybillNo(scanInfo.getWaybillNo());
 				
 				//更新运单信息

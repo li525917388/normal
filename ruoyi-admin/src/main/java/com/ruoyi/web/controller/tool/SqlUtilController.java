@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ruoyi.common.annotation.LdhWebCount;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -26,6 +27,7 @@ public class SqlUtilController {
 	 * @return
 	 */
 	//@RequiresPermissions("tool:build:view")
+	@LdhWebCount
 	@GetMapping()
 	public String index() {
 		return prefix + "/sqlutil";

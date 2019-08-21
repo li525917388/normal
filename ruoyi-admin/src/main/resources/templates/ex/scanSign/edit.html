@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-scanSign-edit" th:object="${scanSign}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">运单编号：</label>
+				<div class="col-sm-8">
+					<input id="waybillNo" name="waybillNo" th:field="*{waybillNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">派送人：</label>
+				<div class="col-sm-8">
+					<input id="deliveryUserId" name="deliveryUserId" th:field="*{deliveryUserId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">签收人：</label>
+				<div class="col-sm-8">
+					<input id="signer" name="signer" th:field="*{signer}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">签收时间：</label>
+				<div class="col-sm-8">
+					<input id="signTime" name="signTime" th:field="*{signTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">签收网点：</label>
+				<div class="col-sm-8">
+					<input id="signDeptId" name="signDeptId" th:field="*{signDeptId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" th:field="*{createTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" th:field="*{remark}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">代收货款：</label>
+				<div class="col-sm-8">
+					<input id="cod" name="cod" th:field="*{cod}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">代签标识：</label>
+				<div class="col-sm-8">
+					<input id="proxyFlag" name="proxyFlag" th:field="*{proxyFlag}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">服务类型：</label>
+				<div class="col-sm-8">
+					<input id="serviceType" name="serviceType" th:field="*{serviceType}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "ex/scanSign";
+		$("#form-scanSign-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-scanSign-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

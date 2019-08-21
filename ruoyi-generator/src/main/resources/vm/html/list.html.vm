@@ -4,7 +4,7 @@
 <head th:include="include :: header"></head>
 <body class="gray-bg">
     
-     <div class="container-div">
+	<div class="container-div">
 		<div class="row">
 			<div class="col-sm-12 search-collapse">
 				<form id="formId">
@@ -65,14 +65,14 @@
 			</div>
 		</div>
 	</div>
-    <div th:include="include :: footer"></div>
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('${moduleName}:${classname}:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('${moduleName}:${classname}:remove')}]];
-        var prefix = ctx + "${moduleName}/${classname}";
+	<div th:include="include :: footer"></div>
+	<script th:inline="javascript">
+		var editFlag = [[${@permission.hasPermi('${moduleName}:${classname}:edit')}]];
+		var removeFlag = [[${@permission.hasPermi('${moduleName}:${classname}:remove')}]];
+		var prefix = ctx + "${moduleName}/${classname}";
 #foreach($column in $columns)
 #if(${column.configInfo} && ${column.configInfo.type} == 'dict')
-        var datas = [[${@dict.getType('${column.configInfo.value}')}]];
+		var datas = [[${@dict.getType('${column.configInfo.value}')}]];
 #end
 #end
 
@@ -92,8 +92,8 @@
 #foreach($column in $columns)
 #if($column.columnName == $primaryKey.columnName)
 				{
-					field : '${column.attrname}', 
 					title : '${column.columnComment}',
+					field : '${column.attrname}', 
 					visible: false
 				},
 #elseif($column.columnName != $primaryKey.columnName)
@@ -121,13 +121,13 @@
 		            formatter: function(value, row, index) {
 		            	var actions = [];
 		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.${primaryKey.attrname} + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.${primaryKey.attrname} + '\')"><i class="fa fa-remove"></i>删除</a>');
+						actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.${primaryKey.attrname} + '\')"><i class="fa fa-remove"></i>删除</a>');
 						return actions.join('');
-		            }
-		        }]
-            };
-            $.table.init(options);
-        });
-    </script>
+					}
+				}]
+			};
+			$.table.init(options);
+		});
+	</script>
 </body>
 </html>

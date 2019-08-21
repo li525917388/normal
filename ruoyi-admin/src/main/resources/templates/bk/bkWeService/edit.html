@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bkWeService-edit" th:object="${bkWeService}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标题：</label>
+				<div class="col-sm-8">
+					<input id="title" name="title" th:field="*{title}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">描述：</label>
+				<div class="col-sm-8">
+					<input id="desc" name="desc" th:field="*{desc}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图标：</label>
+				<div class="col-sm-8">
+					<input id="icon" name="icon" th:field="*{icon}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">顺序：</label>
+				<div class="col-sm-8">
+					<input id="order" name="order" th:field="*{order}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">有效值：</label>
+				<div class="col-sm-8">
+					<input id="valid" name="valid" th:field="*{valid}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" th:field="*{createTime}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "bk/bkWeService";
+		$("#form-bkWeService-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-bkWeService-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

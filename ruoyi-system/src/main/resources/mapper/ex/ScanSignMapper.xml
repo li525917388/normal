@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ex.mapper.ScanSignMapper">
+    
+	<resultMap type="ScanSign" id="ScanSignResult">
+		<result property="id"    column="id"    />
+		<result property="waybillNo"    column="waybill_no"    />
+		<result property="deliveryUserId"    column="delivery_user_id"    />
+		<result property="signer"    column="signer"    />
+		<result property="signTime"    column="sign_time"    />
+		<result property="signDeptId"    column="sign_dept_id"    />
+		<result property="createTime"    column="create_time"    />
+		<result property="createBy"    column="create_by"    />
+		<result property="remark"    column="remark"    />
+		<result property="cod"    column="cod"    />
+		<result property="proxyFlag"    column="proxy_flag"    />
+		<result property="serviceType"    column="service_type"    />
+	</resultMap>
+	
+	<sql id="selectScanSignVo">
+		select id, waybill_no, delivery_user_id, signer, sign_time, sign_dept_id, create_time, create_by, remark, cod, proxy_flag, service_type from ex_scan_sign
+	</sql>
+	
+	<select id="selectScanSignList" parameterType="ScanSign" resultMap="ScanSignResult">
+		<include refid="selectScanSignVo"/>
+		<where>  
+			<if test="id != null "> and id = #{id}</if>
+ 			<if test="waybillNo != null  and waybillNo != '' "> and waybill_no = #{waybillNo}</if>
+ 			<if test="deliveryUserId != null "> and delivery_user_id = #{deliveryUserId}</if>
+ 			<if test="signer != null  and signer != '' "> and signer = #{signer}</if>
+ 			<if test="signTime != null "> and sign_time = #{signTime}</if>
+ 			<if test="signDeptId != null "> and sign_dept_id = #{signDeptId}</if>
+ 			<if test="createTime != null "> and create_time = #{createTime}</if>
+ 			<if test="createBy != null "> and create_by = #{createBy}</if>
+ 			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+ 			<if test="cod != null "> and cod = #{cod}</if>
+ 			<if test="proxyFlag != null "> and proxy_flag = #{proxyFlag}</if>
+ 			<if test="serviceType != null "> and service_type = #{serviceType}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectScanSignById" parameterType="Long" resultMap="ScanSignResult">
+		<include refid="selectScanSignVo"/>
+		where id = #{id}
+	</select>
+	
+	<!-- 根据运单号获取签收信息 -->
+	<select id="selectScanSignByWaybill" parameterType="String" resultMap="ScanSignResult">
+		<include refid="selectScanSignVo"/>
+		where waybill_no = #{waybillNo}
+	</select>
+	
+        
+	<insert id="insertScanSign" parameterType="ScanSign" useGeneratedKeys="true" keyProperty="id">
+		insert into ex_scan_sign
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="waybillNo != null  and waybillNo != ''  ">waybill_no,</if>
+			<if test="deliveryUserId != null  ">delivery_user_id,</if>
+			<if test="signer != null  and signer != ''  ">signer,</if>
+			<if test="signTime != null  ">sign_time,</if>
+			<if test="signDeptId != null  ">sign_dept_id,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  ">create_by,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="cod != null  ">cod,</if>
+			<if test="proxyFlag != null  ">proxy_flag,</if>
+			<if test="serviceType != null  ">service_type,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="waybillNo != null  and waybillNo != ''  ">#{waybillNo},</if>
+			<if test="deliveryUserId != null  ">#{deliveryUserId},</if>
+			<if test="signer != null  and signer != ''  ">#{signer},</if>
+			<if test="signTime != null  ">#{signTime},</if>
+			<if test="signDeptId != null  ">#{signDeptId},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  ">#{createBy},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="cod != null  ">#{cod},</if>
+			<if test="proxyFlag != null  ">#{proxyFlag},</if>
+			<if test="serviceType != null  ">#{serviceType},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updateScanSign" parameterType="ScanSign">
+		update ex_scan_sign
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="waybillNo != null  and waybillNo != ''  ">waybill_no = #{waybillNo},</if>
+			<if test="deliveryUserId != null  ">delivery_user_id = #{deliveryUserId},</if>
+			<if test="signer != null  and signer != ''  ">signer = #{signer},</if>
+			<if test="signTime != null  ">sign_time = #{signTime},</if>
+			<if test="signDeptId != null  ">sign_dept_id = #{signDeptId},</if>
+			<if test="createTime != null  ">create_time = #{createTime},</if>
+			<if test="createBy != null  ">create_by = #{createBy},</if>
+			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+			<if test="cod != null  ">cod = #{cod},</if>
+			<if test="proxyFlag != null  ">proxy_flag = #{proxyFlag},</if>
+			<if test="serviceType != null  ">service_type = #{serviceType},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteScanSignById" parameterType="Long">
+		delete from ex_scan_sign where id = #{id}
+	</delete>
+	
+	<delete id="deleteScanSignByIds" parameterType="String">
+		delete from ex_scan_sign where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+ 			#{id}
+		</foreach>
+	</delete>
+    
+</mapper>

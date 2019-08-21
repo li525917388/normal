@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-friendLink-edit" th:object="${friendLink}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">链接名称：</label>
+				<div class="col-sm-8">
+					<input id="linkName" name="linkName" th:field="*{linkName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标题：</label>
+				<div class="col-sm-8">
+					<input id="linkTitle" name="linkTitle" th:field="*{linkTitle}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">链接地址：</label>
+				<div class="col-sm-8">
+					<input id="linkUrl" name="linkUrl" th:field="*{linkUrl}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">模块：</label>
+				<div class="col-sm-8">
+					<select id="linkType" name="linkType" th:field="*{linkType}" th:with="type=${@dict.getType('oth_friend_link_type')}" class="form-control">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" th:field="*{remark}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">有效值：</label>
+				<div class="col-sm-8">
+					<div class="onoffswitch">
+						<input th:field="*{valid}" id="valid" name="valid" type="hidden">
+                        <input type="checkbox" th:checked="${friendLink.valid == 1 ? true : false}" class="onoffswitch-checkbox" id="valid_checkbox">
+                        <label class="onoffswitch-label" for="valid_checkbox">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                     </div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">顺序：</label>
+				<div class="col-sm-8">
+					<input id="sortNo" name="sortNo" th:field="*{sortNo}" class="form-control" type="text">
+				</div>
+			</div>
+			
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "other/friendLink";
+		$("#form-friendLink-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-friendLink-edit').serialize());
+	        }
+	    }
+		
+		
+		// 有效值改变
+		$("#valid_checkbox").change(function(){
+			$("#valid").val($(this).is(':checked') == true ? 1 : 0);
+		});
+	</script>
+</body>
+</html>

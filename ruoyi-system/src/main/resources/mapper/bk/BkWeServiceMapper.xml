@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bk.mapper.BkWeServiceMapper">
+    
+	<resultMap type="BkWeService" id="BkWeServiceResult">
+		<result property="id"    column="id"    />
+		<result property="title"    column="title"    />
+		<result property="desc"    column="desc_"    />
+		<result property="icon"    column="icon"    />
+		<result property="order"    column="order_"    />
+		<result property="valid"    column="valid"    />
+		<result property="createTime"    column="create_time"    />
+	</resultMap>
+	
+	<sql id="selectBkWeServiceVo">
+		select id, title, desc_, icon, order_, valid, create_time from bk_we_service
+	</sql>
+	
+	<select id="selectBkWeServiceList" parameterType="BkWeService" resultMap="BkWeServiceResult">
+		<include refid="selectBkWeServiceVo"/>
+		<where>  
+			<if test="id != null "> and id = #{id}</if>
+ 			<if test="title != null  and title != '' "> and title = #{title}</if>
+ 			<if test="desc != null  and desc != '' "> and desc_ = #{desc}</if>
+ 			<if test="icon != null  and icon != '' "> and icon = #{icon}</if>
+ 			<if test="order != null "> and order_ = #{order}</if>
+ 			<if test="valid != null "> and valid = #{valid}</if>
+ 			<if test="createTime != null "> and create_time = #{createTime}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectBkWeServiceById" parameterType="Integer" resultMap="BkWeServiceResult">
+		<include refid="selectBkWeServiceVo"/>
+		where id = #{id}
+	</select>
+        
+	<insert id="insertBkWeService" parameterType="BkWeService" useGeneratedKeys="true" keyProperty="id">
+		insert into bk_we_service
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="title != null  and title != ''  ">title,</if>
+			<if test="desc != null  and desc != ''  ">desc_,</if>
+			<if test="icon != null  and icon != ''  ">icon,</if>
+			<if test="order != null  ">order_,</if>
+			<if test="valid != null  ">valid,</if>
+			<if test="createTime != null  ">create_time,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="title != null  and title != ''  ">#{title},</if>
+			<if test="desc != null  and desc != ''  ">#{desc},</if>
+			<if test="icon != null  and icon != ''  ">#{icon},</if>
+			<if test="order != null  ">#{order},</if>
+			<if test="valid != null  ">#{valid},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updateBkWeService" parameterType="BkWeService">
+		update bk_we_service
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="title != null  and title != ''  ">title = #{title},</if>
+			<if test="desc != null  and desc != ''  ">desc_ = #{desc},</if>
+			<if test="icon != null  and icon != ''  ">icon = #{icon},</if>
+			<if test="order != null  ">order_ = #{order},</if>
+			<if test="valid != null  ">valid = #{valid},</if>
+			<if test="createTime != null  ">create_time = #{createTime},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteBkWeServiceById" parameterType="Integer">
+		delete from bk_we_service where id = #{id}
+	</delete>
+	
+	<delete id="deleteBkWeServiceByIds" parameterType="String">
+		delete from bk_we_service where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+ 			#{id}
+		</foreach>
+	</delete>
+    
+</mapper>

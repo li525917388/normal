@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bk.mapper.BkConfigMapper">
+    
+	<resultMap type="BkConfig" id="BkConfigResult">
+		<result property="id"    column="id"    />
+		<result property="configName"    column="config_name"    />
+		<result property="configKey"    column="config_key"    />
+		<result property="configValue"    column="config_value"    />
+		<result property="valid"    column="valid"    />
+		<result property="remark"    column="remark"    />
+		<result property="createDate"    column="create_date"    />
+		<result property="createBy"    column="create_by"    />
+	</resultMap>
+	
+	<sql id="selectBkConfigVo">
+		select id, config_name, config_key, config_value, valid, remark, create_date, create_by from bk_config
+	</sql>
+	
+	<select id="selectBkConfigList" parameterType="BkConfig" resultMap="BkConfigResult">
+		<include refid="selectBkConfigVo"/>
+		<where>  
+			<if test="id != null "> and id = #{id}</if>
+ 			<if test="configName != null  and configName != '' "> and config_name = #{configName}</if>
+ 			<if test="configKey != null  and configKey != '' "> and config_key = #{configKey}</if>
+ 			<if test="configValue != null  and configValue != '' "> and config_value = #{configValue}</if>
+ 			<if test="valid != null "> and valid = #{valid}</if>
+ 			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+ 			<if test="createDate != null "> and create_date = #{createDate}</if>
+ 			<if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectBkConfigById" parameterType="Long" resultMap="BkConfigResult">
+		<include refid="selectBkConfigVo"/>
+		where id = #{id}
+	</select>
+        
+	<insert id="insertBkConfig" parameterType="BkConfig" useGeneratedKeys="true" keyProperty="id">
+		insert into bk_config
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="configName != null  and configName != ''  ">config_name,</if>
+			<if test="configKey != null  and configKey != ''  ">config_key,</if>
+			<if test="configValue != null  and configValue != ''  ">config_value,</if>
+			<if test="valid != null  ">valid,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="configName != null  and configName != ''  ">#{configName},</if>
+			<if test="configKey != null  and configKey != ''  ">#{configKey},</if>
+			<if test="configValue != null  and configValue != ''  ">#{configValue},</if>
+			<if test="valid != null  ">#{valid},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updateBkConfig" parameterType="BkConfig">
+		update bk_config
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="configName != null  and configName != ''  ">config_name = #{configName},</if>
+			<if test="configKey != null  and configKey != ''  ">config_key = #{configKey},</if>
+			<if test="configValue != null  and configValue != ''  ">config_value = #{configValue},</if>
+			<if test="valid != null  ">valid = #{valid},</if>
+			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+			<if test="createDate != null  ">create_date = #{createDate},</if>
+			<if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteBkConfigById" parameterType="Long">
+		delete from bk_config where id = #{id}
+	</delete>
+	
+	<delete id="deleteBkConfigByIds" parameterType="String">
+		delete from bk_config where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+ 			#{id}
+		</foreach>
+	</delete>
+    
+</mapper>

@@ -117,6 +117,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="remark != null  and remark != ''  ">remark,</if>
 			<if test="nextDeptId != null  ">next_dept_id,</if>
 			<if test="deliveryUserId != null  ">delivery_user_id,</if>
+			<if test="signer != null  ">signer,</if>
+			create_time
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="waybillNo != null  and waybillNo != ''  ">#{waybillNo},</if>
@@ -127,6 +129,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
 			<if test="nextDeptId != null  ">#{nextDeptId},</if>
 			<if test="deliveryUserId != null  ">#{deliveryUserId},</if>
+			<if test="signer != null  ">#{signer},</if>
+			sysdate()
 		</trim>
 	</insert>
     

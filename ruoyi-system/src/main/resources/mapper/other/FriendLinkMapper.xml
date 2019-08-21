@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.other.mapper.FriendLinkMapper">
+    
+	<resultMap type="FriendLink" id="FriendLinkResult">
+		<result property="id"    column="id"    />
+		<result property="linkName"    column="link_name"    />
+		<result property="linkTitle"    column="link_title"    />
+		<result property="linkUrl"    column="link_url"    />
+		<result property="linkType"    column="link_type"    />
+		<result property="remark"    column="remark"    />
+		<result property="valid"    column="valid"    />
+		<result property="sortNo"    column="sort_no"    />
+		<result property="createTime"    column="create_time"    />
+		<result property="createBy"    column="create_by"    />
+	</resultMap>
+	
+	<sql id="selectFriendLinkVo">
+		select id, link_name, link_title, link_url, link_type, remark, valid, sort_no, create_time, create_by from oth_friend_link
+	</sql>
+	
+	<select id="selectFriendLinkList" parameterType="FriendLink" resultMap="FriendLinkResult">
+		<include refid="selectFriendLinkVo"/>
+		<where>  
+			<if test="id != null "> and id = #{id}</if>
+ 			<if test="linkName != null  and linkName != '' "> and link_name = #{linkName}</if>
+ 			<if test="linkTitle != null  and linkTitle != '' "> and link_title = #{linkTitle}</if>
+ 			<if test="linkUrl != null  and linkUrl != '' "> and link_url = #{linkUrl}</if>
+ 			<if test="linkType != null  and linkType != '' "> and link_type = #{linkType}</if>
+ 			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+ 			<if test="valid != null "> and valid = #{valid}</if>
+ 			<if test="sortNo != null "> and sort_no = #{sortNo}</if>
+ 			<if test="createTime != null "> and create_time = #{createTime}</if>
+ 			<if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectFriendLinkById" parameterType="Long" resultMap="FriendLinkResult">
+		<include refid="selectFriendLinkVo"/>
+		where id = #{id}
+	</select>
+        
+	<insert id="insertFriendLink" parameterType="FriendLink" useGeneratedKeys="true" keyProperty="id">
+		insert into oth_friend_link
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="linkName != null  and linkName != ''  ">link_name,</if>
+			<if test="linkTitle != null  and linkTitle != ''  ">link_title,</if>
+			<if test="linkUrl != null  and linkUrl != ''  ">link_url,</if>
+			<if test="linkType != null  and linkType != ''  ">link_type,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="valid != null  ">valid,</if>
+			<if test="sortNo != null  ">sort_no,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="linkName != null  and linkName != ''  ">#{linkName},</if>
+			<if test="linkTitle != null  and linkTitle != ''  ">#{linkTitle},</if>
+			<if test="linkUrl != null  and linkUrl != ''  ">#{linkUrl},</if>
+			<if test="linkType != null  and linkType != ''  ">#{linkType},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="valid != null  ">#{valid},</if>
+			<if test="sortNo != null  ">#{sortNo},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+		</trim>
+	</insert>
+	 
+	<update id="updateFriendLink" parameterType="FriendLink">
+		update oth_friend_link
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="linkName != null  and linkName != ''  ">link_name = #{linkName},</if>
+			<if test="linkTitle != null  and linkTitle != ''  ">link_title = #{linkTitle},</if>
+			<if test="linkUrl != null  and linkUrl != ''  ">link_url = #{linkUrl},</if>
+			<if test="linkType != null  and linkType != ''  ">link_type = #{linkType},</if>
+			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+			<if test="valid != null  ">valid = #{valid},</if>
+			<if test="sortNo != null  ">sort_no = #{sortNo},</if>
+			<if test="createTime != null  ">create_time = #{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteFriendLinkById" parameterType="Long">
+		delete from oth_friend_link where id = #{id}
+	</delete>
+	
+	<delete id="deleteFriendLinkByIds" parameterType="String">
+		delete from oth_friend_link where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+ 			#{id}
+		</foreach>
+	</delete>
+    
+</mapper>
