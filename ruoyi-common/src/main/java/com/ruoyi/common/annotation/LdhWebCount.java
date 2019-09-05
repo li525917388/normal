@@ -16,5 +16,16 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface LdhWebCount {
 
+	/**
+	 * 编号
+	 * @return
+	 */
+	public String apiCode() default "";
+	
+	/**
+	 * 名称
+	 * @return
+	 */
+	public String apiName() default "";
 	
 }

@@ -27,7 +27,7 @@ public class SqlUtilController {
 	 * @return
 	 */
 	//@RequiresPermissions("tool:build:view")
-	@LdhWebCount
+	@LdhWebCount(apiName="sql工具主页")
 	@GetMapping()
 	public String index() {
 		return prefix + "/sqlutil";
@@ -91,7 +91,7 @@ public class SqlUtilController {
 		
 		StringBuilder sb = new StringBuilder(sql);
 		
-		String[] list = params.split(", ");
+		String[] list = params.split("[)][,] ");
 		
 		int index = 0;
 		
@@ -99,7 +99,7 @@ public class SqlUtilController {
 			
 			int left = str.indexOf('(');
 			
-			String type = str.substring(left + 1, str.indexOf(')'));
+			String type = str.substring(left + 1);
 			
 			String value = str.substring(0, left);
 			

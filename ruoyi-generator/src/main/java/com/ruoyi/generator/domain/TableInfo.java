@@ -1,6 +1,7 @@
 package com.ruoyi.generator.domain;
 
 import java.util.List;
+
 import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -9,8 +10,8 @@ import com.ruoyi.common.utils.StringUtils;
  * 
  * @author ruoyi
  */
-public class TableInfo extends BaseEntity
-{
+public class TableInfo extends BaseEntity {
+	
     private static final long serialVersionUID = 1L;
 
     /** 表名称 */
@@ -30,6 +31,14 @@ public class TableInfo extends BaseEntity
 
     /** 类名(第一个字母小写) */
     private String classname;
+    
+	private String author;			// 作者
+	
+	private String packgeName;		// 包名
+	
+	private boolean autoRemovePre;	// 是否自动去除表前缀，默认是true
+	
+	private String moduleName;		// 模块
 
     public String getTableName()
     {
@@ -100,4 +109,37 @@ public class TableInfo extends BaseEntity
     {
         this.primaryKey = primaryKey;
     }
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getPackgeName() {
+		return packgeName;
+	}
+
+	public void setPackgeName(String packgeName) {
+		this.packgeName = packgeName;
+	}
+
+	public boolean isAutoRemovePre() {
+		return autoRemovePre;
+	}
+
+	public void setAutoRemovePre(boolean autoRemovePre) {
+		this.autoRemovePre = autoRemovePre;
+	}
+
+	public String getModuleName() {
+		return moduleName;
+	}
+
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}
+    
 }

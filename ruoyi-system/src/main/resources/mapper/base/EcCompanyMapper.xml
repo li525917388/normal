@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.base.mapper.EcCompanyMapper">
+    
+	<resultMap type="EcCompany" id="EcCompanyResult">
+		<result property="id"    column="id"    />
+		<result property="ecCompanyId"    column="ec_company_id"    />
+		<result property="ecCompanyName"    column="ec_company_name"    />
+		<result property="secretKey"    column="secret_key"    />
+		<result property="createTime"    column="create_time"    />
+		<result property="remark"    column="remark"    />
+		<result property="valid"    column="valid"    />
+	</resultMap>
+	
+	<sql id="selectEcCompanyVo">
+		select id, ec_company_id, ec_company_name, secret_key, create_time, remark, valid from base_ec_company
+	</sql>
+	
+	<select id="selectEcCompanyList" parameterType="EcCompany" resultMap="EcCompanyResult">
+		<include refid="selectEcCompanyVo"/>
+		<where>  
+			<if test="id != null "> and id = #{id}</if>
+ 			<if test="ecCompanyId != null  and ecCompanyId != '' "> and ec_company_id like concat('%', #{ecCompanyId}, '%')</if>
+ 			<if test="ecCompanyName != null  and ecCompanyName != '' "> and ec_company_name like concat('%', #{ecCompanyName}, '%')</if>
+ 			<if test="secretKey != null  and secretKey != '' "> and secret_key = #{secretKey}</if>
+ 			<if test="createTime != null "> and create_time = #{createTime}</if>
+ 			<if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+ 			<if test="valid != null "> and valid = #{valid}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectEcCompanyById" parameterType="Integer" resultMap="EcCompanyResult">
+		<include refid="selectEcCompanyVo"/>
+		where id = #{id}
+	</select>
+        
+	<insert id="insertEcCompany" parameterType="EcCompany" useGeneratedKeys="true" keyProperty="id">
+		insert into base_ec_company
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ecCompanyId != null  and ecCompanyId != ''  ">ec_company_id,</if>
+			<if test="ecCompanyName != null  and ecCompanyName != ''  ">ec_company_name,</if>
+			<if test="secretKey != null  and secretKey != ''  ">secret_key,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="valid != null  ">valid,</if>
+			create_time,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ecCompanyId != null  and ecCompanyId != ''  ">#{ecCompanyId},</if>
+			<if test="ecCompanyName != null  and ecCompanyName != ''  ">#{ecCompanyName},</if>
+			<if test="secretKey != null  and secretKey != ''  ">#{secretKey},</if>
+			<if test="createTime != null  "></if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="valid != null  ">#{valid},</if>
+			sysdate(),
+		</trim>
+	</insert>
+	 
+	<update id="updateEcCompany" parameterType="EcCompany">
+		update base_ec_company
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="ecCompanyId != null  and ecCompanyId != ''  ">ec_company_id = #{ecCompanyId},</if>
+			<if test="ecCompanyName != null  and ecCompanyName != ''  ">ec_company_name = #{ecCompanyName},</if>
+			<if test="secretKey != null  and secretKey != ''  ">secret_key = #{secretKey},</if>
+			<if test="createTime != null  ">create_time = #{createTime},</if>
+			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+			<if test="valid != null  ">valid = #{valid},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteEcCompanyById" parameterType="Integer">
+		delete from base_ec_company where id = #{id}
+	</delete>
+	
+	<delete id="deleteEcCompanyByIds" parameterType="String">
+		delete from base_ec_company where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+ 			#{id}
+		</foreach>
+	</delete>
+    
+    <!-- select2 -->
+    <select id="select2" parameterType="String" resultMap="EcCompanyResult">
+    	select ec_company_id, ec_company_name from base_ec_company 
+    	where (ec_company_id like concat('%', #{keywords}, '%') or ec_company_name like concat('%', #{keywords}, '%') )
+    	and valid=1
+    </select>
+</mapper>

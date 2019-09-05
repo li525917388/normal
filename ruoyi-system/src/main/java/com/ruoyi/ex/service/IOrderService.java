@@ -1,6 +1,7 @@
 package com.ruoyi.ex.service;
 
 import com.ruoyi.ex.domain.Order;
+import com.ruoyi.report.domain.ReportData;
 
 import java.util.List;
 
@@ -77,5 +78,12 @@ public interface IOrderService
 	 * @return
 	 */
 	public Order selectOrderByWaybillNo(String waybillNo);
+
+	
+	/**
+	 * 订单地图报表
+	 * @return
+	 */
+	public List<ReportData> getOrderMapReportData();
 	
 }

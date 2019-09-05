@@ -89,4 +89,45 @@ public class StrFormatter
 
         return sbuf.toString();
     }
+    
+    
+    /**
+     * 获取定长字符串，默认0补位
+     * @param str
+     * @param length
+     * @return
+     */
+    public static String formatLength(String str, int length){
+    	
+    	return formatLength(str, length, '0');
+    }
+    
+    
+    /**
+     * 获取定长字符串
+     * @param str
+     * @param length
+     * @param fill
+     * @return
+     */
+    public static String formatLength(String str, int length, char fill){
+    	
+    	if(str == null){
+    		return null;
+    		
+    	}else if(str.length() > length){
+    		return str.substring(str.length() - length, str.length());
+    	}
+    	
+    	else {
+    		StringBuilder sb = new StringBuilder(str);
+    		
+    		for(int i = 0; i < length - str.length(); i++){
+    			
+    			sb.insert(0, fill);
+    		}
+    		
+    		return sb.toString();
+    	}
+    }
 }

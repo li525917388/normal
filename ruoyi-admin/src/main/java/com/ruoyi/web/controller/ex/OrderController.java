@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.ex;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +16,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ruoyi.base.domain.Area;
 import com.ruoyi.base.service.IAreaService;
+import com.ruoyi.base.service.IEcCompanyService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.ex.domain.Order;
 import com.ruoyi.ex.service.IOrderService;
+import com.ruoyi.report.domain.MapReport;
+import com.ruoyi.report.domain.ReportData;
+import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 
 /**
@@ -42,10 +50,15 @@ public class OrderController extends BaseController
 	@Autowired
 	private IAreaService areaService;
 	
+	@Autowired
+	private IEcCompanyService ecCompanyService;
+	
+	@Autowired
+	private ISysConfigService sysConfigService;
+	
 	@RequiresPermissions("ex:order:view")
 	@GetMapping()
-	public String order()
-	{
+	public String order() {
 	    return prefix + "/order";
 	}
 	
@@ -84,7 +97,10 @@ public class OrderController extends BaseController
 		
 		Area area = new Area();
 		area.setLevel(1);
-		mmap.addAttribute("pnovince", areaService.selectAreaList(area ));
+		mmap.addAttribute("pnovince", areaService.selectAreaList(area));
+		
+		// 电商列表
+		mmap.addAttribute("ecCompanyList", ecCompanyService.select2(""));
 		
 	    return prefix + "/add";
 	}
@@ -109,6 +125,9 @@ public class OrderController extends BaseController
 	{
 		Order order = orderService.selectOrderById(orderid);
 		mmap.put("order", order);
+		
+		// 电商列表
+		mmap.addAttribute("ecCompanyList", ecCompanyService.select2(""));
 		
 		//省
 		Area area = new Area();
@@ -210,13 +229,84 @@ public class OrderController extends BaseController
 	 */
 	@PostMapping("/selectOrderByWaybillNo")
 	@ResponseBody
-	public Order selectOrderByWaybillNo(String waybillNo)
-	{
+	public Order selectOrderByWaybillNo(String waybillNo) {
 
 		Order order = orderService.selectOrderByWaybillNo(waybillNo);
 		
 		return order;
 	}
 	
+	
+	
+	@RequiresPermissions("ex:order:quick")
+	@PostMapping("/quickOrder")
+	@ResponseBody
+	public AjaxResult quickOrder(Long orderid){
+		
+		Order order = orderService.selectOrderById(orderid);
+		
+		if(StringUtils.isEmpty(order.getWaybillNo())){
+			
+			String url = sysConfigService.selectConfigByKey("ex_waybill_no_url");
+			String params = sysConfigService.selectConfigByKey("ex_waybill_no_params");
+			
+			String ecCompanyId = order.getEcCompanyId();
+			
+			params += "&ecCompanyId=" + ecCompanyId;
+			
+			String waybillNo = HttpUtils.sendGet(url, params);
+			order.setWaybillNo(waybillNo);
+		}
+		
+		orderService.updateOrder(order);
+		
+		return AjaxResult.sucData(order);
+	}
+	
+	
+	@GetMapping("orderReport")
+	public String orderReport() {
+		
+		System.out.println("订单报表");
+		
+		return "report/order/orderReport";
+	}
+	
+	
+	@PostMapping("getOrderMapReportData")
+	@ResponseBody
+	public MapReport<ReportData> getOrderMapReportData(){
+		
+		List<ReportData> list = orderService.getOrderMapReportData();
+		
+		Map<String, float[]> geoCoordMap = new HashMap<String, float[]>();
+	
+		for(ReportData map : list){
+			
+			String center = map.getCenter();
+			
+			if(center != null){
+				String[] zb = center.split(",");
+				
+				float[] fzb = new float[2];
+				
+				if(zb.length > 1){
+					fzb[0] = Float.parseFloat(zb[0]);
+					fzb[1] = Float.parseFloat(zb[1]);
+				}
+				
+				geoCoordMap.put(map.getName(), fzb);
+			}
+			
+		}
+		
+		MapReport<ReportData> res = new MapReport<>();
+		
+		res.setGeoCoordMap(geoCoordMap);
+		
+		res.setData(list);
+		
+		return res;
+	}
 	
 }

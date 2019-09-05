@@ -36,6 +36,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="goodsNum"    		column="goods_num"    />
 		<result property="weight"    		column="weight"    />
 		<result property="payType"    		column="pay_type"    />
+		<result property="priceType"    	column="price_type"    />
+		<result property="serverType"    	column="server_type"    />
+		<result property="goodsType"    	column="goods_type"    />
 	</resultMap>
 	
 	<sql id="selectOrderVo">
@@ -70,7 +73,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			o.goods_money, 
 			o.goods_num, 
 			o.weight, 
-			o.pay_type 
+			o.pay_type,
+			o.price_type,
+			o.server_type,
+			o.goods_type
 		from ex_order o 
 		left join base_customer c on c.cust_id=o.cust_id
 	</sql>
@@ -81,7 +87,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="orderid != null "> and orderid = #{orderid}</if>
  			<if test="orderNo != null  and orderNo != '' "> and order_no = #{orderNo}</if>
  			<if test="waybillNo != null  and waybillNo != '' "> and waybill_no = #{waybillNo}</if>
- 			<if test="orderDate != null "> and order_date = #{orderDate}</if>
+ 			<if test="orderDate != null "> and order_date &gt;= #{orderDate}</if>
+ 			<if test="orderDateTo != null "> and order_date &lt; DATE_SUB(#{orderDateTo}, INTERVAL -1 DAY)</if>
  			<if test="ecCompanyId != null  and ecCompanyId != '' "> and ec_company_id = #{ecCompanyId}</if>
  			<if test="orderStatus != null "> and order_status = #{orderStatus}</if>
  			<if test="orderSource != null  and orderSource != '' "> and order_source = #{orderSource}</if>
@@ -107,6 +114,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="goodsNum != null "> and goods_num = #{goodsNum}</if>
  			<if test="weight != null "> and weight = #{weight}</if>
  			<if test="payType != null "> and pay_type = #{payType}</if>
+ 			<if test="priceType != null "> and price_type = #{priceType}</if>
+ 			<if test="serverType != null "> and server_type = #{serverType}</if>
+ 			<if test="goodsType != null "> and goods_type = #{goodsType}</if>
  		</where>
 	</select>
 	
@@ -146,6 +156,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="goodsNum != null  ">goods_num,</if>
 			<if test="weight != null  ">weight,</if>
 			<if test="payType != null  ">pay_type,</if>
+			<if test="priceType != null  ">price_type,</if>
+			<if test="serverType != null  ">server_type,</if>
+			<if test="goodsType != null  ">goods_type,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
@@ -176,6 +189,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="goodsNum != null  ">#{goodsNum},</if>
 			<if test="weight != null  ">#{weight},</if>
 			<if test="payType != null  ">#{payType},</if>
+			<if test="priceType != null  ">#{priceType},</if>
+			<if test="serverType != null  ">#{serverType},</if>
+			<if test="goodsType != null  ">#{goodsType},</if>
 		</trim>
 	</insert>
 	 
@@ -183,6 +199,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update ex_order
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="orderDate != null  ">order_date = #{orderDate},</if>
+			<if test="waybillNo != null  ">waybill_no = #{waybillNo},</if>
 			<if test="ecCompanyId != null  and ecCompanyId != ''  ">ec_company_id = #{ecCompanyId},</if>
 			<if test="orderStatus != null  ">order_status = #{orderStatus},</if>
 			<if test="orderSource != null  and orderSource != ''  ">order_source = #{orderSource},</if>
@@ -210,6 +227,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="payType != null  ">pay_type = #{payType},</if>
 			<if test="dispDeptId != null  ">disp_dept_id = #{dispDeptId},</if>
 			<if test="dispUserId != null  ">disp_user_id = #{dispUserId},</if>
+			<if test="priceType != null  ">price_type = #{priceType},</if>
+			<if test="serverType != null  ">server_type = #{serverType},</if>
+			<if test="goodsType != null  ">goods_type = #{goodsType},</if>
 		</trim>
 		where orderid = #{orderid}
 	</update>
@@ -230,5 +250,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectOrderByWaybillNo" parameterType="String" resultMap="OrderResult">
 		<include refid="selectOrderVo"/>
 		where waybill_no=#{waybillNo}
+	</select>
+	
+	
+	
+	<select id="getOrderMapReportData" resultType="ReportData">
+		select a.area_name as name,t1.total as value, a.center 
+		from (select sender_city, count(1) as total from ex_order group by sender_city) t1 
+		left join base_area a on a.area_id = t1.sender_city
 	</select>
 </mapper>

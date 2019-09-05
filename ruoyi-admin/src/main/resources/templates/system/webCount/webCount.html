@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+	<div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								api名称：<input type="text" name="apiName"/>
+							</li>
+
+							<li>
+								总数：<input type="text" name="count"/>
+							</li>
+
+							<li>
+								错误总数：<input type="text" name="errorCount"/>
+							</li>
+
+							<li>
+								最后访问时间：<input type="text" name="updateDate"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:webCount:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:webCount:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:webCount:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:webCount:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script th:inline="javascript">
+		var editFlag = [[${@permission.hasPermi('system:webCount:edit')}]];
+		var removeFlag = [[${@permission.hasPermi('system:webCount:remove')}]];
+		var prefix = ctx + "system/webCount";
+
+		$(function() {
+			var options = {
+				url: prefix + "/list",
+				createUrl: prefix + "/add",
+				updateUrl: prefix + "/edit/{id}",
+				removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+				modalName: "监控网站访问量",
+				showExport: true,
+				clickToSelect: true,
+				columns: [{
+					checkbox: true
+				},
+				{
+					title : '主键',
+					field : 'apiCode', 
+					visible: true
+				},
+				{
+					field : 'apiName', 
+					title : 'api名称',
+					sortable: true
+				},
+				{
+					field : 'count', 
+					title : '总数',
+					sortable: true
+				},
+				{
+					field : 'errorCount', 
+					title : '错误总数',
+					sortable: true
+				},
+				{
+					field : 'updateDate', 
+					title : '',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.apiCode + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+						actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.apiCode + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+					}
+				}]
+			};
+			$.table.init(options);
+		});
+	</script>
+</body>
+</html>

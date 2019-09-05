@@ -1,7 +1,10 @@
 package com.ruoyi.system.domain;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
@@ -45,6 +48,12 @@ public class SysDept extends BaseEntity
 
     /** 父部门名称 */
     private String parentName;
+    
+    //经度
+    private BigDecimal longitude;
+    
+    //纬度
+    private BigDecimal latitude;
 
     public Long getDeptId()
     {
@@ -175,4 +184,22 @@ public class SysDept extends BaseEntity
             .append("updateTime", getUpdateTime())
             .toString();
     }
+
+	public BigDecimal getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(BigDecimal longitude) {
+		this.longitude = longitude;
+	}
+
+	public BigDecimal getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(BigDecimal latitude) {
+		this.latitude = latitude;
+	}
+    
+    
 }

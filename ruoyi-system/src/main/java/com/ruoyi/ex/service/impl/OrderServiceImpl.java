@@ -10,7 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ruoyi.ex.mapper.OrderMapper;
 import com.ruoyi.ex.domain.Order;
 import com.ruoyi.ex.service.IOrderService;
+import com.ruoyi.report.domain.ReportData;
 import com.ruoyi.common.core.text.Convert;
+import com.ruoyi.common.core.text.StrFormatter;
+import com.ruoyi.common.utils.DateUtils;
 
 /**
  * 订单 服务层实现
@@ -56,6 +59,11 @@ public class OrderServiceImpl implements IOrderService {
 	@Override
 	public int insertOrder(Order order) {
 		
+		String orderNo = DateUtils.dateTimeNow() + StrFormatter.formatLength(order.getCustId() + "", 5) 
+				+ StrFormatter.formatLength(order.getPayType() + "", 1) +  StrFormatter.formatLength(order.getReceiverPhone(), 4);	//订单号
+		
+		order.setOrderSource("1");
+		order.setOrderNo(orderNo);
 		order.setOrderDate(new Date());
 		order.setOrderStatus(1);			//
 		
@@ -155,6 +163,14 @@ public class OrderServiceImpl implements IOrderService {
 	public Order selectOrderByWaybillNo(String waybillNo) {
 		
 		return orderMapper.selectOrderByWaybillNo(waybillNo);
+	}
+
+	
+	
+	@Override
+	public List<ReportData> getOrderMapReportData() {
+		// TODO Auto-generated method stub
+		return orderMapper.getOrderMapReportData();
 	}
 
 }

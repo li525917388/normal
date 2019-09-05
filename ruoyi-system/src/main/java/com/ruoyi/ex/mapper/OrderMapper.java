@@ -1,6 +1,7 @@
 package com.ruoyi.ex.mapper;
 
 import com.ruoyi.ex.domain.Order;
+import com.ruoyi.report.domain.ReportData;
 
 import java.util.List;	
 
@@ -68,5 +69,12 @@ public interface OrderMapper
 	 * @return
 	 */
 	public Order selectOrderByWaybillNo(String waybillNo);
+
+	
+	/**
+	 * 订单地图报表
+	 * @return
+	 */
+	public List<ReportData> getOrderMapReportData();
 	
 }

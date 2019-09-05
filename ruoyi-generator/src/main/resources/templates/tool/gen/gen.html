@@ -2,6 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
+
 <body class="gray-bg">
     
     <div class="container-div">
@@ -35,6 +36,10 @@
 				<a class="btn btn-success" onclick="javascript:batchGenCode()" shiro:hasPermission="tool:gen:code">
 			        <i class="fa fa-download"></i> 批量生成
 			    </a>
+			    
+			    <a class="btn btn-success" onclick="javascript:guide()" shiro:hasPermission="tool:gen:code">
+			        <i class="fa fa-download"></i> 向导
+			    </a>
 		    </div>
 		
 		    <div class="col-sm-12 select-table table-striped">
@@ -42,7 +47,10 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="wizard"></div>
 	<div th:include="include :: footer"></div>
+
 	<script type="text/javascript">
 		var prefix = ctx + "tool/gen";
 	
@@ -118,6 +126,22 @@
 		        layer.msg('执行成功,正在生成代码请稍后…', { icon: 1 });
 		    });
 		}
+		
+		
+		function guide() {
+			/* $.modal.openOptions({
+				title: '标准报价试算',
+				width: "1000",
+				url: prefix + "/guide",
+				callBack: function (index, layero){
+					
+					layero.find("iframe")[0].contentWindow.submitHandler();
+				}
+			}); */
+			
+			createMenuItem(prefix + "/guide", "向导");
+		}
+		
 	</script>
 </body>
 </html>

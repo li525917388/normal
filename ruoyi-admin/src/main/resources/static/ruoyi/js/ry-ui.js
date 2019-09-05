@@ -494,6 +494,53 @@
             	    }
             	});
             },
+            
+            openLook: function (title, url, width, height, callback) {
+            	//如果是移动端，就使用自适应大小弹窗
+            	if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
+            	    width = 'auto';
+            	    height = 'auto';
+            	}
+            	if ($.common.isEmpty(title)) {
+                    title = false;
+                };
+                if ($.common.isEmpty(url)) {
+                    url = "/404.html";
+                };
+                if ($.common.isEmpty(width)) {
+                	width = 800;
+                };
+                if ($.common.isEmpty(height)) {
+                	height = ($(window).height() - 50);
+                };
+                if ($.common.isEmpty(callback)) {
+                    callback = function(index, layero) {
+                        var iframeWin = layero.find('iframe')[0];
+                        iframeWin.contentWindow.submitHandler();
+                    }
+                }
+            	var ind = layer.open({
+            		type: 2,
+            		area: [width + 'px', height + 'px'],
+            		fix: false,
+            		//不固定
+            		maxmin: true,
+            		shade: 0.3,
+            		title: title,
+            		content: url,
+            	    // 弹层外区域关闭
+            		shadeClose: true,
+            		success: function(layero, ind){
+            			var iframeWin = window[layero.find('iframe')[0]['name']];
+            			iframeWin.$.operate.disabledForm();
+            		},
+            	    cancel: function(index) {
+            	        return true;
+            	    }
+            	});
+            	
+            },
+            
             // 弹出层指定参数选项
             openOptions: function (options) {
             	var _url = $.common.isEmpty(options.url) ? "/404.html" : options.url; 
@@ -705,6 +752,21 @@
             	    $.modal.open("修改" + $.table._option.modalName, $.operate.editUrl(id));
             	}
             },
+            // 查看详细信息
+            look: function(id) {
+            	if($.common.isEmpty(id) && $.table._option.type == table_type.bootstrapTreeTable) {
+            		var row = $('#' + $.table._option.id).bootstrapTreeTable('getSelections')[0];
+                	if ($.common.isEmpty(row)) {
+            			$.modal.alertWarning("请至少选择一条记录");
+            			return;
+            		}
+                    var url = $.table._option.updateUrl.replace("{id}", row[$.table._option.uniqueId]);
+                    $.modal.openLook("查看" + $.table._option.modalName, url);
+                    
+            	} else {
+            	    $.modal.openLook("查看" + $.table._option.modalName, $.operate.editUrl(id));
+            	}
+            },
             // 修改信息，以tab页展现
             editTab: function(id) {
             	$.modal.openTab("修改" + $.table._option.modalName, $.operate.editUrl(id));
@@ -830,6 +892,13 @@
                     $.modal.alertError(result.msg);
                 }
                 $.modal.closeLoading();
+            },
+            
+            //禁用表单
+            disabledForm: function(){
+            	$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+				$("textarea").attr("disabled","disabled");
             }
         },
         // 校验封装处理

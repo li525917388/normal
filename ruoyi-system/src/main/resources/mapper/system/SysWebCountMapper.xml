@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysWebCountMapper">
+	
+	<resultMap type="SysWebCount" id="SysWebCountResult">
+		<result property="apiCode"    	column="api_code"    />
+		<result property="apiName"    	column="api_name"    />
+		<result property="count"    	column="count"    />
+		<result property="errorCount"	column="error_count"    />
+		<result property="updateDate"	column="update_date"    />
+	</resultMap>
+	
+	<sql id="selectSysWebCountVo">
+		select api_code, api_name, count, error_count, update_date from sys_web_count
+	</sql>
+	
+	<select id="selectSysWebCountList" parameterType="SysWebCount" resultMap="SysWebCountResult">
+		<include refid="selectSysWebCountVo"/>
+		<where>  
+			<if test="apiCode != null  and apiCode != '' "> and api_code = #{apiCode}</if>
+ 			<if test="apiName != null  and apiName != '' "> and api_name = #{apiName}</if>
+ 			<if test="count != null "> and count = #{count}</if>
+ 			<if test="errorCount != null "> and error_count = #{errorCount}</if>
+ 		</where>
+	</select>
+	
+	<select id="selectSysWebCountById" parameterType="String" resultMap="SysWebCountResult">
+		<include refid="selectSysWebCountVo"/>
+		where api_code = #{apiCode}
+	</select>
+        
+	<insert id="insertSysWebCount" parameterType="SysWebCount">
+		insert into sys_web_count
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="apiCode != null  and apiCode != ''  ">api_code,</if>
+			<if test="apiName != null  and apiName != ''  ">api_name,</if>
+			<if test="count != null  ">count,</if>
+			<if test="errorCount != null  ">error_count,</if>
+			update_date
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="apiCode != null  and apiCode != ''  ">#{apiCode},</if>
+			<if test="apiName != null  and apiName != ''  ">#{apiName},</if>
+			<if test="count != null  ">#{count},</if>
+			<if test="errorCount != null  ">#{errorCount},</if>
+			#{updateDate}
+		</trim>
+	</insert>
+	 
+	<update id="updateSysWebCount" parameterType="SysWebCount">
+		update sys_web_count
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="apiName != null  and apiName != ''  ">api_name = #{apiName},</if>
+			<if test="count != null  ">count = #{count},</if>
+			<if test="errorCount != null  ">error_count = #{errorCount},</if>
+			update_date = #{updateDate}
+		</trim>
+		where api_code = #{apiCode}
+	</update>
+
+	<delete id="deleteSysWebCountById" parameterType="String">
+		delete from sys_web_count where api_code = #{apiCode}
+	</delete>
+	
+	<delete id="deleteSysWebCountByIds" parameterType="String">
+		delete from sys_web_count where api_code in 
+		<foreach item="apiCode" collection="array" open="(" separator="," close=")">
+ 			#{apiCode}
+		</foreach>
+	</delete>
+</mapper> 

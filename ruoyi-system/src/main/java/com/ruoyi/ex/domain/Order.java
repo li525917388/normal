@@ -2,9 +2,10 @@ package com.ruoyi.ex.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.core.domain.BaseEntity;
-import java.util.Date;
 
+import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 import java.math.BigDecimal;
 
 /**
@@ -25,6 +26,10 @@ public class Order extends BaseEntity
 	private String waybillNo;
 	/** 订单日期 */
 	private Date orderDate;
+	
+	/** 订单结束日期 */
+	private Date orderDateTo;
+	
 	/** 电商id */
 	private String ecCompanyId;
 	/** 订单状态 */
@@ -85,7 +90,16 @@ public class Order extends BaseEntity
 	
 	/** 调度给用户ID（业务员） */
 	private Long dispUserId;
-
+	
+	/** 费用类别 */
+	private Integer priceType;
+	
+	/** 服务方式 */
+	private Integer serverType;
+	
+	/** 物品类别 */
+	private String goodsType;
+	
 	public void setOrderid(Long orderid) 
 	{
 		this.orderid = orderid;
@@ -411,4 +425,41 @@ public class Order extends BaseEntity
 	public void setGoodsName(String goodsName) {
 		this.goodsName = goodsName;
 	}
+
+	public Date getOrderDateTo() {
+		return orderDateTo;
+	}
+
+	public void setOrderDateTo(Date orderDateTo) {
+		this.orderDateTo = orderDateTo;
+	}
+
+	public Integer getPriceType() {
+		return priceType;
+	}
+
+	public void setPriceType(Integer priceType) {
+		this.priceType = priceType;
+	}
+
+	public Integer getServerType() {
+		return serverType;
+	}
+
+	public void setServerType(Integer serverType) {
+		this.serverType = serverType;
+	}
+
+	public String getGoodsType() {
+		return goodsType;
+	}
+
+	public void setGoodsType(String goodsType) {
+		this.goodsType = goodsType;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 }

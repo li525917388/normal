@@ -146,7 +146,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     			#{scanDeptId},
     			#{remark},
     			#{nextDeptId},
-    			#{previousDeptId},
+    			#{nextDeptId},
     			#{deliveryUserId},
     			#{signer}
     		)

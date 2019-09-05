@@ -1,10 +1,13 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.ruoyi.common.annotation.LdhWebCount;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.framework.util.ShiroUtils;
@@ -24,9 +27,9 @@ public class SysIndexController extends BaseController
     private ISysMenuService menuService;
 
     // 系统首页
+    @LdhWebCount(apiName="若依系统主页")
     @GetMapping("/index")
-    public String index(ModelMap mmap)
-    {
+    public String index(ModelMap mmap) {
         // 取身份信息
         SysUser user = ShiroUtils.getSysUser();
         // 根据用户id取出菜单

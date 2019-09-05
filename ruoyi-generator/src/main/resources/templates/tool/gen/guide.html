@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8" />
+<title>向导</title>
+
+<head th:include="include :: header"></head>
+<link th:href="@{/plugins/steps/css/jquery.steps.css}" rel="stylesheet"/>
+</head>
+<body>
+
+	<form id="guide" class="form-horizontal m" action="#">
+	
+	    <h1>基本信息</h1>
+	    <div>
+	    	<div class="col-md-6">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">表名称：</label>
+			        <div class="col-sm-9">
+			            <input type="text" name="tableName" class="form-control required" placeholder="请输入文本">
+			        </div>
+			    </div>
+			   
+			</div>
+			<div class="col-md-6">
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">表描述：</label>
+			        <div class="col-sm-9">
+			            <input type="text" name="" class="form-control" placeholder="请输入文本">
+			        </div>
+			    </div>
+			   
+			</div>
+			
+			
+			
+			
+			<div class="col-md-6">
+			 
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">实体名称：</label>
+			        <div class="col-sm-9">
+			            <input type="text" name="className" class="form-control required" placeholder="请输入文本">
+			        </div>
+			    </div>
+			    
+			    
+			</div>
+			
+			<div class="col-md-6">
+			   
+			    <div class="form-group">
+			        <label class="col-sm-3 control-label">作者：</label>
+			        <div class="col-sm-9">
+			            <input type="text" name="" class="form-control" placeholder="请输入文本">
+			        </div>
+			    </div>
+			</div>
+			
+	    </div>
+	
+	
+		
+	    <h1>字段信息</h1>
+	    <div>Second Content</div>
+	    
+	    
+	    
+	    
+	    <h1>生成信息</h1>
+	    <div>111</div>
+	
+	</form>
+
+	<div th:include="include :: footer"></div>
+	<script th:src="@{/plugins/steps/js/jquery.steps.js}"></script>
+	
+	
+	<script type="text/javascript">
+		var form = $("#guide").show();
+		
+		var settings = {
+			labels: {
+				cancel: "取消",
+		        current: "current step:2",
+		        pagination: "Pagination3",
+		        finish: "完成",
+		        next: "下一步",
+		        previous: "上一步",
+		        loading: "Loading ..."
+			},
+			onFinishing: function(event, currentIndex){
+				alert(currentIndex);
+				return true; 
+			},
+			onStepChanging: function (event, currentIndex, newIndex)
+		    {
+		        // Allways allow previous action even if the current form is not valid!
+		        if (currentIndex > newIndex)
+		        {
+		            return true;
+		        }
+		        // Forbid next action on "Warning" step if the user is to young
+		        if (newIndex === 3 && Number($("#age-2").val()) < 18)
+		        {
+		            return false;
+		        }
+		        // Needed in some cases if the user went back (clean up)
+		        if (currentIndex < newIndex)
+		        {
+		            // To remove error styles
+		            form.find(".body:eq(" + newIndex + ") label.error").remove();
+		            form.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+		        }
+		        form.validate().settings.ignore = ":disabled,:hidden";
+		        return form.valid();
+		    },
+		    onStepChanged: function (event, currentIndex, priorIndex)
+		    {
+		        // Used to skip the "Warning" step if the user is old enough.
+		        if (currentIndex === 2 && Number($("#age-2").val()) >= 18)
+		        {
+		            form.steps("next");
+		        }
+		        // Used to skip the "Warning" step if the user is old enough and wants to the previous step.
+		        if (currentIndex === 2 && priorIndex === 3)
+		        {
+		            form.steps("previous");
+		        }
+		    }
+		}
+		
+		var wizard = form.steps(settings).validate({
+		    errorPlacement: function errorPlacement(error, element) { element.before(error); },
+		    rules: {
+		        confirm: {
+		            equalTo: "#password-2"
+		        }
+		    }
+		});
+
+	</script>
+</body>
+</html>

@@ -12,14 +12,27 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">订单号：</label>
 				<div class="col-sm-8">
-					<input id="orderNo" name="orderNo" th:field="*{orderNo}" class="form-control" type="text" required>
+					<input th:field="*{orderNo}" class="form-control" type="text" readonly="readonly" required>
+				</div>
+			</div>
+			
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">运单号：</label>
+				<div class="col-sm-8">
+					<input th:field="*{waybillNo}" class="form-control" type="text" readonly="readonly" required>
 				</div>
 			</div>
 
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">电商id：</label>
 				<div class="col-sm-8">
-					<input id="ecCompanyId" name="ecCompanyId" th:field="*{ecCompanyId}" class="form-control" type="text" required>
+					
+					<select id="ecCompanyId" class="form-control" name="ecCompanyId" th:field="*{ecCompanyId}" required>
+						<option value=" " > --请选择--</option>
+						<option th:each="ec:${ecCompanyList}" th:value="${ec.ecCompanyId}">
+							[[${ec.ecCompanyName}]] （[[${ec.ecCompanyId}]]）
+						</option>
+					</select>
 				</div>
 			</div>
 			<div class="form-group">	
@@ -95,7 +108,7 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">寄件详细地址：</label>
 				<div class="col-sm-8">
-					<textarea id="senderAddr" name="senderAddr" th:field="*{senderAddr}" class="form-control" rows="" cols=""></textarea>
+					<textarea id="senderAddr" name="senderAddr" th:field="*{senderAddr}" class="form-control" style="resize:none"></textarea>
 				</div>
 			</div>
 			<div class="form-group">	
@@ -176,12 +189,6 @@
 			<h4 class="form-header h4">其他信息</h4>
 			
 			<div class="form-group">	
-				<label class="col-sm-3 control-label">运费：</label>
-				<div class="col-sm-8">
-					<input id="deliverMoney" name="deliverMoney" th:field="*{deliverMoney}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
 				<label class="col-sm-3 control-label">物品价值：</label>
 				<div class="col-sm-8">
 					<input id="goodsMoney" name="goodsMoney" th:field="*{goodsMoney}" class="form-control" type="text">
@@ -193,16 +200,52 @@
 					<input id="goodsNum" name="goodsNum" th:field="*{goodsNum}" class="form-control" type="text">
 				</div>
 			</div>
+			
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">费用类别：</label>
+				<div class="col-sm-8">
+					<select id="priceType" name="priceType" th:with="type=${@dict.getType('ex_waybill_feetype')}" class="form-control" required>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">服务方式：</label>
+				<div class="col-sm-8">
+					<select id="serverType" name="serverType" th:with="type=${@dict.getType('ex_waybill_deliverytype')}" class="form-control" required>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">物品类别：</label>
+				<div class="col-sm-8">
+					<select id="goodsType" name="goodsType" th:with="type=${@dict.getType('ex_waybill_goodstype')}" class="form-control" required>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">重量：</label>
 				<div class="col-sm-8">
-					<input id="weight" name="weight" th:field="*{weight}" class="form-control" type="text">
+					<input id="weight" name="weight" th:field="*{weight}" class="form-control" type="text" required>
 				</div>
 			</div>
+			
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">运费：</label>
+				<div class="col-sm-8">
+					<input id="deliverMoney" name="deliverMoney" th:field="*{deliverMoney}" class="form-control" type="text" required>
+				</div>
+			</div>
+			
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">支付方式：</label>
 				<div class="col-sm-8">
-					<input id="payType" name="payType" th:field="*{payType}" class="form-control" type="text">
+					<input id="payType" name="payType" th:field="*{payType}" class="form-control" type="text" required>
 				</div>
 			</div>
 		</form>
@@ -218,6 +261,12 @@
 				xxxx:{
 					required:true,
 				},
+        		weight:{
+        			number:true,
+        		},
+        		deliverMoney:{
+        			number:true,
+        		}
 			},
 			focusCleanup: true
 		});
@@ -242,7 +291,7 @@
 				$("#" + type + "Area").val('');
 			} else {//否则调后台查询二级 三级 市区数据
 				$.ajax({
-					url: "/base/area/queryList", 
+					url: ctx + "base/area/queryList", 
 					data: {"parentId": $(obj).val()}, 
 					type: "post",
 					success: function (data) {
@@ -263,6 +312,36 @@
 				});
 			}
 		};
+		
+		
+		// 计算运费
+		$("#weight").blur(function(){
+			
+			var data = $('#form-order-edit').serialize();
+			
+			var sendArea = $("#senderCity").val();
+			var receiveArea = $("#receiverCity").val();
+			
+			if(sendArea == ''){
+				sendArea = $("#senderProv").val();
+			}
+			
+			data += "&sendArea=" + sendArea;
+			data += "&receiveArea=" + receiveArea;
+			
+			var weight = $("#weight").val();
+			
+			if(!isNaN(weight) && weight != ''){
+				$.post(ctx + "fin/priceStandard/calculate",data,function(res){
+					if(res.code == 0){
+	            		$("#deliverMoney").val(res.data);
+	            	}else{
+	            		$.modal.alertError(res.msg);
+	            	}
+				});
+			}
+			
+		});
 	</script>
 </body>
 </html>

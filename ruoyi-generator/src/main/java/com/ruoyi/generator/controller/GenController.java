@@ -36,16 +36,14 @@ public class GenController extends BaseController
 
     @RequiresPermissions("tool:gen:view")
     @GetMapping()
-    public String gen()
-    {
+    public String gen() {
         return prefix + "/gen";
     }
 
     @RequiresPermissions("tool:gen:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(TableInfo tableInfo)
-    {
+    public TableDataInfo list(TableInfo tableInfo) {
         startPage();
         List<TableInfo> list = genService.selectTableList(tableInfo);
         return getDataTable(list);
@@ -57,8 +55,7 @@ public class GenController extends BaseController
     @RequiresPermissions("tool:gen:code")
     @Log(title = "代码生成", businessType = BusinessType.GENCODE)
     @GetMapping("/genCode/{tableName}")
-    public void genCode(HttpServletResponse response, @PathVariable("tableName") String tableName) throws IOException
-    {
+    public void genCode(HttpServletResponse response, @PathVariable("tableName") String tableName) throws IOException {
         byte[] data = genService.generatorCode(tableName);
         response.reset();
         response.setHeader("Content-Disposition", "attachment; filename=\"ruoyi.zip\"");
@@ -75,8 +72,7 @@ public class GenController extends BaseController
     @Log(title = "代码生成", businessType = BusinessType.GENCODE)
     @GetMapping("/batchGenCode")
     @ResponseBody
-    public void batchGenCode(HttpServletResponse response, String tables) throws IOException
-    {
+    public void batchGenCode(HttpServletResponse response, String tables) throws IOException {
         String[] tableNames = Convert.toStrArray(tables);
         byte[] data = genService.generatorCode(tableNames);
         response.reset();
@@ -85,5 +81,19 @@ public class GenController extends BaseController
         response.setContentType("application/octet-stream; charset=UTF-8");
 
         IOUtils.write(data, response.getOutputStream());
+    }
+    
+    
+    /**
+     * 向导页面
+     * @return
+     */
+    //@RequiresPermissions("tool:gen:guide")
+    @GetMapping("/guide")
+    public String guide() {
+    	
+    	System.out.println("向导页面");
+    	
+    	return prefix + "/guide";
     }
 }
