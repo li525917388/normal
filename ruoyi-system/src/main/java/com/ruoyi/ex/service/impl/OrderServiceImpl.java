@@ -1,7 +1,9 @@
 package com.ruoyi.ex.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -171,6 +173,29 @@ public class OrderServiceImpl implements IOrderService {
 	public List<ReportData> getOrderMapReportData() {
 		// TODO Auto-generated method stub
 		return orderMapper.getOrderMapReportData();
+	}
+
+	
+	/* 
+	 * 报表：查询一年每天单量
+	 * @param year
+	 * @return
+	 */
+	@Override
+	public List<Object[]> getOrderEveryDayReport(String year) {
+		
+		List<Map<String, Object>> res = orderMapper.getOrderEveryDayReport(year);
+		
+		List<Object[]> list = new ArrayList<Object[]>();
+		
+		for(Map<String, Object> map : res){
+			Object[] os = new Object[2];
+			os[0] = map.get("days");
+			os[1] = map.get("total");
+			list.add(os);
+		}
+		
+		return list;
 	}
 
 }

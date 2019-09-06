@@ -86,4 +86,14 @@ public interface IOrderService
 	 */
 	public List<ReportData> getOrderMapReportData();
 	
+	
+	
+	
+	/**
+	 * 报表：查询一年每天单量
+	 * @param year
+	 * @return
+	 */
+	public List<Object[]> getOrderEveryDayReport(String year);
+	
 }

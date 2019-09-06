@@ -4,6 +4,7 @@ import com.ruoyi.ex.domain.Order;
 import com.ruoyi.report.domain.ReportData;
 
 import java.util.List;	
+import java.util.Map;
 
 /**
  * 订单 数据层
@@ -76,5 +77,13 @@ public interface OrderMapper
 	 * @return
 	 */
 	public List<ReportData> getOrderMapReportData();
+	
+	
+	/**
+	 * 报表：查询一年每天单量
+	 * @param year
+	 * @return
+	 */
+	public List<Map<String, Object>> getOrderEveryDayReport(String year);
 	
 }

@@ -259,4 +259,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from (select sender_city, count(1) as total from ex_order group by sender_city) t1 
 		left join base_area a on a.area_id = t1.sender_city
 	</select>
+	
+	
+	<!-- 查询一年每天单量 -->
+	<select id="getOrderEveryDayReport" parameterType="String" resultType="java.util.Map">
+		select 
+		DATE_FORMAT(order_date,'%Y-%m-%d') as days,
+		count(1) total
+		from ex_order 
+		where DATE_FORMAT(order_date,'%Y') = #{year}
+		group by days
+	</select>
 </mapper>

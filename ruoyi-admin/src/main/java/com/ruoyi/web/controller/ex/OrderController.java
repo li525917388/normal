@@ -309,4 +309,20 @@ public class OrderController extends BaseController
 		return res;
 	}
 	
+	
+	
+	/**
+	 * 报表：查询一年每天单量
+	 * @param year
+	 * @return
+	 */
+	@PostMapping("getOrderEveryDayReport")
+	@ResponseBody
+	public List<Object[]> getOrderEveryDayReport(String year){
+		
+		System.out.println("报表：查询一年每天单量");
+		
+		return orderService.getOrderEveryDayReport(year);
+	}
+	
 }
