@@ -108,6 +108,7 @@ public class WaybillServiceImpl implements IWaybillService {
 	public int pickupOper(Waybill waybill, SysUser user) {
 		
 		waybill.setWaybillStatus(10);	//运单状态。10=收件
+		waybill.setSendDate(new Date());
 		
 		//新增运单
 		int waybillRes = this.insertWaybill(waybill);

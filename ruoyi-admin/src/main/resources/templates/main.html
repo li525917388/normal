@@ -20,8 +20,12 @@
     
     	<div class="form-group">
 			<div class="col-sm-4">
-				<div style="height:400px;">
-					公告栏
+				<div style="height:380px;background-color: #ffffdd;padding: 10px;">
+					
+					<div style="font-size: 20px; color: #222;padding: 10px 0px;">公告栏</div>
+					<div class="noticeLi" th:pk="${notice.noticeId}" style="font-size: 15px; cursor: pointer;color: #444;" th:each="notice : ${noticeList}" >
+						[[${noticeStat.index + 1}]]. [[${notice.noticeTitle}]]
+					</div>
 				</div>
 			</div>
 			<div class="col-sm-4">
@@ -73,6 +77,17 @@
        
        
     <script type="text/javascript">
+    	
+    	$(".noticeLi").click(function(){
+    		
+    		var pk = $(this).attr("pk");
+    		
+    		$.modal.open("公告详情", ctx + "system/notice/content/" + pk,'','', function(index, layero){
+    			layer.close(index);
+    		});
+    		
+    	});
+    	
         // 基于准备好的dom，初始化echarts实例
        /*  var myChart = echarts.init(document.getElementById('main'));
 
@@ -373,51 +388,22 @@ echarts.init(document.getElementById('main0')).setOption(option);
  */
 
 
+	
 
 
 
-
-
+	// 每日单量统计报表
 	var orderEveryDayData = [];
  	var orderEveryDayMax = 0;
- 	
-
-	function getVirtulData(year) {
-	    year = year || '2019';
-	    var date = +echarts.number.parseDate(year + '-07-01');
-	    var end = +echarts.number.parseDate((+year + 0) + '-08-01');
-	    var dayTime = 3600 * 24 * 1000;
-	    var data = [];
-	    for (var time = date; time < end; time += dayTime) {
-	    	
-	    	var val = Math.floor(Math.random() * 10000);
-	    	if(val > orderEveryDayMax){
-	    		orderEveryDayMax = val;
-	    	}
-	    	
-	    	if(time > echarts.number.parseDate('2019-07-09') && time < echarts.number.parseDate('2019-07-18')){
-	    		
-	    	}else{
-	    		data.push([
-		            echarts.format.formatTime('yyyy-MM-dd', time),
-		            val
-		        ]);
-	    	}
-	        
-	    }
-	    debugger;
-	    return data;
-	}
- 
- 	//orderEveryDayData = getVirtulData(2019);
+ 	var year = new Date().getFullYear();
  	
  	$.ajax({
  		url: ctx + "ex/order/getOrderEveryDayReport",
- 		data: {year: 2019}, 
+ 		data: {year: year}, 
  		type: "post",
  		async: false,
  		success: function(res){
-	 		debugger;
+	 		
 	 		for(var i in res){
 	 			
 	 			if(res[i][1] > orderEveryDayMax){
@@ -435,7 +421,7 @@ echarts.init(document.getElementById('main0')).setOption(option);
 	
 	    title: {
 	        top: 30,
-	        text: '2019年日单量统计',
+	        text: year + '年日单量统计',
 	        subtext: '-',
 	        left: 'center',
 	        textStyle: {
@@ -456,7 +442,7 @@ echarts.init(document.getElementById('main0')).setOption(option);
 	    calendar: [{
 	        top: 100,
 	        left: 'center',
-	        range: ['2019-01-01', '2019-06-30'],
+	        range: [year + '-01-01', year + '-06-30'],
 	        splitLine: {
 	            show: true,
 	            lineStyle: {
@@ -481,7 +467,7 @@ echarts.init(document.getElementById('main0')).setOption(option);
 	    }, {
 	        top: 340,
 	        left: 'center',
-	        range: ['2019-07-01', '2019-12-31'],
+	        range: [year + '-07-01', year + '-12-31'],
 	        splitLine: {
 	            show: true,
 	            lineStyle: {
@@ -520,7 +506,7 @@ echarts.init(document.getElementById('main0')).setOption(option);
 	            }
 	        },
 	        {
-	            name: '步数',
+	            name: '单量',
 	            type: 'scatter',
 	            coordinateSystem: 'calendar',
 	            calendarIndex: 1,

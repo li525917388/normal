@@ -12,8 +12,10 @@ import com.ruoyi.common.config.Global;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.SysMenu;
+import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysMenuService;
+import com.ruoyi.system.service.ISysNoticeService;
 
 /**
  * 首页 业务处理
@@ -21,10 +23,13 @@ import com.ruoyi.system.service.ISysMenuService;
  * @author ruoyi
  */
 @Controller
-public class SysIndexController extends BaseController
-{
-    @Autowired
-    private ISysMenuService menuService;
+public class SysIndexController extends BaseController {
+	
+	@Autowired
+	private ISysMenuService menuService;
+    
+	@Autowired
+    private ISysNoticeService noticeService;
 
     // 系统首页
     @LdhWebCount(apiName="若依系统主页")
@@ -42,9 +47,14 @@ public class SysIndexController extends BaseController
 
     // 系统介绍
     @GetMapping("/system/main")
-    public String main(ModelMap mmap)
-    {
+    public String main(ModelMap mmap) {
         mmap.put("version", Global.getVersion());
+        
+        SysNotice notice = new SysNotice();
+        
+		List<SysNotice> noticeList = noticeService.selectNoticeList(notice );
+		mmap.put("noticeList", noticeList);
+        
         return "main";
     }
 }

@@ -24,17 +24,25 @@
                    <div class="form-group">
                        <label class="col-sm-3 control-label">原sql（Preparing）：</label>
                        <div class="col-sm-9">
-                           <textarea id="sql" name="sql" class="form-control" placeholder="请输原sql" required></textarea>
+                           <textarea id="sql" name="sql" class="form-control" placeholder="请输原sql" rows="5" required></textarea>
                        </div>
                    </div>
                    
                    <div class="form-group">
                        <label class="col-sm-3 control-label">参数（Parameters）：</label>
                        <div class="col-sm-9">
-                           <textarea id="params" name="params" class="form-control" placeholder="请输参数" required></textarea>
+                           <textarea id="params" name="params" class="form-control" placeholder="请输参数。 注：若参数值存在在英文括号(), 会影响解析，需手动去除" rows="5" required></textarea>
                        </div>
                    </div>
 
+				 	<div class="form-group">
+                       	<div class="col-sm-12 col-sm-offset-3">
+                       
+                       		null值参数 <input type="checkbox" id="nullFlagChe">
+                       		<input type="text" name="nullFlag" id="nullFlag" value="0" style="display: none;">
+                       	</div>
+                   	</div>
+                   
                    <div class="form-group">
                        <div class="col-sm-12 col-sm-offset-3">
 							<button type="button" onclick="getResult()" class="btn btn-primary">提交</button>
@@ -46,7 +54,7 @@
                    <div class="form-group">
                        <label class="col-sm-3 control-label">结果：</label>
                        <div class="col-sm-9">
-                           <textarea id="doResult" class="form-control" rows="6" placeholder=""></textarea>
+                           <textarea id="doResult" class="form-control" rows="7" placeholder=""></textarea>
                        </div>
                    </div>
                    
@@ -85,6 +93,16 @@
 	        	});
 	        }
 	    }
+		
+		
+		$("#nullFlagChe").change(function(){
+			
+			if($(this).prop('checked') == true){
+				$("#nullFlag").val(1);
+			}else{
+				$("#nullFlag").val(0);
+			}
+		});
 	</script>
 </body>
 </html>
