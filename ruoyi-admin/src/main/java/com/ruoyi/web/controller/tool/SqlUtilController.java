@@ -1,8 +1,11 @@
 package com.ruoyi.web.controller.tool;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +18,9 @@ import com.ruoyi.common.enums.SqlUtilParamType;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysDictData;
 import com.ruoyi.system.service.ISysDictDataService;
+import com.ruoyi.tool.domain.SqlBeaufString;
+import com.ruoyi.tool.domain.Student;
+import com.ruoyi.tool.domain.StudentRepository;
 
 /**
  * sql工具controller
@@ -34,6 +40,9 @@ public class SqlUtilController {
 	@Autowired
 	private ISysDictDataService sysDictDataService;
 	
+	@Autowired
+	private StudentRepository studentIndexRepository;
+	
 	/**
 	 * sql工具主页
 	 * @return
@@ -44,6 +53,24 @@ public class SqlUtilController {
 	public String index() {
 		return prefix + "/sqlutil";
 	}
+	
+	
+	@GetMapping("/es")
+	public void es(){
+		List<Double> scores= new ArrayList<>();
+		scores.add(67.2);
+		scores.add(27.2);
+		scores.add(56.2);
+		
+		studentIndexRepository.save(new Student(UUID.randomUUID().toString(), "刘伯", 21, scores ));
+		studentIndexRepository.save(new Student(UUID.randomUUID().toString(), "刘思想", 35, scores ));
+		studentIndexRepository.save(new Student(UUID.randomUUID().toString(), "王皮皮", 45, scores ));
+		studentIndexRepository.save(new Student(UUID.randomUUID().toString(), "王二丫", 23, scores ));
+		studentIndexRepository.save(new Student(UUID.randomUUID().toString(), "王铁蛋", 51, scores ));
+	}
+	
+	
+	
 	
 	
 	/**
@@ -131,7 +158,7 @@ public class SqlUtilController {
 
 			int ind = param.lastIndexOf("null");
 			
-			if("null".equals(param.substring(ind).trim())){
+			if(ind > 0 && "null".equals(param.substring(ind).trim())){
 				param = param.subSequence(0, ind) + "null" + spliL + "null" + spliR;
 			}
 
@@ -195,11 +222,18 @@ public class SqlUtilController {
 		
 		SqlUtilController c = new SqlUtilController();
 		
-		String p1 = "ad ? asd ? ff ?";
-		String p2 = "sss(String), null, dfnull,g(String)";
-		p2 = c.formmatParam(p2, 1);
+		String p1 = "select name as a,(select 1 from dual),class as c from t_user";
+		SqlBeaufString a = new SqlBeaufString(p1);
+		a.sf();
 		
-		String a = c.sqlUtil(p1, p2);
-		System.out.println(a);
+		System.out.println(a.getResult());
+	}
+	
+	
+	
+	public static void beautify(String sql){
+		
+		
+		
 	}
 }
